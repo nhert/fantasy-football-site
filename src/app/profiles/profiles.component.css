@@ -1,0 +1,16 @@
+.profiles-container {
+    text-align: center;
+    width: 750px;
+}
+
+::ng-deep .cdk-overlay-container,
+.cdk-global-overlay-wrapper {
+    white-space: pre-line;
+}
+
+.core3 {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    width: auto;
+}

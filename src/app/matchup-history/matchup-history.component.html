@@ -1,0 +1,64 @@
+<div class="matchups-container">
+  <h2>Matchup History</h2>
+  <mat-card class="card-default">
+    <mat-card-content>
+      <h4>View your historical matchups against other managers</h4>
+      <h5><i>This tool includes all historical games against the opponent, even games played after playoff
+          elimination.</i>
+      </h5>
+      <form>
+        <mat-form-field class="form-field-small">
+          <mat-label>Manager 1</mat-label>
+          <mat-select [disabled]="loading" [(ngModel)]="managerLeftValue" name="managerLeftValue" required
+            (selectionChange)="managerDropdownChanged()" #managerLeftSelect="ngModel">
+            @for (user of allUsers; track user) {
+            <mat-option [value]="user.sleeperId_current">{{user.name}}</mat-option>
+            }
+          </mat-select>
+          <mat-error *ngIf="managerLeftSelect.hasError('required')">
+            Required field
+          </mat-error>
+        </mat-form-field>
+        <mat-label> VS </mat-label>
+        <mat-form-field class="form-field-small">
+          <mat-label>Manager 2</mat-label>
+          <mat-select [disabled]="loading" [(ngModel)]="managerRightValue" name="managerRightValue" required
+            (selectionChange)="managerDropdownChanged()" #managerRightSelect="ngModel">
+            @for (user of allUsers; track user) {
+            <mat-option [value]="user.sleeperId_current">{{user.name}}</mat-option>
+            }
+          </mat-select>
+          <mat-error *ngIf="managerRightSelect.hasError('required')">
+            Required field
+          </mat-error>
+        </mat-form-field>
+        <br>
+        <mat-form-field class="form-field-default">
+          <mat-label>Timespan</mat-label>
+          <mat-select [disabled]="loading" [(ngModel)]="timespanValue" name="timespanValue"
+            (selectionChange)="refreshDisplayedData()">
+            <mat-option value="all">All Time</mat-option>
+            <mat-option value="sleeperOnly">Sleeper Era</mat-option>
+            <mat-option value="legacyOnly">NFL.com Era</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="form-field-default">
+          <mat-label>League</mat-label>
+          <mat-select [disabled]="loading" [(ngModel)]="leagueValue" name="leagueValue"
+            (selectionChange)="refreshDisplayedData()">
+            <mat-option value="all">All Leagues</mat-option>
+            <mat-option value="A League">A League</mat-option>
+            <mat-option value="B League">B League</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <simple-spinner [loading]="loading"></simple-spinner>
+
+  <stats-card [statsSource]="stats" [loading]="loading"></stats-card>
+  <simple-table [dataSource]="displayedData" [columnHeaders]="columnHeaders"
+    [columnMinWidths]="[60, 60, 60, 40, 40, 40, 60]" [showCsvExport]="true"
+    [csvFilename]="getCSVFileName()"></simple-table>
+</div>

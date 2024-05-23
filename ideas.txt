@@ -1,0 +1,75 @@
+League Info
+- Overview pages
+- Dates
+
+Drafts
+- History of sleeper drafts for A and B League
+
+Weekly Stuff
+- Hot matchups (projection discrepancies, close calls)
+- This weeks Matchups
+    - historical matchups for everyone playing eachother this week 
+    - rival analysis: people who typically have close matchups pts wise or when win-loss is tilted
+
+Records
+- NFL.com legacy records -> static json object of historical records
+- Sleeper records -> generated from sleeper api
+
+Stats -> GM Profile? -> Profiles? -> 
+- Separate A league b league champs
+- total wins and losses
+- Times scored below 50
+    - Full roster only
+- Times nuked (opponent scored 100 pt differential in one week)
+    - Full roster only
+- protest weeks (0 pts for)
+- Buddy weeks (you and opponent started a short roster)
+- Core 3
+    - Players with most time spent on team by weeks
+
+
+Official League Standings
+- sleeper doesnt show correct standings
+
+Matchup History
+- Scoring totals all time VS
+- All time pts differential
+
+Elimination Line
+- Big line 
+
+Playoff Predictor 
+- Late season?
+- Who would match up with who round 1 + stats + historical matchups
+- 
+
+Calendar
+- Calendar display with any relevant league dates (google calendar?)
+- 
+
+
+Menu Structure
+
+League Info
+- Manifesto
+- Calendar
+- League Standings
+
+Owners
+- List of GMs
+- Profiles
+- Records
+- Draft History
+
+Matchups
+- *** matchup hist.
+- upcoming Matchups
+- Playoff Predictor
+- Elimination Line
+- Survival pool
+- Pickems
+
+Media
+- Picco show
+- Jordan show
+- Draft videos

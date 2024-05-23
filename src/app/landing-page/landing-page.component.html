@@ -1,0 +1,29 @@
+<div class="landing">
+  <h1>Welcome to the B3FL</h1>
+  <p>Otherwise known as: The Big F**king Fantasy Football League.</p>
+  <p>Find some quick links below, or click on a trophy to be taken to that league's Sleeper page.</p>
+  <br>
+  <h4><a [routerLink]="['/gm-list']" routerLinkActive="router-link-active"><em>List of Managers</em></a></h4>
+  <h4><a [routerLink]="['/matchup-history']" routerLinkActive="router-link-active"><em>Matchup History</em></a></h4>
+  <h4><a [routerLink]="['/records']" routerLinkActive="router-link-active"><em>Records</em></a></h4>
+  <h4><a [routerLink]="['/profiles']" routerLinkActive="router-link-active"><em>Profiles</em></a></h4>
+  <!-- <h4><a [routerLink]="['/calendar']" routerLinkActive="router-link-active"><em>Calendar</em></a></h4> -->
+  <h4><a [routerLink]="['/manifesto']" routerLinkActive="router-link-active"><em>Read the B3FL Manifesto</em></a></h4>
+
+  <br>
+
+  <figure>
+    <a href="{{getUrlChampLeague()}}" target="_blank" rel="noopener noreferrer"><img src="/assets/images/A_League.png"
+        alt="" width="300" height="300"></a>
+    <figcaption>EST. 2010</figcaption>
+  </figure>
+
+  <br>
+
+  <figure>
+    <a href="{{getUrlOtherLeague()}}" target="_blank" rel="noopener noreferrer"><img src="/assets/images/B_League.png"
+        alt="" width="300" height="300"></a>
+    <figcaption>EST. 2021</figcaption>
+  </figure>
+
+</div>

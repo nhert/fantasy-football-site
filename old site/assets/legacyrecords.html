@@ -1,0 +1,158 @@
+<html>
+
+<body>
+    <div style="margin:0 auto;">
+        <select id="yearDropdown"></select>
+        <select id="ownerDropdown"></select>
+    </div>
+
+    <div style="margin:0 auto; text-align: center;" id="pageTableDiv"></div>
+
+    <script>
+        var curYear = "", curOwner = "";
+        var allCurOwners = [];
+        var container;
+
+        function updateDisplayedYear(year, season) {
+            curYear = year;
+            allCurOwners = [];
+
+            let ownerDropdown = document.getElementById("ownerDropdown");
+            ownerDropdown.innerHTML = "";
+
+            let i = 0;
+
+            for (var key in season.teams) {
+                var opt = document.createElement('option');
+                opt.value = i;
+                var managerName = season.teams[key].manager;
+                if (managerName == "") managerName = "?";
+
+                opt.innerHTML = season.teams[key].name + " (" + managerName + ")";
+                allCurOwners.push(season.teams[key].name);
+                i++;
+                ownerDropdown.appendChild(opt);
+            }
+            updateDisplayedOwner(allCurOwners[0], season);
+        }
+
+        function updateDisplayedOwner(owner, season) {
+            curOwner = owner;
+
+            var data;
+            for (var key in season.teams) {
+                if (season.teams[key].name == curOwner) {
+                    data = season.teams[key];
+                    break;
+                }
+            }
+
+            if (data) {
+                container.innerHTML = "<br>";
+
+                var managerName = data.manager;
+                if (managerName == "") managerName = "?";
+                container.innerHTML += "<h3>" + data.name + " (" + managerName + ")</h3>";
+                container.innerHTML += "<br>";
+
+                container.innerHTML += "<h3><b>" + data.wins + " - " + data.losses + " - " + data.ties + " (" + data.division + ")</b></h3>";
+                container.innerHTML += "<h4>Rank: " + data.rank + "</h4>";
+                container.innerHTML += "<h4>Points For: " + data.total_points + "</h4>";
+                container.innerHTML += "<h4>Points Against: " + data.total_points_against + "</h4><br>";
+
+                var jsonData = [];
+                for (var key in data.games) {
+                    var game = data.games[key];
+
+                    var scoreFor = parseInt(game.score);
+                    var scoreAgs = parseInt(game.opponent_score);
+                    var result = scoreFor > scoreAgs ? "Win" : "Loss";
+
+                    var week = parseInt(game.week);
+                    var weekLabel = "";
+                    if (curYear == "2021") {
+                        if (week >= 15) {
+                            weekLabel = "Round " + (week - 14);
+                        } else {
+                            weekLabel = game.week;
+                        }
+                    } else {
+                        if (week >= 14) {
+                            weekLabel = "Round " + (week - 13);
+                        } else {
+                            weekLabel = game.week;
+                        }
+                    }
+
+                    jsonData.push({
+                        "Week": weekLabel,
+                        "Opponent": game.opponent_name,
+                        "Pts For": game.score,
+                        "Pts Against": game.opponent_score,
+                        "Result": result
+                    });
+                }
+                SleeperTools.generateTable(container, jsonData);
+            }
+
+            //console.log(data);
+        }
+
+        async function initialize() {
+            container = document.getElementById("pageTableDiv");
+
+            if (SleeperTools != null) {
+                var data;
+
+                const legacyData = await SleeperTools.getLegacyChampLeagueData();
+                var seasons = legacyData["seasons"];
+
+                let yearLabelsArray = Object.keys(seasons);
+                let yearDropdown = document.getElementById("yearDropdown");
+                let i = 0;
+                yearLabelsArray.forEach((year) => {
+                    var opt = document.createElement('option');
+                    opt.value = i;
+                    opt.innerHTML = year;
+                    i++;
+                    yearDropdown.appendChild(opt);
+                });
+
+                yearDropdown.addEventListener(
+                    'change',
+                    function () { updateDisplayedYear(yearLabelsArray[this.value], seasons[yearLabelsArray[this.value]]); },
+                    false
+                );
+
+                let ownerDropdown = document.getElementById("ownerDropdown");
+                ownerDropdown.addEventListener(
+                    'change',
+                    function () { updateDisplayedOwner(allCurOwners[this.value], seasons[curYear]); },
+                    false
+                );
+
+                var year0 = yearLabelsArray[0];
+                updateDisplayedYear(year0, seasons[year0]);
+                updateDisplayedOwner(allCurOwners[0], seasons[year0]);
+
+                // legacyData 
+                /*
+                  {
+                      seasons
+                  }
+                */
+
+                //SleeperTools.generateTable(container, data);
+                //console.log(yearLabelsArray);
+
+            } else {
+                console.log("No sleeper tools.");
+            }
+
+        }
+
+        initialize();
+    </script>
+</body>
+
+</html>

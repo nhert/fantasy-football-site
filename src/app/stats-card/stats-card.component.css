@@ -1,0 +1,27 @@
+.stats-container {
+    margin-top: 15px;
+}
+
+.stats-card {
+    text-align: center;
+    background-color: #313131;
+    color: #f0f0f0;
+}
+
+.stats-details {
+    display: table;
+    table-layout: fixed;
+}
+
+.mat-expansion-panel-header-title {
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    width: 100%;
+    flex: 0 0 auto;
+}
+
+.win-loss-h1 {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: #f0f0f0;
+}

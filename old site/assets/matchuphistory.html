@@ -1,0 +1,220 @@
+<html>
+
+<body>
+    <h4>View your historical matchups against other managers</h4>
+    <h5><i>This tool includes all historical games against the opponent, even games played after playoff elimination.</i></h5>
+    <div style="margin:20px auto; display: block;">
+        <select id="ownerLeft"></select>
+        <span><b> Against </b></span>
+        <select id="ownerRight"></select>
+    </div>
+    <div style="margin:20px auto; display: block;">
+        <label for="timespan">Timespan</label>
+        <select id="timespan">
+            <option value="all">All Time</option>
+            <option value="sleeperOnly">Sleeper Era</option>
+            <option value="legacyOnly">NFL.com Era</option>
+        </select>
+        <label for="leagueType">League</label>
+        <select id="leagueType">
+            <option value="all">All Leagues</option>
+            <option value="A League">A League</option>
+            <option value="B League">B League</option>
+        </select>
+    </div>
+    <br>
+
+    <div class="loader" id="spinner" style="display: none;"></div>
+
+    <div id="pageTableDiv"></div>
+
+    <div id="downloadCsvDiv" style="display: none;">
+        <button onclick="downloadCsv()">Download CSV</button>
+    </div>
+   
+    <script>
+        var allCurOwners = [];
+        var container = document.getElementById("pageTableDiv");
+        var spinner = document.getElementById("spinner");
+        var downloadCsvDiv = document.getElementById("downloadCsvDiv");
+        var timespanDropdown = document.getElementById("timespan");
+        var leagueTypeDropdown = document.getElementById("leagueType");
+        var ownerLeftDropdown = document.getElementById("ownerLeft");
+        var ownerRightDropdown = document.getElementById("ownerRight");
+        var currentMatchupData;
+        var currentlyDisplayedData;
+
+        function downloadCsv(){
+            if (currentlyDisplayedData){
+                console.log("Generating CSV ...");
+                var today = new Date();
+                var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+                var user1 = ownerLeftDropdown.options[ownerLeftDropdown.selectedIndex].innerHTML;
+                var user2 = ownerRightDropdown.options[ownerRightDropdown.selectedIndex].innerHTML;
+
+                var fileName = user1 + "_against_" + user2 + "_MatchupHistory_" + date; 
+                SleeperTools.generateCsvFile(currentlyDisplayedData, fileName);
+            }
+        }
+
+        function setLoading(isLoading) {
+            spinner.style.display = isLoading ? "block" : "none";
+            downloadCsvDiv.style.display = !isLoading && currentlyDisplayedData ? "block" : "none";
+            timespanDropdown.disabled = isLoading;
+            ownerLeftDropdown.disabled = isLoading;
+            ownerRightDropdown.disabled = isLoading;
+            leagueTypeDropdown.disabled = isLoading;
+        }
+
+        function buildAllRecordsIntoCombined(records){
+            var wins = 0, losses = 0, ties = 0;
+
+            records.forEach(record => {
+                if (record.outcome == "win"){
+                    wins++;
+                } else if (record.outcome == "loss"){
+                    losses++;
+                } else if (record.outcome == "tie"){
+                    ties++;
+                }
+            });
+            return wins + " - " + losses + " - " + ties;
+        }
+
+        function beautifyForTableDisplay(records){
+            tableData = [];
+
+            records.forEach(record => {
+                tableData.push({
+                    "Result": beautifyForOutcomeColumn(record.outcome),
+                    "Pts For": record.owner_score,
+                    "Pts Against": record.opponent_score,
+                    "Year": record.year,
+                    "Week": record.week,
+                    "Platform": record.type,
+                    "League": record.league_type
+                });
+            });
+
+            return tableData;
+        }
+
+        function beautifyForOutcomeColumn(outcome){
+            if (outcome == "win"){
+                return "<span style=\"color: green;\">WIN</span>";
+            } else if (outcome == "loss"){
+                return "<span style=\"color: red;\">LOSS</span>";
+            } else if (outcome == "tie"){
+                return "<span style=\"color: orange;\">TIE</span>";
+            } else if (outcome == "noContest"){
+                return "<span style=\"color: black;\">NO CONTEST</span>";
+            }
+        }
+
+        async function displayMatchup(){
+            var timespanValue = timespanDropdown.value;
+            var ownerLeftValue = ownerLeftDropdown.value;
+            var ownerRightValue = ownerRightDropdown.value;
+            //console.log(timespanValue + " " + ownerLeftValue + " " + ownerRightValue);
+
+            container.innerHTML = "";
+            if (ownerLeftValue == ownerRightValue){
+                container.innerHTML = "<span style=\"color: red;\"><b>Please choose two different managers to view Matchup History.</b></span>";
+                downloadCsvDiv.style.display = "none";
+                currentMatchupData = null;
+            } else {
+                setLoading(true);
+                currentMatchupData = await SleeperTools.getMatchupData(ownerLeftValue, ownerRightValue);
+                setLoading(false);
+                refreshTable();
+            }
+        }
+
+        function refreshTable(){
+            if (!currentMatchupData){
+                console.warn("Tried to refresh table with null currentMatchupData");
+                return;
+            } 
+            // currentMatchupData == all data loaded for players. Perform filters on front-end.
+
+            var dataToDisplay = currentMatchupData;
+
+            // If timespan dropdown is anything other than all, filter.
+            if (timespanDropdown.value != "all"){
+                var typeCheck = timespanDropdown.value == "legacyOnly" ? "NFL.com" : "Sleeper";
+                dataToDisplay = dataToDisplay.filter(obj => {
+                                                        return obj.type === typeCheck
+                                                        })
+            }
+
+            if (leagueTypeDropdown.value != "all"){
+                var typeCheck = leagueTypeDropdown.value;
+                dataToDisplay = dataToDisplay.filter(obj => {
+                                                        return obj.league_type === typeCheck
+                                                        })
+            }
+
+            // Refresh displayed stat totals
+            container.innerHTML = "";
+            container.innerHTML += "<h1 style=\"margin:0 auto; text-align: center;\"><b>" + buildAllRecordsIntoCombined(dataToDisplay) + "</b></h1><br>";
+            
+            // Refresh displayed table.
+            SleeperTools.generateTable(container, beautifyForTableDisplay(dataToDisplay));
+            currentlyDisplayedData = dataToDisplay;
+        }
+
+        async function initialize() {
+            if (SleeperTools != null){
+                var data;
+                data = await SleeperTools.getAllUserIds();
+
+                data.forEach(user => {
+                    allCurOwners.push(user);
+
+                    var opt = document.createElement('option');
+                    opt.value = user.SleeperUserId;
+                    opt.innerHTML = user.Manager;
+                    
+                    var opt2 = document.createElement('option');
+                    opt2.value = user.SleeperUserId;
+                    opt2.innerHTML = user.Manager;
+                   
+                    ownerLeftDropdown.appendChild(opt);
+                    ownerRightDropdown.appendChild(opt2);
+                });
+
+                timespanDropdown.addEventListener(
+                    'change',
+                    function() {  refreshTable(); },
+                    false
+                );
+                leagueTypeDropdown.addEventListener(
+                    'change',
+                    function() {  refreshTable(); },
+                    false
+                );
+                ownerLeftDropdown.addEventListener(
+                    'change',
+                    function() {  displayMatchup(); },
+                    false
+                );
+                ownerRightDropdown.addEventListener(
+                    'change',
+                    function() {  displayMatchup(); },
+                    false
+                );
+
+                displayMatchup();
+            
+                //SleeperTools.generateTable(container, data);
+            } else {
+              console.log("No sleeper tools.");
+            }
+
+        }
+
+        initialize();
+    </script>
+</body>
+
+</html>

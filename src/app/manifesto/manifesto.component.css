@@ -1,0 +1,7 @@
+.pdf-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 900px;
+    height: 1100px;
+}

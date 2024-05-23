@@ -1,0 +1,138 @@
+<div class="profiles-container">
+    <h2>GM Profiles</h2>
+    <br>
+    <mat-card>
+        <mat-card-content>
+            <h4>Stats and analysis</h4>
+            <form>
+                <mat-form-field class="form-field-default">
+                    <mat-label>Manager</mat-label>
+                    <mat-select [disabled]="loading" [(ngModel)]="managerValue" name="managerValue" required
+                        (selectionChange)="managerDropdownChanged()" #managerSelect="ngModel">
+                        @for (user of allUsers; track user) {
+                        <mat-option [value]="user.sleeperId_current">{{user.name}}</mat-option>
+                        }
+                    </mat-select>
+                    <mat-error *ngIf="managerSelect.hasError('required')">
+                        Required field
+                    </mat-error>
+                </mat-form-field>
+            </form>
+        </mat-card-content>
+    </mat-card>
+
+    <simple-spinner [loading]="loading"></simple-spinner>
+
+    <div *ngIf="!loading && managerValue">
+        <img [src]="avatarUrl" style="width: 150px; height: 150px; margin-top: 30px; margin-bottom: 10px;">
+    </div>
+
+    <stats-card [statsSource]="stats" [loading]="loading" [expanded]="true" [showAdvancedStats]="true"></stats-card>
+
+    <div *ngIf="showCore3 && !loading" class="core3">
+        <mat-card>
+            <mat-card-content>
+
+                <span style="font-size: 20px; padding-right: 5px;"><b>Core 3</b></span>
+                <mat-icon [matTooltip]="tooltip_core3()">
+                    help
+                </mat-icon>
+
+                <table style=" margin-left: auto; margin-right: auto; width: auto;">
+                    <tr>
+                        <td>
+                            <h2>#1</h2>
+                        </td>
+                        <td>
+                            <h2>#2</h2>
+                        </td>
+                        <td>
+                            <h2>#3</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <!-- <img [src]="corePlayer1.playerAvatarUrl"
+                        style="width: 250px; height: 166px; margin-top: 30px; margin-bottom: 10px;"> -->
+                            <img [src]="corePlayer1.playerAvatarUrl" style="height: 150px;">
+                        </td>
+                        <td>
+                            <!-- <img [src]="corePlayer2.playerAvatarUrl"
+                        style="width: 250px; height: 166px; margin-top: 30px; margin-bottom: 10px;"> -->
+                            <img [src]="corePlayer2.playerAvatarUrl" style="height: 150px;">
+                        </td>
+                        <td>
+                            <!-- <img [src]="corePlayer3.playerAvatarUrl"
+                        style="width: 250px; height: 166px; margin-top: 30px; margin-bottom: 10px;"> -->
+                            <img [src]="corePlayer3.playerAvatarUrl" style="height: 150px;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p><b>{{corePlayer1.player.full_name}}</b></p>
+                        </td>
+                        <td>
+                            <p><b>{{corePlayer2.player.full_name}}</b></p>
+                        </td>
+                        <td>
+                            <p><b>{{corePlayer3.player.full_name}}</b></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>{{corePlayer1.player.position}} ({{corePlayer1.player.team}})<br>
+                                {{corePlayer1.weeksOfService}} weeks</p>
+                        </td>
+                        <td>
+                            <p>{{corePlayer2.player.position}} ({{corePlayer2.player.team}})<br>
+                                {{corePlayer2.weeksOfService}} weeks</p>
+                        </td>
+                        <td>
+                            <p>{{corePlayer3.player.position}} ({{corePlayer3.player.team}})<br>
+                                {{corePlayer3.weeksOfService}} weeks</p>
+                        </td>
+                    </tr>
+                </table>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+
+    <div *ngIf="stats?.initialized() && !loading">
+        <div *ngIf="stats.protestWeeks && stats.protestWeeks.length > 0" style="margin-top: 25px;">
+            <span style="font-size: large; padding: 5px;">Thrown Weeks</span>
+            <mat-icon [matTooltip]="tooltip_thrownWeeks()">
+                help
+            </mat-icon>
+            <simple-table [dataSource]="stats.protestWeeks" [columnHeaders]="columnHeaders"
+                borderType="all"></simple-table>
+        </div>
+
+        <div *ngIf="stats.nukeWeeks && stats.nukeWeeks.length > 0" style="margin-top: 25px;">
+            <span style="font-size: large; padding: 5px;">Nuke Weeks</span>
+            <mat-icon [matTooltip]="tooltip_nukeWeeks()">
+                help
+            </mat-icon>
+            <simple-table [dataSource]="stats.nukeWeeks" [columnHeaders]="columnHeaders"
+                borderType="all"></simple-table>
+        </div>
+
+        <div *ngIf="stats.buddyWeeks && stats.buddyWeeks.length > 0" style="margin-top: 25px;">
+            <span style="font-size: large; padding: 5px;">Buddy Weeks</span>
+            <mat-icon [matTooltip]="tooltip_buddyWeeks()">
+                help
+            </mat-icon>
+            <simple-table [dataSource]="stats.buddyWeeks" [columnHeaders]="columnHeaders"
+                borderType="all"></simple-table>
+        </div>
+
+        <div *ngIf="stats.patheticWeeks && stats.patheticWeeks.length > 0" style="margin-top: 25px;">
+            <span style="font-size: large; padding: 5px;">Loser Weeks</span>
+            <mat-icon [matTooltip]="tooltip_patheticWeeks()">
+                help
+            </mat-icon>
+            <simple-table [dataSource]="stats.patheticWeeks" [columnHeaders]="columnHeaders"
+                borderType="all"></simple-table>
+        </div>
+    </div>
+</div>

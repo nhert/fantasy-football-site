@@ -1,0 +1,62 @@
+<div class="drafts-container">
+    <simple-spinner [loading]="loadingSelectOptions"></simple-spinner>
+    <div *ngIf="!loadingSelectOptions && selectOptions">
+        <h2>Draft History</h2>
+        <!-- <mat-card class="card-default">
+            <mat-card-content>
+                <h4>View Sleeper drafts, with traded picks displayed under the proper GM</h4> -->
+        <form>
+            <mat-form-field class="form-field-large">
+                <mat-label>Draft</mat-label>
+                <mat-select [disabled]="loading" [(ngModel)]="selectValue" name="selectDraftYearValue" required
+                    (selectionChange)="selectValueChanged()" #selectDraftYearValue="ngModel">
+                    @for (league of selectOptions; track league) {
+                    <mat-option [value]="league.LeagueId">{{league.LeagueType}} ({{league.Year}})</mat-option>
+                    }
+                </mat-select>
+                <mat-error *ngIf="selectDraftYearValue.hasError('required')">
+                    Required field
+                </mat-error>
+            </mat-form-field>
+        </form>
+        <!-- </mat-card-content>
+        </mat-card> -->
+    </div>
+
+    <simple-spinner [loading]="loading"></simple-spinner>
+    <div *ngIf="!loading && draftData" style="margin-top: 30px;">
+        <table cellSpacing="0" class="draft-table">
+            <thead>
+                <tr>
+                    <th *ngFor="let userId of draftData.users">
+                        {{getUserName(userId)}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let draftRound of getDraftRounds()">
+                    <td *ngFor="let userId of draftData.users">
+                        <ng-template
+                            *ngTemplateOutlet="draftPick; context: {$implicit: createDraftPickDataForHtml(userId, draftRound)}"></ng-template>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<ng-template #draftPick let-pickData>
+    <div [class]="pickData.colourClass">
+        <div style="width: 100%; height: 100%; ">
+            <img *ngIf="pickData.avatarUrl" [src]="pickData.avatarUrl" style="height: 40px; margin-top: 10px;">
+            <br>
+            <span style="font-size: small;"><b>{{pickData.name}}</b></span>
+            <br>
+            <span style="font-size: small;">Round {{pickData.round}}</span>
+            <br>
+            <span style="font-size: x-small;">Pick {{pickData.pick_no}}</span>
+            <span *ngIf="pickData.traded" style="font-size: x-small;"><mat-icon
+                    style="vertical-align: middle; transform: scale(0.5);">arrow_circle_left</mat-icon>{{pickData.tradedGm}}</span>
+        </div>
+    </div>
+</ng-template>

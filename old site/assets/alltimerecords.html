@@ -1,0 +1,234 @@
+<html>
+
+<body>
+    <h4>View your all time record in the B3FL</h4>
+    <div style="margin:20px auto; display: block;">
+        <label for="owner">Manager</label>
+        <select id="owner"></select>
+    </div>
+    <div style="margin:20px auto; display: block;">
+        <label for="timespan">Timespan</label>
+        <select id="timespan">
+            <option value="all">All Time</option>
+            <option value="sleeperOnly">Sleeper Era</option>
+            <option value="legacyOnly">NFL.com Era</option>
+        </select>
+        <label for="leagueType">League</label>
+        <select id="leagueType">
+            <option value="all">All Leagues</option>
+            <option value="A League">A League</option>
+            <option value="B League">B League</option>
+        </select>
+    </div>
+    <div style="margin:20px auto; display: block;">
+        <label for="showPostElimPlayoffGames">Include games played after being eliminated from playoffs</label>
+        <input type="checkbox" id="showPostElimPlayoffGames" name="showPostElimPlayoffGames" checked>
+    </div>
+    <br>
+
+    <div class="loader" id="spinner" style="display: none;"></div>
+
+    <div id="pageTableDiv"></div>
+
+    <div id="downloadCsvDiv" style="display: none;">
+        <button onclick="downloadCsv()">Download CSV</button>
+    </div>
+   
+    <script>
+        var allCurOwners = [];
+        var container = document.getElementById("pageTableDiv");
+        var spinner = document.getElementById("spinner");
+        var downloadCsvDiv = document.getElementById("downloadCsvDiv");
+        var timespanDropdown = document.getElementById("timespan");
+        var ownerDropdown = document.getElementById("owner");
+        var leagueTypeDropdown = document.getElementById("leagueType");
+        var postElimPlayoffsCheckbox = document.getElementById("showPostElimPlayoffGames");
+        var currentAllTimeData;
+        var currentlyDisplayedData;
+
+        function setLoading(isLoading) {
+            spinner.style.display = isLoading ? "block" : "none";
+            downloadCsvDiv.style.display = !isLoading ? "block" : "none";
+            timespanDropdown.disabled = isLoading;
+            ownerDropdown.disabled = isLoading;
+            postElimPlayoffsCheckbox.disabled = isLoading;
+            leagueTypeDropdown.disabled = isLoading;
+        }
+
+        function downloadCsv(){
+            if (currentlyDisplayedData){
+                console.log("Generating CSV ...");
+                var today = new Date();
+                var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+                var user = ownerDropdown.options[ownerDropdown.selectedIndex].innerHTML;
+
+                var fileName = user + "_AllTimeRecords_" + date; 
+                SleeperTools.generateCsvFile(currentlyDisplayedData, fileName);
+            }
+        }
+
+        function buildAllRecordsIntoCombined(records){
+            var wins = 0, losses = 0, ties = 0;
+
+            records.forEach(record => {
+                if (record.outcome == "win"){
+                    wins++;
+                } else if (record.outcome == "loss"){
+                    losses++;
+                } else if (record.outcome == "tie"){
+                    ties++;
+                }
+            });
+            return wins + " - " + losses + " - " + ties;
+        }
+
+        function beautifyForTableDisplay(records){
+            tableData = [];
+
+            records.forEach(record => {
+                tableData.push({
+                    "Game Type": beautifyForGameTypeColumn(record.game_type),
+                    "Result": beautifyForOutcomeColumn(record.outcome),
+                    "Pts For": record.owner_score,
+                    "Pts Against": record.opponent_score,
+                    "Year": record.year,
+                    "Week": record.week,
+                    "Platform": record.type,
+                    "League": record.league_type
+                });
+            });
+
+            return tableData;
+        }
+
+        function beautifyForGameTypeColumn(type){
+            if (type == "Regular") return "<span style=\"color: grey;\"><b>Regular Season</b></span>";
+            if (type == "Playoff") return "<span style=\"color: orange;\"><b>Playoff Game</b></span>";
+            if (type == "PlayoffPostElimination") return "<span style=\"color: red;\"><b>After Elimination</b></span>";
+        }
+
+        function beautifyForOutcomeColumn(outcome){
+            if (outcome == "win"){
+                return "<span style=\"color: green;\">WIN</span>";
+            } else if (outcome == "loss"){
+                return "<span style=\"color: red;\">LOSS</span>";
+            } else if (outcome == "tie"){
+                return "<span style=\"color: orange;\">TIE</span>";
+            } else if (outcome == "noContest"){
+                return "<span style=\"color: black;\">NO CONTEST</span>";
+            }
+        }
+
+        async function displayAllTimeRecords(){
+            var timespanValue = timespanDropdown.value;
+            var ownerValue = ownerDropdown.value;
+            
+            container.innerHTML = "";
+            
+            setLoading(true);
+            currentAllTimeData = await SleeperTools.getAllTimeRecordData(ownerValue);
+            setLoading(false);
+            refreshTable();
+        }
+
+        function refreshTable(){
+            if (!currentAllTimeData){
+                console.warn("Tried to refresh table with null currentAllTimeData");
+                return;
+            } 
+            // currentAllTimeData == all data loaded for player. Perform filters on front-end.
+
+            var dataToDisplay = currentAllTimeData;
+
+            // If timespan dropdown is anything other than all, filter.
+            if (timespanDropdown.value != "all"){
+                var typeCheck = timespanDropdown.value == "legacyOnly" ? "NFL.com" : "Sleeper";
+                dataToDisplay = dataToDisplay.filter(obj => {
+                                                        return obj.type === typeCheck
+                                                        })
+            }
+
+            if (leagueTypeDropdown.value != "all"){
+                var typeCheck = leagueTypeDropdown.value;
+                dataToDisplay = dataToDisplay.filter(obj => {
+                                                        return obj.league_type === typeCheck
+                                                        })
+            }
+
+            if (!postElimPlayoffsCheckbox.checked){
+                dataToDisplay = dataToDisplay.filter(obj => {
+                                                        return obj.game_type != "PlayoffPostElimination"
+                                                        })
+            }
+
+            // Refresh displayed stat totals
+            container.innerHTML = "";
+            container.innerHTML += "<h1 style=\"margin:0 auto; text-align: center;\"><b>" + buildAllRecordsIntoCombined(dataToDisplay) + "</b></h1><br>";
+            
+            // Refresh displayed table.
+            SleeperTools.generateTable(container, beautifyForTableDisplay(dataToDisplay));
+            currentlyDisplayedData = dataToDisplay;
+        }
+
+        function checkUserParam(){
+            var urlParams = new URLSearchParams(window.location.search);
+
+            // optional sleeper userId
+            const userParam = urlParams.get("user");
+            if (SleeperTools.doesUserRealExist(userParam)){
+                ownerDropdown.value = userParam;
+            }
+        }
+
+        async function initialize() {
+            if (SleeperTools != null){
+                var data;
+                data = await SleeperTools.getAllUserIds();
+
+                data.forEach(user => {
+                    allCurOwners.push(user);
+
+                    var opt = document.createElement('option');
+                    opt.value = user.SleeperUserId;
+                    opt.innerHTML = user.Manager;
+                    
+                    ownerDropdown.appendChild(opt);
+                });
+
+                // This will load data
+                ownerDropdown.addEventListener(
+                    'change',
+                    function() {  displayAllTimeRecords(); },
+                    false
+                );
+
+                // This will filter loaded data
+                timespanDropdown.addEventListener(
+                    'change',
+                    function() {  refreshTable(); },
+                    false
+                );
+                leagueTypeDropdown.addEventListener(
+                    'change',
+                    function() {  refreshTable(); },
+                    false
+                );
+                postElimPlayoffsCheckbox.addEventListener(
+                    'change',
+                    function() {  refreshTable(); },
+                    false
+                );
+            
+                checkUserParam();
+                displayAllTimeRecords();
+            } else {
+              console.log("No sleeper tools.");
+            }
+
+        }
+
+        initialize();
+    </script>
+</body>
+
+</html>

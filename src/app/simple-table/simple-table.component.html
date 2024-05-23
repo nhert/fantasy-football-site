@@ -1,0 +1,19 @@
+<table *ngIf="dataSource?.length > 0" [class]="className">
+    <thead>
+        <tr>
+            <th *ngFor="let header of columnHeaders | keyvalue" [style]="colWidthStyle(header.key)">
+                {{ header.value }}
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of dataSource">
+            <td *ngFor="let obj of objectValues(row)" [innerHTML]="obj">
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div *ngIf="showCsvExport && dataSource?.length > 0">
+    <button type="button" id="csvDownloadButton" (click)="exportCsv()" style="width: 120px; height: 50px;"><span
+            style="font-size: medium;">Export CSV</span></button>
+</div>

@@ -1,0 +1,65 @@
+.drafts-container {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+}
+
+.draft-pick-cell {
+    width: 100%;
+    height: 120px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+}
+
+.wr-class {
+    background-color: rgba(86, 201, 248, 0.8);
+}
+
+.rb-class {
+    background-color: rgba(143, 242, 202, 0.8);
+}
+
+.qb-class {
+    background-color: rgba(239, 116, 161, 0.8);
+}
+
+.te-class {
+    background-color: rgba(254, 174, 88, 0.8);
+}
+
+.k-class {
+    background-color: rgba(182, 185, 255, 0.8);
+}
+
+.def-class {
+    background-color: rgba(191, 117, 93, 0.8)
+}
+
+.draft-table {
+    background-color: #313131;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    min-width: 1400px;
+    table-layout: fixed;
+}
+
+.draft-table th {
+    height: 30px;
+    color: white;
+}
+
+.draft-table td th {
+    width: 100%;
+}
+
+.draft-table tr {
+    width: 100%;
+}
+
+.draft-table tbody tr {
+    height: 120px;
+}

@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { NavMenuComponent } from "./nav-menu/nav-menu.component";
+import { TopBarComponent } from "./top-bar/top-bar.component";
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+    selector: 'app-root',
+    standalone: true,
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css',
+    imports: [NavMenuComponent, TopBarComponent]
 })
 export class AppComponent {
-  title = 'hello-world';
+  title = "B3FL Site"
 }
+

@@ -1,0 +1,2 @@
+1. open cmd / shell and navigate to directory with this file
+2. run this command: curl "Accept: application/json" --output nfl_players.json https://api.sleeper.app/v1/players/nfl

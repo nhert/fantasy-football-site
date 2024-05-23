@@ -1,0 +1,38 @@
+<html>
+
+<body>
+    <div class="loader" id="spinner" style="display: none;"></div>
+    <div id="pageTableDiv"></div>
+
+    <script>
+        var spinner = document.getElementById("spinner");
+
+        function setLoading(isLoading) {
+            spinner.style.display = isLoading ? "block" : "none";
+        }
+
+        async function displayTable() {
+            let container = document.getElementById("pageTableDiv");
+           
+            if (SleeperTools != null){
+              var data;
+              
+              setLoading(true);
+              data = await SleeperTools.getGmList();
+              setLoading(false);
+
+              container.innerHTML += "<h3>Players</h3>";
+              let colWidths = [80, 100, 100, 110, 40, 40];
+              SleeperTools.generateTableWithColumnWidth(container, data, colWidths);
+
+            } else {
+              console.log("No sleeper tools.");
+            }
+
+        }
+
+        displayTable();
+    </script>
+</body>
+
+</html>

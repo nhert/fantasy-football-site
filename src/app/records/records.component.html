@@ -1,0 +1,56 @@
+<div class="records-container">
+    <h2>GM Records</h2>
+    <br>
+    <mat-card>
+        <mat-card-content>
+            <h4>View a GM's game record in the B3FL</h4>
+            <form>
+                <mat-form-field class="form-field-default">
+                    <mat-label>Manager</mat-label>
+                    <mat-select [disabled]="loading" [(ngModel)]="managerValue" name="managerValue" required
+                        (selectionChange)="managerDropdownChanged()" #managerSelect="ngModel">
+                        @for (user of allUsers; track user) {
+                        <mat-option [value]="user.sleeperId_current">{{user.name}}</mat-option>
+                        }
+                    </mat-select>
+                    <mat-error *ngIf="managerSelect.hasError('required')">
+                        Required field
+                    </mat-error>
+                </mat-form-field>
+                <br>
+                <mat-form-field class="form-field-default">
+                    <mat-label>Timespan</mat-label>
+                    <mat-select [disabled]="loading" [(ngModel)]="timespanValue" name="timespanValue"
+                        (selectionChange)="refreshDisplayedData()">
+                        <mat-option value="all">All Time</mat-option>
+                        <mat-option value="sleeperOnly">Sleeper Era</mat-option>
+                        <mat-option value="legacyOnly">NFL.com Era</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <br>
+                <mat-form-field class="form-field-default">
+                    <mat-label>League</mat-label>
+                    <mat-select [disabled]="loading" [(ngModel)]="leagueValue" name="leagueValue"
+                        (selectionChange)="refreshDisplayedData()">
+                        <mat-option value="all">All Leagues</mat-option>
+                        <mat-option value="A League">A League</mat-option>
+                        <mat-option value="B League">B League</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <section>
+                    <mat-checkbox [disabled]="loading" [(ngModel)]="showEliminatedGamesValue"
+                        name="showEliminatedGamesValue" (change)="refreshDisplayedData()" [color]="primary">Show
+                        Post-Elimination Playoff
+                        Games?</mat-checkbox>
+                </section>
+            </form>
+        </mat-card-content>
+    </mat-card>
+
+    <simple-spinner [loading]="loading"></simple-spinner>
+
+    <stats-card [statsSource]="stats" [loading]="loading"></stats-card>
+    <simple-table [dataSource]="displayedData" [columnMinWidths]="[120, 60, 60, 60, 40, 40, 60, 70]"
+        [columnHeaders]="columnHeaders" [showCsvExport]="true" [csvFilename]="getCSVFileName()"
+        borderType="all"></simple-table>
+</div>

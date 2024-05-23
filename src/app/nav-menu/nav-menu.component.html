@@ -1,0 +1,72 @@
+<mat-sidenav-container>
+  <mat-sidenav #sidenav fixedInViewport="true" mode="over" style="min-width: 300px !important;">
+    <mat-nav-list dense>
+      <a mat-list-item routerLink="home" (click)="sidenav.toggle()"><mat-icon>home</mat-icon><span
+          style="font-size: 20px; padding-left: 10px;">Home</span></a>
+      <mat-expansion-panel [class.mat-elevation-z0]="true" dense expanded>
+        <mat-expansion-panel-header>
+          <mat-icon>info</mat-icon>
+          <div><span style="font-size: 16px; padding-left: 15px;">League Info</span></div>
+        </mat-expansion-panel-header>
+        <mat-nav-list dense (click)="sidenav.toggle()">
+          <a mat-list-item routerLink="manifesto">Manifesto</a>
+          <!-- <a mat-list-item routerLink="standings">Standings</a>
+          <a mat-list-item routerLink="calendar">Calendar</a> -->
+        </mat-nav-list>
+      </mat-expansion-panel>
+      <mat-expansion-panel [class.mat-elevation-z0]="true" dense expanded>
+        <mat-expansion-panel-header>
+          <mat-icon>account_circle</mat-icon><span style="font-size: 16px; padding-left: 15px;"> Owners</span>
+        </mat-expansion-panel-header>
+        <mat-nav-list dense (click)="sidenav.toggle()">
+          <a mat-list-item routerLink="gm-list">List of GMs</a>
+          <a mat-list-item routerLink="profiles">Profiles</a>
+          <a mat-list-item routerLink="records">Records</a>
+          <a mat-list-item routerLink="drafts">Draft History</a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+      <mat-expansion-panel [class.mat-elevation-z0]="true" dense expanded>
+        <mat-expansion-panel-header>
+          <mat-icon>sports_football</mat-icon><span style="font-size: 16px; padding-left: 15px;"> Matchups</span>
+        </mat-expansion-panel-header>
+        <mat-nav-list dense (click)="sidenav.toggle()">
+          <a mat-list-item routerLink="matchup-history">Matchup History</a>
+          <!-- <a mat-list-item routerLink="upcoming-matchup">Upcoming Matchups</a>
+          <a mat-list-item routerLink="playoff-predictor">Playoff Predictor</a>
+          <a mat-list-item routerLink="elimination-line">Elimination Line</a> -->
+          <a mat-list-item routerLink="survival">Survival</a>
+          <a mat-list-item routerLink="pickems">Pick'Ems</a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+      <mat-expansion-panel [class.mat-elevation-z0]="true" dense expanded>
+        <mat-expansion-panel-header>
+          <mat-icon>video_library</mat-icon><span style="font-size: 16px; padding-left: 15px;"> Media</span>
+        </mat-expansion-panel-header>
+        <mat-nav-list dense (click)="sidenav.toggle()">
+          <a mat-list-item routerLink="pistol-guncop">Pistol & The Guncops</a>
+          <a mat-list-item routerLink="jordan-show">The Jordan Show</a>
+          <a mat-list-item routerLink="draft-videos">Draft Videos</a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+
+    <app-top-bar [sideNavRef]="sidenav"></app-top-bar>
+
+    <!-- <div style="padding-left: 15px;">
+      <button type="button" mat-button (click)="sidenav.toggle()" style="position: fixed; z-index: 10;">
+        <mat-icon>menu</mat-icon><span style="font-size: 20px;">Menu</span>
+      </button>
+    </div> -->
+
+    <div class="main">
+      <div class="content">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+
+    <div style="min-height: 50px;"></div>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

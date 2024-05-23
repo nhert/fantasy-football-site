@@ -1,0 +1,102 @@
+<html>
+
+<body>
+    <div style="margin:0 auto;">
+        <select name="year" id="yearDropdown"></select>
+    </div>
+    
+    <div style="margin:0 auto; text-align: center;" id="pageTableDiv"></div>
+   
+    <script>
+        var curYear = "", curOwner = "";
+        var allCurOwners = [];
+        var container;
+
+        function updateDisplayedYear(year, season){
+            curYear = year;
+
+            var teams = season.teams;
+            var champId;
+
+            for (var key in teams) {
+                if (teams[key].championships[year] != null){
+                    champId = key;
+                    break;
+                }
+            }
+            
+            if (season){
+                container.innerHTML = "<br>";
+
+                container.innerHTML += "<h3 style=\"color: red;\"><u>League Champion</u></h3><br>";
+                container.innerHTML += "<h4 style=\"color: red;\">" + teams[champId].manager + "</h4>";
+                container.innerHTML += "<h4 style=\"color: red;\">(" + teams[champId].name + ")</h4>";
+
+                container.innerHTML += "<br>";
+
+                container.innerHTML += "<h3><u>Highest Scoring Player</u></h3><br>";
+                container.innerHTML += "<h4>" + season.highest_player_name + " (" + season.highest_player_pos_team + ")</h4>";
+                container.innerHTML += "<h4>" + season.highest_player_points + " (Week " + season.highest_player_week + ")</h4>";
+
+                var playerOwner = teams[season.highest_player_team_id];
+                container.innerHTML += "<h5>Manager: " + playerOwner.manager + " (" + playerOwner.name + ")</h5>";
+
+                container.innerHTML += "<br>";
+
+                var teamOwner = teams[season.highest_score_team_id];
+                container.innerHTML += "<h3><u>Highest Scoring Week</u></h3><br>";
+                container.innerHTML += "<h4>" + season.highest_score + " (Week " + season.highest_score_week + ")</h4>";
+                container.innerHTML += "<h5>Manager: " + teamOwner.manager +  " (" + teamOwner.name + ")</h5>";
+
+                container.innerHTML += "<br>";
+
+                ptsOwner = teams[season.points_leader_team_id];
+                container.innerHTML += "<h3><u>Highest Points Total</u></h3><br>";
+                container.innerHTML += "<h4>" + season.points_leader_total + "pts</h4>";
+                container.innerHTML += "<h5>Manager: " + ptsOwner.manager +  " (" + ptsOwner.name + ")</h5>";
+            }
+
+            console.log(season);
+        }
+
+        async function initialize() {
+            container = document.getElementById("pageTableDiv");
+           
+            if (SleeperTools != null){
+              var data;
+
+              const legacyData = await SleeperTools.getLegacyChampLeagueData();
+              var seasons = legacyData["seasons"];
+
+              let yearLabelsArray = Object.keys(seasons);
+              let yearDropdown = document.getElementById("yearDropdown");
+              let i = 0;
+              yearLabelsArray.forEach((year) => {
+                var opt = document.createElement('option');
+                opt.value = i;
+                opt.innerHTML = year;
+                i++;
+                yearDropdown.appendChild(opt);
+              });
+
+              yearDropdown.addEventListener(
+                    'change',
+                    function() {  updateDisplayedYear(yearLabelsArray[this.value], seasons[yearLabelsArray[this.value]]); },
+                    false
+                );
+
+              var year0 = yearLabelsArray[0];
+              updateDisplayedYear(year0, seasons[year0]);
+
+        
+            } else {
+              console.log("No sleeper tools.");
+            }
+
+        }
+
+        initialize();
+    </script>
+</body>
+
+</html>

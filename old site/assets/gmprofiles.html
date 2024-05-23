@@ -1,0 +1,184 @@
+<html>
+
+<body>
+    <h3>Select a GM below</h3>
+    <div style="margin:20px auto; display: block;">
+        <label for="owner">Manager</label>
+        <select id="owner"></select>
+    </div>
+    <br>
+
+    <div class="loader" id="spinner" style="display: none;"></div>
+
+    <div id="pageTableDiv" style="text-align: center; margin:20px auto; display: block;"></div>
+   
+    <script>
+        var allCurOwners = [];
+        var container = document.getElementById("pageTableDiv");
+        var spinner = document.getElementById("spinner");
+        var ownerDropdown = document.getElementById("owner");
+        
+        var currentProfileData;
+
+        function setLoading(isLoading) {
+            spinner.style.display = isLoading ? "block" : "none";
+            ownerDropdown.disabled = isLoading;
+        }
+
+        function buildAllRecordsIntoCombined(records){
+            var wins = 0, losses = 0, ties = 0;
+
+            records.forEach(record => {
+                if (record.outcome == "win"){
+                    wins++;
+                } else if (record.outcome == "loss"){
+                    losses++;
+                } else if (record.outcome == "tie"){
+                    ties++;
+                }
+            });
+            return wins + " - " + losses + " - " + ties;
+        }
+
+        function beautifyForTableDisplay(records){
+            tableData = [];
+
+            records.forEach(record => {
+                tableData.push({
+                    "Result": beautifyForOutcomeColumn(record.outcome),
+                    "Pts For": record.owner_score,
+                    "Pts Against": record.opponent_score,
+                    "Year": record.year,
+                    "Week": record.week,
+                    "Platform": record.type,
+                    "Game Type": beautifyForGameTypeColumn(record.game_type)
+                });
+            });
+
+            return tableData;
+        }
+
+        function beautifyForOutcomeColumn(outcome){
+            if (outcome == "win"){
+                return "<span style=\"color: green;\">WIN</span>";
+            } else if (outcome == "loss"){
+                return "<span style=\"color: red;\">LOSS</span>";
+            } else if (outcome == "tie"){
+                return "<span style=\"color: orange;\">TIE</span>";
+            } else if (outcome == "noContest"){
+                return "<span style=\"color: black;\">NO CONTEST</span>";
+            }
+        }
+
+        async function displayData(){
+            var ownerValue = ownerDropdown.value;
+            
+            container.innerHTML = "";
+            
+            setLoading(true);
+            currentProfileData = await SleeperTools.getGmProfile(ownerValue);
+            setLoading(false);
+            refreshTable();
+        }
+
+        function refreshTable(){
+            if (!currentProfileData){
+                console.warn("Tried to refresh table with null currentProfileData");
+                return;
+            } 
+    
+            var dataToDisplay = currentProfileData;
+            var profile = dataToDisplay[0];
+           
+            // Refresh displayed stat totals
+            container.innerHTML += tagWith("Championships", "h2");
+            container.innerHTML += tagWith(profile.titles, "h3");
+            container.innerHTML += "<br>";
+            container.innerHTML += tagWith("Best Season", "h2");
+            container.innerHTML += tagWith(profile.seasonBest, "h3");
+            container.innerHTML += "<br>";
+            container.innerHTML += tagWith("Worst Season", "h2");
+            container.innerHTML += tagWith(profile.seasonWorst, "h3");
+            container.innerHTML += "<br>";
+            container.innerHTML += tagWith("Avg Pts For: " + profile.avgPtsFor, "h5");
+            container.innerHTML += tagWith("Avg Pts Against: " + profile.avgPtsAgainst, "h5");
+            container.innerHTML += tagWith("Career Win %: " + profile.avgWinPercent, "h5");
+            container.innerHTML += "<br>";
+            container.innerHTML += tagWith("Years Played: " + profile.yearsPlayed, "h5");
+            container.innerHTML += tagWith("Games Played: " + profile.gamesPlayed, "h5");
+            container.innerHTML += tagWith("'Nice' Scores: " + profile.niceScores, "h5");
+        }
+
+        /*
+        let gmProfile = {
+			titles: "N/A",
+			seasonBest: mostWinsRecord.record_string + " (" + mostWinsRecord.year + ")",
+			seasonWorst: mostLossesRecord.record_string + " (" + mostLossesRecord.year + ")",
+			bio: "N/A",
+			avgPtsFor: avgPtsFor.toFixed(2),
+			avgPtsAgainst: avgPtsAgainst.toFixed(2),
+			avgWinPercent: avgWinPct,
+			niceScores: niceScores,
+			gamesPlayed: recordCount,
+			yearsPlayed: yearsPlayed
+		}
+        */
+
+        function tagWith(sourceString, tag){
+            return "<{0}>{1}</{0}>".format(tag, sourceString);
+        }
+
+        String.prototype.format = function() {
+            let formatted = this;
+            for (let i = 0; i < arguments.length; i++) {
+                let regexp = new RegExp('\\{'+i+'\\}', 'gi');
+                formatted = formatted.replace(regexp, arguments[i]);
+            }
+            return formatted;
+        };
+
+        function checkUserParam(){
+            var urlParams = new URLSearchParams(window.location.search);
+
+            // optional sleeper userId
+            const userParam = urlParams.get("user");
+            if (SleeperTools.doesUserRealExist(userParam)){
+                ownerDropdown.value = userParam;
+            }
+        }
+
+        async function initialize() {
+            if (SleeperTools != null){
+                var data;
+                data = await SleeperTools.getAllUserIds();
+
+                data.forEach(user => {
+                    allCurOwners.push(user);
+
+                    var opt = document.createElement('option');
+                    opt.value = user.SleeperUserId;
+                    opt.innerHTML = user.Manager;
+                    
+                    ownerDropdown.appendChild(opt);
+                });
+
+                // This will load data
+                ownerDropdown.addEventListener(
+                    'change',
+                    function() {  displayData(); },
+                    false
+                );
+
+                checkUserParam();
+                displayData();
+            } else {
+              console.log("No sleeper tools.");
+            }
+
+        }
+
+        initialize();
+    </script>
+</body>
+
+</html>

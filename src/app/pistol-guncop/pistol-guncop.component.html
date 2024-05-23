@@ -1,0 +1,15 @@
+<div style="text-align: center;">
+    <h2>Pistol & The Gun Cops</h2>
+    <a [href]="getChannelUrl()">Click here to visit the channel</a>
+    <br>
+    <span>Please find the 10 latest Pistol & The Gun Cops videos below!</span>
+    <simple-spinner [loading]="loading"></simple-spinner>
+    <div style="height: 50px;"></div>
+
+    <div *ngIf="videos && !loading && videos.length > 0">
+        <div *ngFor="let video of videos">
+            <iframe width="905" height="498" [src]="getVideoUrl(video)" frameborder="0"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="padding: 30px;"></iframe>
+        </div>
+    </div>
+</div>
