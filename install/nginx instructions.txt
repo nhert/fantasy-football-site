@@ -1,0 +1,7 @@
+https://www.devdungeon.com/content/deploy-angular-apps-nginx
+
+1. SSH into the instance and "sudo su"
+2. Run "apt install nginx" to get the service
+3. Go to /usr/share/nginx/html/ and drop the pullSiteData.sh script
+4. Copy the contents of "default.txt" to /etc/nginx/sites-available/default/
+5. service nginx restart
