@@ -1,0 +1,21 @@
+{
+  "routes": [
+    "/calendar",
+    "/draft-videos",
+    "/drafts",
+    "/elimination-line",
+    "/gm-list",
+    "/home",
+    "/jordan-show",
+    "/manifesto",
+    "/matchup-history",
+    "/pickems",
+    "/pistol-guncop",
+    "/playoff-predictor",
+    "/profiles",
+    "/records",
+    "/standings",
+    "/survival",
+    "/upcoming-matchup"
+  ]
+}
