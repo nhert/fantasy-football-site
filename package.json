@@ -28,7 +28,6 @@
     "@syncfusion/ej2-angular-pdfviewer": "^25.2.5",
     "express": "^4.18.2",
     "localstorage-polyfill": "^1.0.1",
-    "ngx-extended-pdf-viewer": "^20.2.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

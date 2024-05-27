@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { NgxExtendedPdfViewerComponent, NgxExtendedPdfViewerService, NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 
 @Component({
   selector: 'app-manifesto',
   standalone: true,
-  imports: [NgxExtendedPdfViewerModule],
+  imports: [],
   templateUrl: './manifesto.component.html',
   styleUrl: './manifesto.component.css'
 })
