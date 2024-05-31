@@ -1,3 +1,14 @@
+.footer-dark {
+    padding-bottom: 5px;
+    padding-top: 20px;
+    color: #f0f9ff;
+    width: 100%;
+    background-color: #282d32;
+
+    position: sticky;
+    left: 0;
+}
+
 .footer-table {
     margin-left: auto;
     margin-right: auto;
@@ -14,14 +25,6 @@
 
 .footer-table tr {
     width: 100%;
-}
-
-.footer-dark {
-    padding-bottom: 5px;
-    padding-top: 40px;
-    color: #f0f9ff;
-    width: 100vh;
-    background-color: #282d32;
 }
 
 .footer-dark h3 {
