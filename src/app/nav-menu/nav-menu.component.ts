@@ -36,6 +36,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { Constants } from '../_Tools/Constants';
 import { RouterModule } from '@angular/router';
 import { TopBarComponent } from "../top-bar/top-bar.component";
+import { FooterComponent } from "../footer/footer.component";
 
 @Component({
   selector: 'app-nav-menu',
@@ -73,7 +74,8 @@ import { TopBarComponent } from "../top-bar/top-bar.component";
     MatTooltipModule,
     MatNativeDateModule,
     RouterModule,
-    TopBarComponent
+    TopBarComponent,
+    FooterComponent
   ]
 })
 export class NavMenuComponent {

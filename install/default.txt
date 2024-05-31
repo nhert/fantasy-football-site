@@ -1,6 +1,14 @@
 server {
   listen 0.0.0.0:80;
+  listen 0.0.0.0:443 ssl;
+
+  server_name  b3fl.com www.b3fl.com;
+
   root /usr/share/nginx/html/fantasy-football-site/dist/fantasy-football-site/browser/;
+
+  ssl_certificate  /etc/letsencrypt/live/b3fl.com/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/b3fl.com/privkey.pem;
+
   location / {
     try_files $uri $uri/ /index.html;
   }

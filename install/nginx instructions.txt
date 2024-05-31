@@ -1,7 +1,9 @@
 https://www.devdungeon.com/content/deploy-angular-apps-nginx
 
 1. SSH into the instance and "sudo su"
-2. Run "apt install nginx" to get the service
-3. Go to /usr/share/nginx/html/ and drop the pullSiteData.sh script
-4. Copy the contents of "default.txt" to /etc/nginx/sites-available/default/
-5. service nginx restart
+2. Run "apt install nginx" to get the service. Also run "apt install certbot" for SSL.
+3. Go to /usr/share/nginx/html/ and drop the pullSiteData.sh script. 
+4. Run ". pullSiteData.sh"
+5. Copy the contents of "default.txt" to /etc/nginx/sites-available/default/
+6. Certbot instructions: https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal&tab=standard
+7. service nginx restart
