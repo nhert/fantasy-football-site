@@ -7,7 +7,8 @@ export class Stats {
 
     private records: any[];
 
-    public titles: number;
+    public titlesALeague: number;
+    public titlesBLeague: number;
     public seasonBest: string;
     public seasonWorst: string;
     public totalWins: number;
@@ -104,7 +105,8 @@ export class Stats {
         var mostLosses = 0;
         var mostLossesRecord = null;
         var yearsPlayed = 0;
-        var titles = 0;
+        var titles_a_league = 0;
+        var titles_b_league = 0;
         for (var curYear in allRecords_groupedByYear) {
             var curRecords = allRecords_groupedByYear[curYear]; // represents a single year in records.
             var record = this.calculateRecordForYear(curRecords);
@@ -119,12 +121,17 @@ export class Stats {
                 mostLossesRecord = record;
             }
             if (record.title_win) {
-                titles++;
+                if (record.league_type == Constants.A_LEAGUE_NAME) {
+                    titles_a_league++;
+                } else {
+                    titles_b_league++;
+                }
             }
         }
 
         // Set basic stat fields on the Stats class
-        this.titles = titles;
+        this.titlesALeague = titles_a_league;
+        this.titlesBLeague = titles_b_league;
         this.seasonBest = mostWinsRecord ? mostWinsRecord.record_string + " (" + mostWinsRecord.year + ")" : "N/A";
         this.seasonWorst = mostLossesRecord ? mostLossesRecord.record_string + " (" + mostLossesRecord.year + ")" : "N/A";
         this.totalPtsFor = totalPtsFor;
@@ -166,6 +173,8 @@ export class Stats {
         var wins = 0, losses = 0, ties = 0;
         var year = 0;
         var playoffWins = 0, playoffLosses = 0;
+        var league_type;
+
         yearRecord.forEach(week => {
             if (week.game_type == Constants.GAME_TYPE_REGULAR || week.game_type == Constants.GAME_TYPE_NONE) {
                 if (week.outcome == Constants.OUTCOME_TYPE_WIN) {
@@ -176,7 +185,7 @@ export class Stats {
                     ties++;
                 }
             } else if (week.game_type == Constants.GAME_TYPE_PLAYOFF) {
-                if (week.outcome == Constants.OUTCOME_TYPE_WIN) {
+                if (week.outcome == Constants.OUTCOME_TYPE_WIN || week.outcome == Constants.OUTCOME_TYPE_BYE_WEEK) {
                     playoffWins++;
                 } else if (week.outcome == Constants.OUTCOME_TYPE_LOSS) {
                     playoffLosses++;
@@ -184,8 +193,12 @@ export class Stats {
                 //TODO: playoff stats
             }
             year = week.year;
+            league_type = week.league_type;
         });
         var game_count = wins + losses + ties;
+
+        console.log(yearRecord);
+
 
         var record = {
             wins: wins,
@@ -195,9 +208,10 @@ export class Stats {
             game_count: game_count,
             record_string: wins + " - " + losses + " - " + ties,
             win_percent: wins / game_count,
-            title_win: playoffWins == 3
+            title_win: playoffWins == 3,
+            league_type: league_type
         };
-
+        console.log(record);
         return record;
     }
 

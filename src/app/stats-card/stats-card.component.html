@@ -9,20 +9,28 @@
         </mat-expansion-panel-header>
 
         <div>
-            <span>Win % <b>{{statsSource.winPercent.toFixed(3)}}</b></span> <br>
-            <span>Total Pts For <b>{{statsSource.totalPtsFor.toFixed(2)}}</b></span> <br>
-            <span>Total Pts Against <b>{{statsSource.totalPtsAgainst.toFixed(2)}}</b></span> <br>
-            <span>Avg Pts For <b>{{statsSource.avgPtsFor.toFixed(2)}}</b></span> <br>
-            <span>Avg Pts Against <b>{{statsSource.avgPtsAgainst.toFixed(2)}}</b></span> <br>
-
+            <div *ngIf="!showAdvancedStats">
+                <span>Win % <b>{{statsSource.winPercent.toFixed(3)}}</b></span> <br>
+                <span>Total Pts For <b>{{statsSource.totalPtsFor.toFixed(2)}}</b></span> <br>
+                <span>Total Pts Against <b>{{statsSource.totalPtsAgainst.toFixed(2)}}</b></span> <br>
+                <span>Avg Pts For <b>{{statsSource.avgPtsFor.toFixed(2)}}</b></span> <br>
+                <span>Avg Pts Against <b>{{statsSource.avgPtsAgainst.toFixed(2)}}</b></span> <br>
+            </div>
             <div *ngIf="showAdvancedStats">
+                <h2 class="gold-text">Championships (A League) <b>{{statsSource.titlesALeague}}</b></h2>
+                <h2 style="color: #858585">Championships (B League) <b>{{statsSource.titlesBLeague}}</b></h2>
                 <br>
-                <span>Championships <b>{{statsSource.titles}}</b></span> <br>
                 <span>Best Season <b>{{statsSource.seasonBest}}</b></span> <br>
                 <span>Worst Season <b>{{statsSource.seasonWorst}}</b></span> <br>
                 <span>Games Played <b>{{statsSource.gamesPlayed}}</b></span> <br>
                 <span>Years of Service <b>{{statsSource.yearsPlayed}}</b></span> <br>
                 <span>'Nice' Scores <b>{{statsSource.niceWeeks}}</b></span> <br>
+                <br>
+                <span>Win % <b>{{statsSource.winPercent.toFixed(3)}}</b></span> <br>
+                <span>Total Pts For <b>{{statsSource.totalPtsFor.toFixed(2)}}</b></span> <br>
+                <span>Total Pts Against <b>{{statsSource.totalPtsAgainst.toFixed(2)}}</b></span> <br>
+                <span>Avg Pts For <b>{{statsSource.avgPtsFor.toFixed(2)}}</b></span> <br>
+                <span>Avg Pts Against <b>{{statsSource.avgPtsAgainst.toFixed(2)}}</b></span> <br>
             </div>
         </div>
     </mat-expansion-panel>
