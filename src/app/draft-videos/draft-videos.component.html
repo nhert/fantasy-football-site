@@ -1,0 +1,32 @@
+<div class="draft-vids-container">
+    <h1>Draft Lottery Videos</h1>
+    <form>
+        <mat-form-field class="form-field-large">
+            <mat-label>Year</mat-label>
+            <mat-select [(ngModel)]="selectValue" name="selectDraftYearValue" #selectDraftYearValue="ngModel">
+                <mat-option [value]="2024">2024</mat-option>  
+                <mat-option [value]="2023">2023</mat-option>  
+                <mat-option [value]="2022">2022</mat-option>  
+            </mat-select>
+        </mat-form-field>
+    </form>
+
+    <div *ngIf="selectValue == '2024'">
+        <h2>2024</h2>
+        <iframe width="603" height="339" src="https://www.youtube.com/embed/4PjUl4EnFdI" title="The B3FL 2024 Draft Selection" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <div *ngIf="selectValue == '2023'">
+        <h2>2023 - A League Round Robin</h2>
+        <iframe width="603" height="339" src="https://www.youtube.com/embed/JFcnRW8cXTg" title="B3FL Champions League - Draft Lotto - Round Robin" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+        <h2>2023 - A League Finals</h2>
+        <iframe width="603" height="339" src="https://www.youtube.com/embed/WyLNG4e4bw4" title="B3FL - Champions League - Draft Lotto -Final Locks" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+        <h2>2023 - B League</h2>
+        <iframe width="603" height="339" src="https://www.youtube.com/embed/WzBVOaLUm6s" title="B3FL - B League - Draft Lotto 2023" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <div *ngIf="selectValue == '2022'">
+        <h2>2022</h2>
+        <iframe width="603" height="339" src="https://www.youtube.com/embed/9N6fDy7JyxY" title="B3FL 2022 Season Draft Race" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+</div>

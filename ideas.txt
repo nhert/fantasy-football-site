@@ -1,3 +1,8 @@
+BUGFIXES
+- Drafts page has incorrect manager names - from people switching between leagues. find a way to use their sleeperId?
+- Championships missing (Liam) - most likely from same issue as above. Dont use roster, use sleeperId
+- 
+
 League Info
 - Overview pages
 - Dates

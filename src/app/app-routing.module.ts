@@ -11,6 +11,7 @@ import { PickemsComponent } from './pickems/pickems.component';
 import { PistolGuncopComponent } from './pistol-guncop/pistol-guncop.component';
 import { JordanShowComponent } from './jordan-show/jordan-show.component';
 import { DraftsComponent } from './drafts/drafts.component';
+import { DraftVideosComponent } from './draft-videos/draft-videos.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -34,7 +35,7 @@ export const routes: Routes = [
   // Media
   { path: 'pistol-guncop', component: PistolGuncopComponent },
   { path: 'jordan-show', component: JordanShowComponent },
-  { path: 'draft-videos', component: LandingPageComponent },
+  { path: 'draft-videos', component: DraftVideosComponent },
 ];
 
 @NgModule({
