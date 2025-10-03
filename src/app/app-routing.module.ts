@@ -12,6 +12,7 @@ import { PistolGuncopComponent } from './pistol-guncop/pistol-guncop.component';
 import { JordanShowComponent } from './jordan-show/jordan-show.component';
 import { DraftsComponent } from './drafts/drafts.component';
 import { DraftVideosComponent } from './draft-videos/draft-videos.component';
+import { LiveScoresComponent } from './live-scores/live-scores.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -26,6 +27,7 @@ export const routes: Routes = [
   { path: 'records', component: RecordsComponent },
   { path: 'drafts', component: DraftsComponent },
   // Matchups
+  { path: 'live-scores', component: LiveScoresComponent },
   { path: 'matchup-history', component: MatchupHistoryComponent },
   { path: 'upcoming-matchup', component: LandingPageComponent },
   { path: 'playoff-predictor', component: LandingPageComponent },

@@ -1,0 +1,141 @@
+<div class="live-scores-container">
+    <h1>B3FL Live Scores</h1>
+    <p>Click on a matchup to see individual player scores</p>
+    <p>The refresh button can be used to quickly update scores without a full page reload</p>
+
+    <div style="padding-left: 15px;">
+        <button style="width: 100px; height: 100px;" [disabled]="refreshButtonDisabled()"
+            (click)="refreshDisplayedData()"><mat-icon style="transform: scale(2);">refresh</mat-icon></button>
+    </div>
+
+    <simple-spinner [loading]="loading"></simple-spinner>
+
+    <div *ngIf="isLoaded()" id="live-scores-div">
+        <h2>{{nflData.year}}</h2>
+        <h2>Week {{nflData.week}}</h2>
+        <br>
+        <h2>A League</h2>
+        <div *ngFor="let matchup of aLeagueMatchups">
+            <mat-expansion-panel [hideToggle]="true" [expanded]="false">
+                <mat-expansion-panel-header class="please" [collapsedHeight]="'250px'" [expandedHeight]="'250px'">
+                    <div class="card-content-wrapper">
+                        <div class="left-content">
+                            <mat-label style="font-size: 40px;">{{matchup[0].points}}</mat-label>
+                            <br>
+                            <br>
+                            <mat-label style="font-size: 18px;">{{matchup[0].teamName}}</mat-label>
+                            <br>
+                            <br>
+                            <img src="{{matchup[0].avatarUrl}}" alt="Player Avatar" width=80px height=80px>
+                            <br>
+                            <mat-label>{{matchup[0].managerName}} ({{matchup[0].sleeperName}})</mat-label>
+                        </div>
+                        <div class="middle-content">
+                            <mat-label style="font-size: 24px;"> VS </mat-label>
+                        </div>
+                        <div class="right-content">
+                            <mat-label style="font-size: 40px;">{{matchup[1].points}}</mat-label>
+                            <br>
+                            <br>
+                            <mat-label style="font-size: 18px;">{{matchup[1].teamName}}</mat-label>
+                            <br>
+                            <br>
+                            <img src="{{matchup[1].avatarUrl}}" alt="Player Avatar" width=80px height=80px>
+                            <br>
+                            <mat-label>{{matchup[1].managerName}} ({{matchup[1].sleeperName}})</mat-label>
+                        </div>
+                    </div>
+                </mat-expansion-panel-header>
+
+                <div class="card-content-wrapper">
+                    <div class="left-content player-content-left">
+                        <div class="player-content-style-left">
+                            <div *ngFor="let data of matchup[0].startingPlayers">
+                                <p>
+                                    <span
+                                        style="font-size: 20; margin-right: 5px;"><em>{{data.player.position}}</em></span>
+                                    <span style="font-size: 14; margin-right: 15px;">{{data.player.full_name}}</span>
+                                    <span style="font-size: 30;"><b>{{data.playerScore}}</b></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right-content player-content-right">
+                        <div class="player-content-style-right">
+                            <div *ngFor="let data of matchup[1].startingPlayers">
+                                <p>
+                                    <span style="font-size: 30; margin-right: 15px;"><b>{{data.playerScore}}</b></span>
+                                    <span style="font-size: 14; margin-right: 5px;">{{data.player.full_name}}</span>
+                                    <span style="font-size: 20;"><em>{{data.player.position}}</em></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+            <div style="height: 20px;"></div>
+        </div>
+        <h2>B League</h2>
+        <div *ngFor="let matchup of bLeagueMatchups">
+            <mat-expansion-panel [hideToggle]="true" [expanded]="false">
+                <mat-expansion-panel-header class="please" [collapsedHeight]="'250px'" [expandedHeight]="'250px'">
+                    <div class="card-content-wrapper">
+                        <div class="left-content">
+                            <mat-label style="font-size: 40px;">{{matchup[0].points}}</mat-label>
+                            <br>
+                            <br>
+                            <mat-label style="font-size: 18px;">{{matchup[0].teamName}}</mat-label>
+                            <br>
+                            <br>
+                            <img src="{{matchup[0].avatarUrl}}" alt="Player Avatar" width=80px height=80px>
+                            <br>
+                            <mat-label>{{matchup[0].managerName}} ({{matchup[0].sleeperName}})</mat-label>
+                        </div>
+                        <div class="middle-content">
+                            <mat-label style="font-size: 24px;"> VS </mat-label>
+                        </div>
+                        <div class="right-content">
+                            <mat-label style="font-size: 40px;">{{matchup[1].points}}</mat-label>
+                            <br>
+                            <br>
+                            <mat-label style="font-size: 18px;">{{matchup[1].teamName}}</mat-label>
+                            <br>
+                            <br>
+                            <img src="{{matchup[1].avatarUrl}}" alt="Player Avatar" width=80px height=80px>
+                            <br>
+                            <mat-label>{{matchup[1].managerName}} ({{matchup[1].sleeperName}})</mat-label>
+                        </div>
+                    </div>
+                </mat-expansion-panel-header>
+
+                <div class="card-content-wrapper">
+                    <div class="left-content player-content-left">
+                        <div class="player-content-style-left">
+                            <div *ngFor="let data of matchup[0].startingPlayers">
+                                <p>
+                                    <span
+                                        style="font-size: 20; margin-right: 5px;"><em>{{data.player.position}}</em></span>
+                                    <span style="font-size: 14; margin-right: 15px;">{{data.player.full_name}}</span>
+                                    <span style="font-size: 30;"><b>{{data.playerScore}}</b></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right-content player-content-right">
+                        <div class="player-content-style-right">
+                            <div *ngFor="let data of matchup[1].startingPlayers">
+                                <p>
+                                    <span style="font-size: 30; margin-right: 15px;"><b>{{data.playerScore}}</b></span>
+                                    <span style="font-size: 14; margin-right: 5px;">{{data.player.full_name}}</span>
+                                    <span style="font-size: 20;"><em>{{data.player.position}}</em></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+            <div style="height: 20px;"></div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,51 @@
+ .live-scores-container {
+     text-align: center;
+     width: 500px;
+ }
+
+ .card-content-wrapper {
+     display: flex;
+     justify-content: space-between;
+     /* Distributes items with space between them */
+     align-items: center;
+     /* Vertically centers items */
+     width: 100%;
+     /* Ensure container takes full width */
+ }
+
+ :host ::ng-deep .mat-content.mat-content-hide-toggle {
+     margin-right: 0 !important;
+ }
+
+ .left-content,
+ .right-content {
+     /* Add specific styles for each div as needed */
+
+     margin-top: 10px;
+     margin-bottom: 10px;
+     flex: 1
+ }
+
+ .middle-content {
+     flex: 0
+ }
+
+ .player-content-left {
+     margin-right: 20px;
+ }
+
+ .player-content-right {
+     margin-left: 20px;
+ }
+
+ .player-content-style-left {
+     text-align: right;
+ }
+
+ .player-content-style-right {
+     text-align: left;
+ }
+
+ span {
+     white-space: pre-wrap;
+ }

@@ -136,8 +136,8 @@ export class Constants {
 		},
 		{
 			name: "Ryan",
-			sleeperId_current: "867294931482505216",
-			sleeperIds_old: [],
+			sleeperId_current: "1129286835634581504",
+			sleeperIds_old: ["867294931482505216"],
 			legacyId: "userId-25196559",
 			currentLeague: this.B_LEAGUE_NAME
 		},
@@ -291,7 +291,7 @@ export class Constants {
 		return "/assets/images/team-logos/" + playerId + ".png";
 	}
 
-	public static getNflPlayerData(playerKeyValueObj: any) {
+	public static getNflPlayerDataForGmProfile(playerKeyValueObj: any) {
 		if (nflPlayersJson[playerKeyValueObj.key]) {
 			return {
 				player: nflPlayersJson[playerKeyValueObj.key],
@@ -303,6 +303,25 @@ export class Constants {
 			player: {},
 			weeksOfService: 0,
 			playerAvatarUrl: ""
+		}
+	}
+
+	public static getNflPlayerDataLiveScores(playerKey: string, playerScore: any) {
+		if (nflPlayersJson[playerKey]) {
+			var toReturn = {
+				player: nflPlayersJson[playerKey],
+				playerAvatarUrl: ("https://sleepercdn.com/content/nfl/players/thumb/" + playerKey + ".jpg"),
+				playerScore: playerScore
+			}
+			if (!toReturn.player.full_name) {
+				toReturn.player.full_name = toReturn.player.team;
+			}
+			return toReturn;
+		}
+		return {
+			player: { full_name: "EMPTY" },
+			playerAvatarUrl: "",
+			playerScore: 0
 		}
 	}
 

@@ -26,6 +26,9 @@ export class SleeperApiService {
 	private getNflStateRestAPI(): string {
 		return "https://api.sleeper.app/v1/state/nfl";
 	}
+	private getLeagueUserDataRestAPI(leagueId: string): string {
+		return "https://api.sleeper.app/v1/league/" + leagueId + "/users";
+	}
 
 	//#endregion
 	//#region Public API
@@ -83,9 +86,9 @@ export class SleeperApiService {
 
 		let core3 = []
 		if (sortedArray.length > 3) {
-			core3 = [Constants.getNflPlayerData({ key: players[0], value: sortedMap.get(players[0]) }),
-			Constants.getNflPlayerData({ key: players[1], value: sortedMap.get(players[1]) }),
-			Constants.getNflPlayerData({ key: players[2], value: sortedMap.get(players[2]) })]
+			core3 = [Constants.getNflPlayerDataForGmProfile({ key: players[0], value: sortedMap.get(players[0]) }),
+			Constants.getNflPlayerDataForGmProfile({ key: players[1], value: sortedMap.get(players[1]) }),
+			Constants.getNflPlayerDataForGmProfile({ key: players[2], value: sortedMap.get(players[2]) })]
 		}
 
 		//console.log(core3);
@@ -266,6 +269,147 @@ export class SleeperApiService {
 		}
 
 		return allSleeperLeagueIds;
+	}
+
+	public async getLiveScores(cacheData) {
+		const nflState = await fetch(this.getNflStateRestAPI()).then((res) => res.json());
+		//console.log(nflState);
+		var currentNflWeek = nflState.week;
+
+		var aLeagueMatchups = [];
+		var bLeagueMatchups = [];
+		var aLeagueRosterMap = new Map<number, any>(); // rosterId -> sleeperUserId
+		var bLeagueRosterMap = new Map<number, any>();
+		var userInfoMap = new Map<number, any>(); // sleeperUserId -> user data
+
+		const aLeagueMatchupData = await fetch(this.getLeagueRestAPI(Constants.A_LEAGUE_SLEEPER_ID) + "/matchups/" + currentNflWeek).then((res) => res.json());
+		const bLeagueMatchupData = await fetch(this.getLeagueRestAPI(Constants.B_LEAGUE_SLEEPER_ID) + "/matchups/" + currentNflWeek).then((res) => res.json());
+		var numALeagueMatchups = Math.floor(aLeagueMatchupData.length / 2);
+		var numBLeagueMatchups = Math.floor(bLeagueMatchupData.length / 2);
+
+		if (cacheData) {
+			console.log("getLiveScores() Refreshing with cached data");
+			aLeagueRosterMap = cacheData.aLeagueRosterMap;
+			bLeagueRosterMap = cacheData.bLeagueRosterMap;
+			userInfoMap = cacheData.userInfoMap;
+		} else {
+			console.log("getLiveScores() Loading fresh data from SleeperAPI");
+			const aLeagueRosterData = await this.getSleeperRosterRecords(Constants.A_LEAGUE_SLEEPER_ID);
+			const bLeagueRosterData = await this.getSleeperRosterRecords(Constants.B_LEAGUE_SLEEPER_ID);
+			const aLeagueUserData = await fetch(this.getLeagueUserDataRestAPI(Constants.A_LEAGUE_SLEEPER_ID)).then((res) => res.json());
+			const bLeagueUserData = await fetch(this.getLeagueUserDataRestAPI(Constants.B_LEAGUE_SLEEPER_ID)).then((res) => res.json());
+			for (var roster of aLeagueRosterData) {
+				var userId = roster.owner_id;
+				var userMetadata = aLeagueUserData.find(obj => obj.user_id == userId).metadata;
+				aLeagueRosterMap.set(roster.roster_id, { userId: userId, teamName: userMetadata.team_name, teamAvatar: userMetadata.avatar });
+			}
+			for (var roster of bLeagueRosterData) {
+				var userId = roster.owner_id;
+				var userMetadata = bLeagueUserData.find(obj => obj.user_id == userId).metadata;
+				bLeagueRosterMap.set(roster.roster_id, { userId: userId, teamName: userMetadata.team_name, teamAvatar: userMetadata.avatar });
+			}
+			for (let i = 0; i < Constants.USERS.length; i++) {
+				const userReal = Constants.USERS[i];
+				const userData = await this.getSleeperUserData(userReal.sleeperId_current);
+				// Get the values of the current object in the JSON data 
+				userInfoMap.set(userData.user_id,
+					{
+						avatar: "https://sleepercdn.com/avatars/" + userData.avatar,
+						sleeperName: userData.display_name,
+						managerName: userReal.name,
+					}
+				);
+			}
+		}
+
+		//console.log(aLeagueMatchupData);
+		//console.log(aLeagueRosterMap);
+		//console.log(userInfoMap);
+		//console.log(bLeagueMatchupData);
+
+		for (let matchupId = 1; matchupId <= numALeagueMatchups; matchupId++) {
+			//console.log("looking for matchup=" + matchupId);
+			var playersInMatchup = [];
+			for (var matchupData of aLeagueMatchupData) {
+				if (matchupData.matchup_id == matchupId) {
+					var userRoster = aLeagueRosterMap.get(matchupData.roster_id);
+					var userId = userRoster.userId;
+					var user = userInfoMap.get(userId);
+					var teamName = userRoster.teamName;
+					var teamAvatarUrl = userRoster.teamAvatar;
+					if (!teamName) {
+						teamName = "Team " + user.sleeperName;
+					}
+					var startingPlayersData = [];
+					for (var player in matchupData.starters) {
+						var playerId = matchupData.starters[player];
+						startingPlayersData.push(Constants.getNflPlayerDataLiveScores(playerId, matchupData.starters_points[player]));
+					}
+
+					playersInMatchup.push({
+						points: matchupData.points,
+						rosterId: matchupData.roster_id,
+						userId: userId,
+						avatarUrl: teamAvatarUrl ? teamAvatarUrl : user.avatar,
+						sleeperName: user.sleeperName,
+						managerName: user.managerName,
+						teamName: teamName,
+						startingPlayers: startingPlayersData
+					});
+				}
+			}
+			aLeagueMatchups.push(playersInMatchup);
+		}
+		for (let matchupId = 1; matchupId <= numBLeagueMatchups; matchupId++) {
+			//console.log("looking for matchup=" + matchupId);
+			var playersInMatchup = [];
+			for (var matchupData of bLeagueMatchupData) {
+				if (matchupData.matchup_id == matchupId) {
+					var userRoster = bLeagueRosterMap.get(matchupData.roster_id);
+					var userId = userRoster.userId;
+					var user = userInfoMap.get(userId);
+					var teamName = userRoster.teamName;
+					var teamAvatarUrl = userRoster.teamAvatar;
+					if (!teamName) {
+						teamName = "Team " + user.sleeperName;
+					}
+					var startingPlayersData = [];
+					for (var player in matchupData.starters) {
+						var playerId = matchupData.starters[player];
+						startingPlayersData.push(Constants.getNflPlayerDataLiveScores(playerId, matchupData.starters_points[player]));
+					}
+
+					playersInMatchup.push({
+						points: matchupData.points,
+						rosterId: matchupData.roster_id,
+						userId: userId,
+						avatarUrl: teamAvatarUrl ? teamAvatarUrl : user.avatar,
+						sleeperName: user.sleeperName,
+						managerName: user.managerName,
+						teamName: teamName,
+						startingPlayers: startingPlayersData
+					});
+				}
+			}
+			bLeagueMatchups.push(playersInMatchup);
+		}
+
+		//console.log(aLeagueMatchups);
+		//console.log(bLeagueMatchups);
+
+		return {
+			aLeague: aLeagueMatchups,
+			bLeague: bLeagueMatchups,
+			nflData: {
+				year: nflState.league_season,
+				week: currentNflWeek
+			},
+			cache: {
+				aLeagueRosterMap: aLeagueRosterMap,
+				bLeagueRosterMap: bLeagueRosterMap,
+				userInfoMap: userInfoMap
+			}
+		}
 	}
 
 	//#endregion
