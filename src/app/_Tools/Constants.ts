@@ -5,10 +5,10 @@ import nflPlayersJson from '../../assets/nflPlayers/nfl_players.json'
 // Class holding constants related to the site
 export class Constants {
 	// Set to the most current Sleeper League ID. This will update when commish starts a new season.
-	static A_LEAGUE_SLEEPER_ID = "968583157932937216";
-	static B_LEAGUE_SLEEPER_ID = "992194800943939584";
+	static A_LEAGUE_SLEEPER_ID = "1257104499407863808";
+	static B_LEAGUE_SLEEPER_ID = "1257479897941553152";
 
-	static PICKEMS_URL = "https://fantasy-sports-extension.web.app/login";
+	static PICKEMS_URL = "https://leagueside.app/";
 	static PISTOL_GUNCOP_URL = "https://www.youtube.com/@bfltwo5555";
 	static PISTOL_GUNCOP_YT_CHANNEL_ID = "UCqd9SN4AnC9RfJDMwzzVsfQ";
 	static JORDAN_SHOW_URL = "https://www.twitch.tv/jordstirling";
@@ -17,13 +17,20 @@ export class Constants {
 	// Record correction constants for 2021/2022 since papa t shared team with jer
 	static A_LEAGUE_SLEEPER_ID_2022_SEASON = "865477710976286720"; // using for user generation atm
 	static B_LEAGUE_SLEEPER_ID_2022_SEASON = "866171664994541568"; // record correction for PaPa T in 2022
+	static B_LEAGUE_SLEEPER_ID_2023_SEASON = "992194800943939584"; // record correction for roster owners
 	static PAPA_T_SLEEPER_ID_RECORD_CORRECTION = "868693802389540864";
 	static JER_SLEEPER_ID_RECORD_CORRECTION = "471702444481441792";
+	static LIAM_SLEEPER_ID_RECORD_CORRECTION_2023 = "867479730138583040";
+	static RYAN_SLEEPER_ID_RECORD_CORRECTION_2023 = "867294931482505216";
+	static PICCO_SLEEPER_ID_RECORD_CORRECTION_2023 = "865480383385448448";
+	static ALEX_SLEEPER_ID_RECORD_CORRECTION_2023 = "731243643578490880";
 
 	// Generic
 	// Display name for leagues
 	static A_LEAGUE_NAME = "A League";
 	static B_LEAGUE_NAME = "B League";
+	static RETIRED_LEAGUE_NAME = "Retired";
+	static HIATUS_LEAGUE_NAME = "On Hiatus";
 
 	static PLATFORM_SLEEPER = "Sleeper";
 	static PLATFORM_NFL_LEGACY = "NFL.com";
@@ -97,14 +104,14 @@ export class Constants {
 			sleeperId_current: "731243643578490880",
 			sleeperIds_old: [],
 			legacyId: "userId-19416897",
-			currentLeague: this.A_LEAGUE_NAME
+			currentLeague: this.HIATUS_LEAGUE_NAME
 		},
 		{
 			name: "Picco",
 			sleeperId_current: "865480383385448448",
 			sleeperIds_old: [],
 			legacyId: "userId-28536059",
-			currentLeague: this.A_LEAGUE_NAME
+			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
 			name: "Jordan S.",
@@ -132,7 +139,7 @@ export class Constants {
 			sleeperId_current: "867294931482505216",
 			sleeperIds_old: [],
 			legacyId: "userId-25196559",
-			currentLeague: this.A_LEAGUE_NAME
+			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
 			name: "Jordan I.",
@@ -167,7 +174,7 @@ export class Constants {
 			sleeperId_current: "867587986001403904",
 			sleeperIds_old: [],
 			legacyId: "userId-5339416",
-			currentLeague: this.B_LEAGUE_NAME
+			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
 			name: "Jake",
@@ -195,20 +202,41 @@ export class Constants {
 			sleeperId_current: "867598396356259840",
 			sleeperIds_old: [],
 			legacyId: "userId-14721116",
-			currentLeague: this.B_LEAGUE_NAME
+			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
 			name: "Papa T",
 			sleeperId_current: "868693802389540864",
 			sleeperIds_old: [],
 			legacyId: "userId-90093",
-			currentLeague: this.A_LEAGUE_NAME
+			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
 			name: "Dan",
 			sleeperId_current: "868705613276925952",
 			sleeperIds_old: [],
 			legacyId: "userId-7401235",
+			currentLeague: this.B_LEAGUE_NAME
+		},
+		{
+			name: "Jackson",
+			sleeperId_current: "1130918451767369728",
+			sleeperIds_old: [],
+			legacyId: "-",
+			currentLeague: this.A_LEAGUE_NAME
+		},
+		{
+			name: "Big Red",
+			sleeperId_current: "1130914622246318080",
+			sleeperIds_old: [],
+			legacyId: "-",
+			currentLeague: this.A_LEAGUE_NAME
+		},
+		{
+			name: "Cole",
+			sleeperId_current: "868742012944420864",
+			sleeperIds_old: [],
+			legacyId: "-",
 			currentLeague: this.B_LEAGUE_NAME
 		}
 	]

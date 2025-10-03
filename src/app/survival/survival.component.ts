@@ -9,4 +9,7 @@ import { Constants } from '../_Tools/Constants';
   styleUrl: './survival.component.css'
 })
 export class SurvivalComponent {
+  ngOnInit(): void {
+    window.location.href = Constants.PICKEMS_URL;
+  }
 }

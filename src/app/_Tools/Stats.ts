@@ -19,6 +19,8 @@ export class Stats {
     public winPercent: number; // float
     public avgPtsFor: number; // float - avg across years played
     public avgPtsAgainst: number; // float - avg across years played
+    public highScore: number;
+    public lowScore: number;
     public gamesPlayed: number;
     public yearsPlayed: number;
     public niceWeeks: number;
@@ -58,6 +60,9 @@ export class Stats {
         var totalTies = 0;
         var niceScores = 0;
 
+        var highestPtsFor = 0;
+        var lowestPtsFor = 10000;
+
         var patheticScores = [];
         var timesNuked = [];
         var protestWeeks = [];
@@ -82,6 +87,14 @@ export class Stats {
 
             avgPtsFor += parseFloat(record.owner_score);
             avgPtsAgainst += parseFloat(record.opponent_score);
+
+            var scoreConvert = parseFloat(record.owner_score);
+            if (scoreConvert > highestPtsFor) {
+                highestPtsFor = scoreConvert;
+            }
+            if (scoreConvert < lowestPtsFor && scoreConvert > 0) {
+                lowestPtsFor = scoreConvert;
+            }
 
             if (record.outcome == Constants.OUTCOME_TYPE_WIN) {
                 totalWins++;
@@ -144,6 +157,8 @@ export class Stats {
         this.totalWins = totalWins;
         this.totalLosses = totalLosses;
         this.totalTies = totalTies;
+        this.highScore = highestPtsFor;
+        this.lowScore = lowestPtsFor;
 
         // Stats with record arrays
         this.niceWeeks = niceScores;
@@ -197,7 +212,7 @@ export class Stats {
         });
         var game_count = wins + losses + ties;
 
-        console.log(yearRecord);
+        //console.log(yearRecord);
 
 
         var record = {
@@ -211,7 +226,7 @@ export class Stats {
             title_win: playoffWins == 3,
             league_type: league_type
         };
-        console.log(record);
+        //console.log(record);
         return record;
     }
 

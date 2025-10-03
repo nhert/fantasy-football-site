@@ -23,6 +23,9 @@ export class SleeperApiService {
 	private getUserRestAPI(userId: string): string {
 		return "https://api.sleeper.app/v1/user/" + userId;
 	}
+	private getNflStateRestAPI(): string {
+		return "https://api.sleeper.app/v1/state/nfl";
+	}
 
 	//#endregion
 	//#region Public API
@@ -101,11 +104,9 @@ export class SleeperApiService {
 		var user2Ids = Constants.getAllUserSleeperIds(sleeperId2);
 
 		var legacyRecords = await this.getMatchupsLegacy(sleeperId1, sleeperId2); // array
-		//var sleeperRecords = await getMatchupsSleeper(sleeperId1, sleeperId2);
 
 		var records = [];
 		legacyRecords.forEach(record => { records.push(record); });
-		//sleeperRecords.forEach(record => { records.push(record);});
 
 		// Loop through the user(s) previous sleeper ids to collect old records.
 		for (let i = 0; i < user1Ids.length; i++) {
@@ -276,13 +277,14 @@ export class SleeperApiService {
 		var allLeagues = await this.getSleeperLeagueIdsAndAllPreviousLeagueIds();
 
 		var records = [];
-		// If you played Jers ID in sleeper in B League 2022 - you actually played Papa T. If in , search using jers sleeperId since his account controlled the team
+
+		const nflState = await fetch(this.getNflStateRestAPI()).then((res) => res.json());
+		var currentNflWeek = nflState.week;
 
 		for (var curLeague of allLeagues) {
 			var leagueId = curLeague.LeagueId;
 
-			const leagueRosterData = await fetch(this.getLeagueRestAPI(leagueId) + "/rosters")
-				.then((res) => res.json());
+			const leagueRosterData = await this.getSleeperRosterRecords(leagueId);
 			const leagueData = await fetch(this.getLeagueRestAPI(leagueId))
 				.then((res) => res.json());
 
@@ -315,9 +317,16 @@ export class SleeperApiService {
 				}
 			});
 
+			// If we are currently on the elapsed Sleeper season (this year), only load weeks up to the current NFL week.
+			// I.e., do not load weeks that have not happened yet
+			var weekMax = 17;
+			if (leagueId == Constants.A_LEAGUE_SLEEPER_ID || leagueId == Constants.B_LEAGUE_SLEEPER_ID) {
+				weekMax = currentNflWeek - 1;
+			}
+
 			//console.log("Jake " + roster1Id + " rimon " + roster2Id);
 			if (roster1Id != -1 && roster2Id != -1) {
-				for (let week = 1; week <= 17; week++) {
+				for (let week = 1; week <= weekMax; week++) {
 					const matchups = await fetch(this.getLeagueRestAPI(leagueId) + "/matchups/" + week).then((res) => res.json());
 
 					var user1score = -1, user2score = -1, outcome = "", year = "", matchupId1 = -1, matchupId2 = -2
@@ -474,13 +483,29 @@ export class SleeperApiService {
 		var isPaPaT_Rule = sleeperId == Constants.PAPA_T_SLEEPER_ID_RECORD_CORRECTION; // If you played him in legacy, pull using jers NFL ID
 		var isJer_Rule = sleeperId == Constants.JER_SLEEPER_ID_RECORD_CORRECTION;
 
-		// If you played Jers ID in sleeper in B League 2022 - you actually played Papa T. If in , search using jers sleeperId since his account controlled the team
+		const nflState = await fetch(this.getNflStateRestAPI()).then((res) => res.json());
+		var currentNflWeek = nflState.week;
+		/*
+			example object
+			{
+				"week": 5,
+				"leg": 5,
+				"season": "2025",
+				"season_type": "regular",
+				"league_season": "2025",
+				"previous_season": "2024",
+				"season_start_date": "2025-09-04",
+				"display_week": 5,
+				"league_create_season": "2025",
+				"season_has_scores": true
+			}
+		*/
 
+		// If you played Jers ID in sleeper in B League 2022 - you actually played Papa T. If in , search using jers sleeperId since his account controlled the team
 		for (var curLeague of allLeagues) {
 			var leagueId = curLeague.LeagueId;
 
-			const leagueRosterData = await fetch(this.getLeagueRestAPI(leagueId) + "/rosters")
-				.then((res) => res.json());
+			const leagueRosterData = await this.getSleeperRosterRecords(leagueId);
 			const leagueData = await fetch(this.getLeagueRestAPI(leagueId))
 				.then((res) => res.json());
 			const playoffData = await fetch(this.getLeagueRestAPI(leagueId) + "/winners_bracket")
@@ -516,13 +541,20 @@ export class SleeperApiService {
 				}
 			});
 
+			// If we are currently on the elapsed Sleeper season (this year), only load weeks up to the current NFL week.
+			// I.e., do not load weeks that have not happened yet
+			var weekMax = 17;
+			if (leagueId == Constants.A_LEAGUE_SLEEPER_ID || leagueId == Constants.B_LEAGUE_SLEEPER_ID) {
+				weekMax = currentNflWeek - 1;
+			}
+
 			//console.log("Found player roster ID %s for League %s", rosterId, leagueId);
 
 			var lastPlayoffResult = "";
 			var isPlayoffsPostElim = false;
 
 			if (rosterId != -1) {
-				for (let week = 1; week <= 17; week++) {
+				for (let week = 1; week <= weekMax; week++) {
 					const matchups = await fetch(this.getLeagueRestAPI(leagueId) + "/matchups/" + week).then((res) => res.json());
 
 					//console.log(matchups);
@@ -737,7 +769,29 @@ export class SleeperApiService {
 		return records;
 	}
 
+	// Records need a small correction.
+	// In 2023, Jer reassigned some of the roster owners in B league by mistake (transferring GMs for promotion/demotion to the season that just happened)
+	private async getSleeperRosterRecords(leagueId) {
+		const leagueRosterData = await fetch(this.getLeagueRestAPI(leagueId) + "/rosters")
+			.then((res) => res.json());
 
+		/*
+		JStir used commissioner powers to remove Stirling97 731243643578490880 from Team 2 
+		JStir used commissioner powers to remove PistolPicco 865480383385448448 from Team 3
+		JStir used commissioner powers to remove str8bred 867294931482505216 from Team 5
+		JStir used commissioner powers to remove lmolo4 867479730138583040 from Team 7
+		JStir used commissioner powers to assign natehertz to Team 7
+		JStir used commissioner powers to assign michaelbell04 to Team 2
+		*/
+		if (leagueId == Constants.B_LEAGUE_SLEEPER_ID_2023_SEASON) { // Perform roster owner corrections.
+			leagueRosterData[1].owner_id = Constants.ALEX_SLEEPER_ID_RECORD_CORRECTION_2023;
+			leagueRosterData[2].owner_id = Constants.PICCO_SLEEPER_ID_RECORD_CORRECTION_2023;
+			leagueRosterData[4].owner_id = Constants.RYAN_SLEEPER_ID_RECORD_CORRECTION_2023;
+			leagueRosterData[6].owner_id = Constants.LIAM_SLEEPER_ID_RECORD_CORRECTION_2023;
+		}
+
+		return leagueRosterData;
+	}
 
 	//#endregion
 }
