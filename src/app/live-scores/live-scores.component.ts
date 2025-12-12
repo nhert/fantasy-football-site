@@ -7,7 +7,6 @@ import { MatLabel, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
-import { SimpleTableComponent } from '../simple-table/simple-table.component';
 import { SimpleSpinnerComponent } from "../simple-spinner/simple-spinner.component";
 import { SleeperApiService } from '../_API/sleeper-api.service';
 import { MatIcon } from "@angular/material/icon";
@@ -16,7 +15,7 @@ import { MatExpansionPanel, MatExpansionModule } from "@angular/material/expansi
 @Component({
   selector: 'app-live-scores',
   standalone: true,
-  imports: [SimpleTableComponent, MatProgressSpinnerModule, CommonModule, FormsModule, MatLabel, MatInputModule, MatFormFieldModule, MatSelectModule, MatDividerModule, ReactiveFormsModule, MatCardModule, SimpleSpinnerComponent, MatIcon, MatExpansionPanel, MatExpansionModule],
+  imports: [MatProgressSpinnerModule, CommonModule, FormsModule, MatLabel, MatInputModule, MatFormFieldModule, MatSelectModule, MatDividerModule, ReactiveFormsModule, MatCardModule, SimpleSpinnerComponent, MatIcon, MatExpansionPanel, MatExpansionModule],
   templateUrl: './live-scores.component.html',
   styleUrl: './live-scores.component.css'
 })

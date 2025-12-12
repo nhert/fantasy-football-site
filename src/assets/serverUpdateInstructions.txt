@@ -1,0 +1,5 @@
+1. ng build to create a new dist
+2. Upload new dist changes to Github
+3. EC2 connect to the instance and go to /usr/share/nginx/html/fantasy...
+4. Run pullSiteData.sh
+5. Run service nginx restart
