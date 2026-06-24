@@ -8,7 +8,7 @@ import { Title } from '@angular/platform-browser';
   standalone: true,
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
-  imports: [NavMenuComponent, TopBarComponent]
+  imports: [NavMenuComponent]
 })
 export class AppComponent {
   title = "Welcome to the B3FL!"

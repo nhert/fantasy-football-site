@@ -1,12 +1,11 @@
-import { CommonModule, KeyValue } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Utils } from '../_Tools/Utils';
-import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'simple-table',
   standalone: true,
-  imports: [CommonModule, MatButton],
+  imports: [CommonModule],
   templateUrl: './simple-table.component.html',
   styleUrl: './simple-table.component.css'
 })

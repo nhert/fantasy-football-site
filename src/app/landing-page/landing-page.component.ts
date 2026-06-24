@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NavMenuComponent } from "../nav-menu/nav-menu.component";
+import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Constants } from '../_Tools/Constants';
 
@@ -8,7 +7,7 @@ import { Constants } from '../_Tools/Constants';
     standalone: true,
     templateUrl: './landing-page.component.html',
     styleUrl: './landing-page.component.css',
-    imports: [NavMenuComponent, RouterModule]
+    imports: [RouterModule]
 })
 export class LandingPageComponent {
     public getUrlChampLeague() {
