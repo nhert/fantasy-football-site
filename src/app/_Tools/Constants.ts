@@ -4,6 +4,20 @@ import nflPlayersJson from '../../assets/nflPlayers/nfl_players.json'
 
 // Class holding constants related to the site
 export class Constants {
+	static AUTH0_DOMAIN = "dev-bk2yk7ww7yqyitvv.us.auth0.com";
+	static AUTH0_CLIENT_ID = "iDWar2e5ka8RXvdJTQT60w5DytBEyz9J";
+	//static AUTH0_CALLBACK = "https://b3fl.com/";
+	static AUTH0_CALLBACK = "http://localhost:4200/pickems-survivor-lobby";
+	// auth0 expects this exact structure in app-routing.module.ts
+	static AUTH0_CONFIG = {
+		domain: Constants.AUTH0_DOMAIN,
+		clientId: Constants.AUTH0_CLIENT_ID,
+		authorizationParams: {
+			redirect_uri: Constants.AUTH0_CALLBACK,
+		},
+		errorPath: '/callback',
+	}
+
 	// Set to the most current Sleeper League ID. This will update when commish starts a new season.
 	static A_LEAGUE_SLEEPER_ID = "1257104499407863808";
 	static B_LEAGUE_SLEEPER_ID = "1257479897941553152";
@@ -272,6 +286,17 @@ export class Constants {
 			}
 		}
 		return this.DUMMY_USER;
+	}
+
+	// get an array of all real user profiles of active gms (in a or b league and can be chosen for pickems/survivor games)
+	public static getAllActiveUsers() {
+		let userArray = [];
+		for (let i = 0; i < Constants.USERS.length; i++) {
+			if (Constants.USERS[i].currentLeague == Constants.A_LEAGUE_NAME || Constants.USERS[i].currentLeague == Constants.B_LEAGUE_NAME) {
+				userArray.push(Constants.USERS[i]);
+			}
+		}
+		return userArray;
 	}
 
 	// Loads legacy NFL.com json data for the A League from the bluehost server

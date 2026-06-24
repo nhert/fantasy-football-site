@@ -5,8 +5,10 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app-routing.module';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 import { SafePipe } from './_Tools/SafePipe';
+import { provideAuth0 } from '@auth0/auth0-angular';
+import { Constants } from './_Tools/Constants';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,7 +16,8 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     provideAnimations(),
     provideAnimationsAsync(),
-    provideHttpClient(),
+    provideHttpClient(withFetch()),
+    provideAuth0(Constants.AUTH0_CONFIG),
     importProvidersFrom(SafePipe)
   ]
 };

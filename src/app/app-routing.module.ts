@@ -6,13 +6,15 @@ import { MatchupHistoryComponent } from './matchup-history/matchup-history.compo
 import { RecordsComponent } from './records/records.component';
 import { ProfilesComponent } from './profiles/profiles.component';
 import { ManifestoComponent } from './manifesto/manifesto.component';
-import { SurvivalComponent } from './survival/survival.component';
-import { PickemsComponent } from './pickems/pickems.component';
 import { PistolGuncopComponent } from './pistol-guncop/pistol-guncop.component';
 import { JordanShowComponent } from './jordan-show/jordan-show.component';
 import { DraftsComponent } from './drafts/drafts.component';
 import { DraftVideosComponent } from './draft-videos/draft-videos.component';
 import { LiveScoresComponent } from './live-scores/live-scores.component';
+import { AuthGuard } from '@auth0/auth0-angular';
+import { Constants } from './_Tools/Constants';
+import { PickemsSurvivorLobbyComponent } from './pickems-survivor-lobby/pickems-survivor-lobby.component';
+import { Auth0Guard } from './_Tools/Auth0Guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -32,16 +34,27 @@ export const routes: Routes = [
   { path: 'upcoming-matchup', component: LandingPageComponent },
   { path: 'playoff-predictor', component: LandingPageComponent },
   { path: 'elimination-line', component: LandingPageComponent },
-  { path: 'survival', component: SurvivalComponent },
-  { path: 'pickems', component: PickemsComponent },
   // Media
   { path: 'pistol-guncop', component: PistolGuncopComponent },
   { path: 'jordan-show', component: JordanShowComponent },
   { path: 'draft-videos', component: DraftVideosComponent },
+  // Protected by Login
+  // TODO: UNCOMMENT THIS TO RE-ENABLE AUTH0 LOGIN
+  //{ path: 'pickems-survivor-lobby', component: PickemsSurvivorLobbyComponent, canActivate: [AuthGuard] },
+  { path: 'pickems-survivor-lobby', component: PickemsSurvivorLobbyComponent },
+  {
+    path: 'callback',
+    loadChildren: () =>
+      import('./features/callback/callback.module').then(
+        (m) => m.CallbackModule
+      ),
+  },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes)
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

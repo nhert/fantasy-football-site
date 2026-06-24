@@ -11,4 +11,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class SimpleSpinnerComponent {
   @Input('loading') loading: boolean;
+  @Input('title') title: string;
+  @Input('hideRefreshTip') hideRefreshTip: boolean = false;
 }

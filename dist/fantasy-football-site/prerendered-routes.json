@@ -10,13 +10,12 @@
     "/live-scores",
     "/manifesto",
     "/matchup-history",
-    "/pickems",
+    "/pickems-survivor-lobby",
     "/pistol-guncop",
     "/playoff-predictor",
     "/profiles",
     "/records",
     "/standings",
-    "/survival",
     "/upcoming-matchup"
   ]
 }

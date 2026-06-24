@@ -1,0 +1,38 @@
+<div class="game-container">
+    <ng-container *ngIf="currentUser">
+        <!-- user loaded the game state in preseason -->
+        <div *ngIf="isGameStateLoaded && gamePhase==0">
+            <h1>Fantasy season hasn't started yet! First game begins on {{firstGameDate}}</h1>
+        </div>
+
+        <!-- user loaded the game state in postseason -->
+        <div *ngIf="isGameStateLoaded && gamePhase==2">
+            <h1>Fantasy regular season has finished. See you next year!</h1>
+        </div>
+
+        <!-- user loaded the game state in-season -->
+        <div *ngIf="isGameStateLoaded && gamePhase==1">
+            <mat-tab-group class="toolbar" animationDuration="200ms">
+                <mat-tab label="Survivor">
+                    <ng-template matTabContent>
+                        <game-survivor-pool-content [currentUser]="currentUser" [gameState]="gameState"
+                            [made_choices_sleeper_ids]="made_choices_sleeper_ids" [survivorEntries]="survivorEntries"
+                            [gameUsers]="gameUsers"></game-survivor-pool-content>
+                    </ng-template>
+                </mat-tab>
+
+                <mat-tab label="Pick'ems">
+                    <ng-template matTabContent>
+                        <game-pickems-content [currentUser]="currentUser"></game-pickems-content>
+                    </ng-template>
+                </mat-tab>
+
+                <mat-tab label="Standings">
+                    <ng-template matTabContent>
+                        <game-pickems-standings-content [currentUser]="currentUser"></game-pickems-standings-content>
+                    </ng-template>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </ng-container>
+</div>

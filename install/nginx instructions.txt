@@ -1,9 +1,23 @@
 https://www.devdungeon.com/content/deploy-angular-apps-nginx
 
+These instructions help to install a fresh version of the site on a new amazon instance
+
+
+START THE API BACKEND FOR SURVIVOR / PICKEMS (localhost:5000)
+
+1. npm install -g pm2 (install package manager2 globally if not already)
+2. Make a folder somewhere that makes sense and drop the pullPickemsSurvivorDbData.sh script.
+3. Run ". pullPickemsSurvivorDbData.sh" (this clones/pulls latest github version of the pickem/survivor db to the directory)
+4. Run "pm2 start server.js --name express-api" (api will listen on localhost in the background for reverse proxy from nginx)
+
+SETUP NGINX FOR ANGULAR FRONTEND
+
 1. SSH into the instance and "sudo su"
 2. Run "apt install nginx" to get the service. Also run "apt install certbot" for SSL.
 3. Go to /usr/share/nginx/html/ and drop the pullSiteData.sh script. 
-4. Run ". pullSiteData.sh"
+4. Run ". pullSiteData.sh" (this clones/pulls latest github version of the site to the directory)
 5. Copy the contents of "default.txt" to /etc/nginx/sites-available/default/
 6. Certbot instructions: https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal&tab=standard
 7. service nginx restart
+
+

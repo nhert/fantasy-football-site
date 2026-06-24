@@ -1,0 +1,37 @@
+.game-container {
+    width: 100%;
+}
+
+.toolbar {
+    /* Main Container Background */
+    background-color: #2e2e2e;
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+    /* Angular Material Tab Design Tokens */
+    --mdc-tab-indicator-active-indicator-color: #dbdbdb;
+    /* Vibrant cyan/blue accent indicator */
+    --mat-tab-header-divider-color: #334155;
+    /* Deep charcoal divider line */
+
+    /* Text and Label States */
+    --mat-tab-header-active-label-text-color: #f8fafc;
+    /* Crisp off-white active text */
+    --mat-tab-header-inactive-label-text-color: #94a3b8;
+    /* Muted slate inactive text */
+    --mat-tab-header-active-hover-label-text-color: #ffffff;
+    --mat-tab-header-inactive-hover-label-text-color: #cbd5e1;
+
+    /* Ripple / Interaction Colors */
+    --mat-tab-header-active-ripple-color: rgba(255, 255, 255, 0.1);
+    --mat-tab-header-inactive-ripple-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Optional: Add a dark background wrapper for the active body area */
+.toolbar ::ng-deep .mat-mdc-tab-body-content {
+    background-color: #424242;
+    color: #e2e8f0;
+    padding: 24px;
+    height: 100%;
+}

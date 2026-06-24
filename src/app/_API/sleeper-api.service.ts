@@ -33,6 +33,11 @@ export class SleeperApiService {
 	//#endregion
 	//#region Public API
 
+	public async getNflState() {
+		const nflState = await fetch(this.getNflStateRestAPI()).then((res) => res.json());
+		return nflState;
+	}
+
 	// Get unique list of all users in both sleeper leagues for the GM List page.
 	public async getGmList() {
 
