@@ -9,7 +9,7 @@
         </mat-expansion-panel-header>
         <mat-nav-list dense (click)="sidenav.toggle()">
           <a mat-list-item routerLink="live-scores">Live Scores</a>
-          <a mat-list-item routerLink="pickems-survivor-lobby">Pick'Ems & Survivor Pool</a>
+          <a mat-list-item routerLink="pickems-survivor-lobby">Pick'ems & Survivor Pool</a>
           <!-- <a mat-list-item routerLink="upcoming-matchup">Upcoming Matchups</a>
           <a mat-list-item routerLink="playoff-predictor">Playoff Predictor</a>
           <a mat-list-item routerLink="elimination-line">Elimination Line</a> -->
@@ -61,9 +61,10 @@
     </div> -->
 
     <div class="main">
-      <div class="content">
-        <router-outlet></router-outlet>
-      </div>
+      <router-outlet></router-outlet>
+      <!-- <div class="content">
+        
+      </div> -->
     </div>
 
     <!-- <div style="min-height: 50px;"></div> -->

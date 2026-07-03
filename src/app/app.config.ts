@@ -9,6 +9,7 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { SafePipe } from './_Tools/SafePipe';
 import { provideAuth0 } from '@auth0/auth0-angular';
 import { Constants } from './_Tools/Constants';
+import { provideToastr } from 'ngx-toastr';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,6 +19,11 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideHttpClient(withFetch()),
     provideAuth0(Constants.AUTH0_CONFIG),
+    provideToastr({
+      timeOut: 3000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    }),
     importProvidersFrom(SafePipe)
   ]
 };

@@ -3,8 +3,6 @@ import { Constants } from '../_Tools/Constants';
 import { Utils } from '../_Tools/Utils';
 import { Stats } from '../_Tools/Stats';
 
-import { Writable } from 'stream';
-
 @Injectable({ providedIn: 'root' })
 export class SleeperApiService {
 
@@ -249,7 +247,7 @@ export class SleeperApiService {
 
 		var prevLeagueId = Constants.A_LEAGUE_SLEEPER_ID;
 		var e = 0;
-		while (prevLeagueId != null && e < 100) {
+		while (prevLeagueId != null && e < 50) {
 			let league = await fetch(this.getLeagueRestAPI(prevLeagueId)).then((res) => res.json());
 			allSleeperLeagueIds.push({
 				LeagueId: prevLeagueId,
@@ -262,7 +260,7 @@ export class SleeperApiService {
 
 		prevLeagueId = Constants.B_LEAGUE_SLEEPER_ID;
 		e = 0;
-		while (prevLeagueId != null && e < 100) {
+		while (prevLeagueId != null && e < 50) {
 			let league = await fetch(this.getLeagueRestAPI(prevLeagueId)).then((res) => res.json());
 			allSleeperLeagueIds.push({
 				LeagueId: prevLeagueId,
@@ -654,11 +652,16 @@ export class SleeperApiService {
 		for (var curLeague of allLeagues) {
 			var leagueId = curLeague.LeagueId;
 
+			console.log(curLeague);
+
 			const leagueRosterData = await this.getSleeperRosterRecords(leagueId);
 			const leagueData = await fetch(this.getLeagueRestAPI(leagueId))
 				.then((res) => res.json());
 			const playoffData = await fetch(this.getLeagueRestAPI(leagueId) + "/winners_bracket")
 				.then((res) => res.json());
+
+			//console.log(leagueRosterData);
+			//console.log(leagueData);
 
 			var winningRosters = [];
 			playoffData.forEach(round => {
@@ -706,7 +709,7 @@ export class SleeperApiService {
 				for (let week = 1; week <= weekMax; week++) {
 					const matchups = await fetch(this.getLeagueRestAPI(leagueId) + "/matchups/" + week).then((res) => res.json());
 
-					//console.log(matchups);
+					console.log(matchups);
 
 					var user1score = -1, user2score = -1, outcome = "", year = "", matchupId1 = -1
 					var user1starters = [], user1roster = [], user2starters = [], user2roster = [];
@@ -782,6 +785,7 @@ export class SleeperApiService {
 			}
 		}
 
+		console.log("----BREAK--------");
 		return records;
 	}
 

@@ -1,20 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Constants } from '../_Tools/Constants';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { catchError, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 
 @Injectable({ providedIn: 'root' })
 export class SurvivorPickemsApiService {
-    // If developing locally, switch this to true.
-    // Should be false in production mode.
     //TODO: SET THIS
-    static IN_DEV_MODE: boolean = true;
+    static SKIP_AUTH: boolean = true; // skip auth0 login. Also update the router to include authguard 
+    static IN_LOCAL_TESTING_MODE: boolean = true; // set to true for production (nginx) mode
 
-    private apiUrl = SurvivorPickemsApiService.IN_DEV_MODE ? 'http://localhost:5000/api' : '/api';
+    private apiUrl = SurvivorPickemsApiService.IN_LOCAL_TESTING_MODE ? 'http://localhost:5000/api' : '/api';
     private usersApiUrl = this.apiUrl + '/users';
     private survivorApiUrl = this.apiUrl + '/survivor_pool';
-    //private pickemsApiUrl = '/api/users';
+    //private pickemsApiUrl = this.apiUrl + '/pickems';
 
     constructor(private http: HttpClient) { }
 
@@ -26,6 +24,14 @@ export class SurvivorPickemsApiService {
 
     getGameSchedule(): Observable<any> {
         return this.http.get(this.apiUrl + "/schedule");
+    }
+
+    getServerTime(): Observable<any> {
+        return this.http.get(this.apiUrl + "/time");
+    }
+
+    getSurvivorPickemsGameStates(): Observable<any> {
+        return this.http.get(this.apiUrl + "/game_states");
     }
 
     // USERS

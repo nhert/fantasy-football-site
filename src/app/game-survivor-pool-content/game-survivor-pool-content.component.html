@@ -1,142 +1,199 @@
 <ng-container *ngIf="isTablePrepared">
-    <div class="timer">
 
+    <!-- The survivor pool is still ongoing, so show the week, timer, and inputs. -->
+    <ng-container *ngIf="!isSurvivorPoolFinished()">
+        <span style="font-size: 36px; margin-bottom: 40;">NFL Week {{gameState.week}}</span>
+
+        <p style="font-size: 16px; margin-bottom: 20px;">Picks Must be Submitted by: {{
+            gameState.current_cutoff_datetime_utc_iso| date: 'medium' }}</p>
+
+        <pickems-survivor-timer (disableUiComponents)="handleDisableUiComponents()"></pickems-survivor-timer>
+
+        <div class="survivor-inputs">
+            <mat-form-field style="padding-top: 20px;">
+                <mat-label>Choose a GM</mat-label>
+                <mat-select [compareWith]="compareUsers" (selectionChange)="onGmSelectionChange($event)"
+                    [disabled]="shouldDisableUiInput()">
+                    <mat-optgroup label='A League' style="font-size: 12px;">
+                        <mat-option *ngFor="let user of getAlphabetizedUsersForALeague()" [value]="user"
+                            [disabled]="isSleeperIdInListOfSurvivorChoices(user.sleeperId_current)">
+                            {{ user.name }}
+                        </mat-option>
+                    </mat-optgroup>
+                    <mat-optgroup label='B League' style="font-size: 12px;">
+                        <mat-option *ngFor="let user of getAlphabetizedUsersForBLeague()" [value]="user"
+                            [disabled]="isSleeperIdInListOfSurvivorChoices(user.sleeperId_current)">
+                            {{ user.name }}
+                        </mat-option>
+                    </mat-optgroup>
+                </mat-select>
+            </mat-form-field>
+            <button type="button" mat-raised-button (click)="handleSubmitChoiceClick()"
+                [disabled]="shouldDisableUiInput()">Submit
+                Choice</button>
+        </div>
+
+        <div *ngIf="userEliminated" class="elimination-text">
+            <span><strong>YOU ARE ELIMINATED!</strong></span>
+        </div>
+
+        <div *ngIf="userMissedStart" class="elimination-text">
+            <span><strong>MISSED WEEK 1 SUBMISSION!</strong></span>
+        </div>
+    </ng-container>
+
+    <!-- The survivor pool is concluded, so show the outcome and winners -->
+    <ng-container *ngIf="isSurvivorPoolFinished()">
+        <span style="font-size: 36px;">Survivor Pool Finished!</span>
+        <br><br>
+        <span style="font-size: 22px;">{{getSurvivorPoolOutcome()}}</span>
+        <br><br>
+        <span style="font-size: 18px; color:blueviolet">Congratulations to
+            {{getListOfSurvivorPoolWinningUsernames()}}!</span>
+    </ng-container>
+
+    <div style="display: flex; justify-content: center;">
+        <div class="responsive-table-container">
+            <!-- Use tag selectors instead of attribute selectors -->
+            <mat-table [dataSource]="dataSource" class="mat-elevation-z8 responsive-table">
+
+                <ng-container matColumnDef="playerUsername">
+                    <mat-header-cell *matHeaderCellDef> Player </mat-header-cell>
+                    <mat-cell *matCellDef="let element" [attr.data-label]="'Player'">
+                        <span>{{element.playerUsername}}</span>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="week1">
+                    <mat-header-cell *matHeaderCellDef> Week 1 </mat-header-cell>
+                    <mat-cell *matCellDef="let element" [attr.data-label]="'Week 1'"
+                        [class.won]="element.week1.outcome === 'WIN' || element.week1.outcome === 'TIE'"
+                        [class.loss]="element.week1.outcome === 'LOSS'">
+                        {{element.week1.choice_gm_name}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="week2">
+                    <mat-header-cell *matHeaderCellDef> Week 2 </mat-header-cell>
+                    <mat-cell *matCellDef="let element" [attr.data-label]="'Week 2'"
+                        [class.won]="element.week2.outcome === 'WIN' || element.week2.outcome === 'TIE'"
+                        [class.loss]="element.week2.outcome === 'LOSS'">
+                        {{element.week2.choice_gm_name}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="week3">
+                    <mat-header-cell *matHeaderCellDef> Week 3 </mat-header-cell>
+                    <mat-cell *matCellDef="let element" [attr.data-label]="'Week 3'"
+                        [class.won]="element.week3.outcome === 'WIN' || element.week3.outcome === 'TIE'"
+                        [class.loss]="element.week3.outcome === 'LOSS'">
+                        {{element.week3.choice_gm_name}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="week4">
+                    <mat-header-cell *matHeaderCellDef> Week 4 </mat-header-cell>
+                    <mat-cell *matCellDef="let element" [attr.data-label]="'Week 4'"
+                        [class.won]="element.week4.outcome === 'WIN' || element.week4.outcome === 'TIE'"
+                        [class.loss]="element.week4.outcome === 'LOSS'">
+                        {{element.week4.choice_gm_name}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="week5">
+                    <mat-header-cell *matHeaderCellDef> Week 5 </mat-header-cell>
+                    <mat-cell *matCellDef="let element" [attr.data-label]="'Week 5'"
+                        [class.won]="element.week5.outcome === 'WIN' || element.week5.outcome === 'TIE'"
+                        [class.loss]="element.week5.outcome === 'LOSS'">
+                        {{element.week5.choice_gm_name}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="week6">
+                    <mat-header-cell *matHeaderCellDef> Week 6 </mat-header-cell>
+                    <mat-cell *matCellDef="let element" [attr.data-label]="'Week 6'"
+                        [class.won]="element.week6.outcome === 'WIN' || element.week6.outcome === 'TIE'"
+                        [class.loss]="element.week6.outcome === 'LOSS'">
+                        {{element.week6.choice_gm_name}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="week7">
+                    <mat-header-cell *matHeaderCellDef> Week 7 </mat-header-cell>
+                    <mat-cell *matCellDef="let element" [attr.data-label]="'Week 7'"
+                        [class.won]="element.week7.outcome === 'WIN' || element.week7.outcome === 'TIE'"
+                        [class.loss]="element.week7.outcome === 'LOSS'">
+                        {{element.week7.choice_gm_name}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="week8">
+                    <mat-header-cell *matHeaderCellDef> Week 8 </mat-header-cell>
+                    <mat-cell *matCellDef="let element" [attr.data-label]="'Week 8'"
+                        [class.won]="element.week8.outcome === 'WIN' || element.week8.outcome === 'TIE'"
+                        [class.loss]="element.week8.outcome === 'LOSS'">
+                        {{element.week8.choice_gm_name}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="week9">
+                    <mat-header-cell *matHeaderCellDef> Week 9 </mat-header-cell>
+                    <mat-cell *matCellDef="let element" [attr.data-label]="'Week 9'"
+                        [class.won]="element.week9.outcome === 'WIN' || element.week9.outcome === 'TIE'"
+                        [class.loss]="element.week9.outcome === 'LOSS'">
+                        {{element.week9.choice_gm_name}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="week10">
+                    <mat-header-cell *matHeaderCellDef> Week 10 </mat-header-cell>
+                    <mat-cell *matCellDef="let element" [attr.data-label]="'Week 10'"
+                        [class.won]="element.week10.outcome === 'WIN' || element.week10.outcome === 'TIE'"
+                        [class.loss]="element.week10.outcome === 'LOSS'">
+                        {{element.week10.choice_gm_name}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="week11">
+                    <mat-header-cell *matHeaderCellDef> Week 11 </mat-header-cell>
+                    <mat-cell *matCellDef="let element" [attr.data-label]="'Week 11'"
+                        [class.won]="element.week11.outcome === 'WIN' || element.week11.outcome === 'TIE'"
+                        [class.loss]="element.week11.outcome === 'LOSS'">
+                        {{element.week11.choice_gm_name}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="week12">
+                    <mat-header-cell *matHeaderCellDef> Week 12 </mat-header-cell>
+                    <mat-cell *matCellDef="let element" [attr.data-label]="'Week 12'"
+                        [class.won]="element.week12.outcome === 'WIN' || element.week12.outcome === 'TIE'"
+                        [class.loss]="element.week12.outcome === 'LOSS'">
+                        {{element.week12.choice_gm_name}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="week13">
+                    <mat-header-cell *matHeaderCellDef> Week 13 </mat-header-cell>
+                    <mat-cell *matCellDef="let element" [attr.data-label]="'Week 13'"
+                        [class.won]="element.week13.outcome === 'WIN' || element.week13.outcome === 'TIE'"
+                        [class.loss]="element.week13.outcome === 'LOSS'">
+                        {{element.week13.choice_gm_name}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="week14">
+                    <mat-header-cell *matHeaderCellDef> Week 14 </mat-header-cell>
+                    <mat-cell *matCellDef="let element" [attr.data-label]="'Week 14'"
+                        [class.won]="element.week14.outcome === 'WIN' || element.week14.outcome === 'TIE'"
+                        [class.loss]="element.week14.outcome === 'LOSS'">
+                        {{element.week14.choice_gm_name}}
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+        </div>
     </div>
 
-    <mat-form-field>
-        <mat-label>Choose a GM</mat-label>
-        <mat-select [compareWith]="compareUsers" (selectionChange)="onGmSelectionChange($event)"
-            [disabled]="disableUiControl">
-            <mat-optgroup label='A League' style="font-size: 12px;">
-                <mat-option *ngFor="let user of getAlphabetizedUsersForALeague()" [value]="user"
-                    [disabled]="isSleeperIdInListOfSurvivorChoices(user.sleeperId_current)">
-                    {{ user.name }}
-                </mat-option>
-            </mat-optgroup>
-            <mat-optgroup label='B League' style="font-size: 12px;">
-                <mat-option *ngFor="let user of getAlphabetizedUsersForBLeague()" [value]="user"
-                    [disabled]="isSleeperIdInListOfSurvivorChoices(user.sleeperId_current)">
-                    {{ user.name }}
-                </mat-option>
-            </mat-optgroup>
-        </mat-select>
-    </mat-form-field>
-    <div style="align-items: center; justify-content: center; text-align: center;">
-        <button type="button" mat-button (click)="handleSubmitChoiceClick()" [disabled]="disableUiControl">Submit
-            Choice</button>
-    </div>
-
-    <div class="responsive-table-container">
-        <!-- Use tag selectors instead of attribute selectors -->
-        <mat-table [dataSource]="dataSource" class="mat-elevation-z8 responsive-table">
-
-            <ng-container matColumnDef="playerUsername">
-                <mat-header-cell *matHeaderCellDef> Player </mat-header-cell>
-                <mat-cell *matCellDef="let element" [attr.data-label]="'Player'">
-                    {{element.playerUsername}}
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="week1">
-                <mat-header-cell *matHeaderCellDef> Week 1 </mat-header-cell>
-                <mat-cell *matCellDef="let element" [attr.data-label]="'Week 1'">
-                    {{element.week1.choice_gm_name}}
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="week2">
-                <mat-header-cell *matHeaderCellDef> Week 2 </mat-header-cell>
-                <mat-cell *matCellDef="let element" [attr.data-label]="'Week 2'">
-                    {{element.week2.choice_gm_name}}
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="week3">
-                <mat-header-cell *matHeaderCellDef> Week 3 </mat-header-cell>
-                <mat-cell *matCellDef="let element" [attr.data-label]="'Week 3'">
-                    {{element.week3.choice_gm_name}}
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="week4">
-                <mat-header-cell *matHeaderCellDef> Week 4 </mat-header-cell>
-                <mat-cell *matCellDef="let element" [attr.data-label]="'Week 4'">
-                    {{element.week4.choice_gm_name}}
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="week5">
-                <mat-header-cell *matHeaderCellDef> Week 5 </mat-header-cell>
-                <mat-cell *matCellDef="let element" [attr.data-label]="'Week 5'">
-                    {{element.week5.choice_gm_name}}
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="week6">
-                <mat-header-cell *matHeaderCellDef> Week 6 </mat-header-cell>
-                <mat-cell *matCellDef="let element" [attr.data-label]="'Week 6'">
-                    {{element.week6.choice_gm_name}}
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="week7">
-                <mat-header-cell *matHeaderCellDef> Week 7 </mat-header-cell>
-                <mat-cell *matCellDef="let element" [attr.data-label]="'Week 7'">
-                    {{element.week7.choice_gm_name}}
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="week8">
-                <mat-header-cell *matHeaderCellDef> Week 8 </mat-header-cell>
-                <mat-cell *matCellDef="let element" [attr.data-label]="'Week 8'">
-                    {{element.week8.choice_gm_name}}
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="week9">
-                <mat-header-cell *matHeaderCellDef> Week 9 </mat-header-cell>
-                <mat-cell *matCellDef="let element" [attr.data-label]="'Week 9'">
-                    {{element.week9.choice_gm_name}}
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="week10">
-                <mat-header-cell *matHeaderCellDef> Week 10 </mat-header-cell>
-                <mat-cell *matCellDef="let element" [attr.data-label]="'Week 10'">
-                    {{element.week10.choice_gm_name}}
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="week11">
-                <mat-header-cell *matHeaderCellDef> Week 11 </mat-header-cell>
-                <mat-cell *matCellDef="let element" [attr.data-label]="'Week 11'">
-                    {{element.week11.choice_gm_name}}
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="week12">
-                <mat-header-cell *matHeaderCellDef> Week 12 </mat-header-cell>
-                <mat-cell *matCellDef="let element" [attr.data-label]="'Week 12'">
-                    {{element.week12.choice_gm_name}}
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="week13">
-                <mat-header-cell *matHeaderCellDef> Week 13 </mat-header-cell>
-                <mat-cell *matCellDef="let element" [attr.data-label]="'Week 13'">
-                    {{element.week13.choice_gm_name}}
-                </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="week14">
-                <mat-header-cell *matHeaderCellDef> Week 14 </mat-header-cell>
-                <mat-cell *matCellDef="let element" [attr.data-label]="'Week 14'">
-                    {{element.week14.choice_gm_name}}
-                </mat-cell>
-            </ng-container>
-
-            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-        </mat-table>
-    </div>
 </ng-container>

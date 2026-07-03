@@ -3,14 +3,14 @@
     <p>Click on a matchup to see individual player scores</p>
     <p>The refresh button can be used to quickly update scores without a full page reload</p>
 
-    <div style="padding-left: 15px;">
+    <div>
         <button style="width: 100px; height: 100px;" [disabled]="refreshButtonDisabled()"
             (click)="refreshDisplayedData()"><mat-icon style="transform: scale(2);">refresh</mat-icon></button>
     </div>
 
     <simple-spinner [loading]="loading"></simple-spinner>
 
-    <div *ngIf="isLoaded()" id="live-scores-div">
+    <div *ngIf="isLoaded() && !isPreseason" id="live-scores-div">
         <h2>{{nflData.year}}</h2>
         <h2>Week {{nflData.week}}</h2>
         <br>
@@ -146,4 +146,9 @@
         </div>
     </div>
 
+    <div *ngIf="isLoaded() && isPreseason">
+        <h2>{{nflData.year}}</h2>
+        <h2>Preseason</h2>
+        <p>Live scores will be available once Week 1 of the season starts!</p>
+    </div>
 </div>

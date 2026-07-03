@@ -1,0 +1,41 @@
+/* Ensure the mat-calendar button layout can host a relative layout label */
+.has-label .mat-calendar-body-cell-content {
+    position: relative;
+    overflow: visible !important;
+    margin-bottom: 12px;
+    /* Leave space at the bottom for the label text */
+}
+
+/* Style the base layout for labels */
+.has-label .mat-calendar-body-cell-content::after {
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    font-weight: bold;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+/* Define what text strings to render based on the classes returned from TypeScript */
+.label-holiday .mat-calendar-body-cell-content::after {
+    content: 'Holiday';
+    color: #e06666;
+}
+
+.label-meeting .mat-calendar-body-cell-content::after {
+    content: 'Meeting';
+    color: #3c78d8;
+}
+
+.label-deadline .mat-calendar-body-cell-content::after {
+    content: 'Due';
+    color: #cc0000;
+}
+
+/* Optional: Highlight the actual calendar day circle background */
+.has-label .mat-calendar-body-cell-content {
+    border: 1px dashed #666;
+    border-radius: 50%;
+}

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { GameUser } from '../pickems-survivor-lobby/pickems-survivor-lobby.component';
+import { GameUser } from '../_Models/survivor.pickems.models';
 
 // export interface PeriodicElement {
 //   week1: string;
@@ -37,6 +37,5 @@ export class GamePickemsStandingsContentComponent {
   @Input('currentUser') currentUser: GameUser;
 
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  //dataSource = ELEMENT_DATA;
 
 }

@@ -1,0 +1,39 @@
+.countdown-container {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    display: block;
+}
+
+.timer {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.time-block {
+    display: flex;
+    flex-direction: column;
+    background-color: #f4f4f4;
+    padding: 15px;
+    border-radius: 8px;
+    min-width: 60px;
+}
+
+.number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.label {
+    font-size: 0.85rem;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.expired-message {
+    font-size: 1.5rem;
+    color: red;
+    font-weight: bold;
+}

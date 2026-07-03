@@ -1,12 +1,12 @@
 <div class="game-container">
     <ng-container *ngIf="checkAuth() | async">
-        <nav class="toolbar">
-            <div class="toolbar-left">
-                <img [src]="currentUser.picture" alt="Profile" style="width: 50px; height: 50px;" />
+        <nav class="account-bar">
+            <div class="account-bar-left">
+                <img [src]="currentUser.picture" alt="Profile" style="width: 40px; height: 40px;" />
                 <span style="font-size: 12px;">{{ currentUser.email }}</span>
             </div>
 
-            <div class="toolbar-right">
+            <div class="account-bar-right">
                 <button class="logout-button" type="button" mat-button (click)="handleLogout()">
                     <mat-icon style="vertical-align: middle; transform: scale(0.7); width: 25px">logout</mat-icon>
                     <span class="logout-button-text">Logout</span>
@@ -18,14 +18,10 @@
             <simple-spinner [loading]="!isGameServerHealthChecked" [hideRefreshTip]="true"
                 [title]="'Checking that the Game Server is online ...'"></simple-spinner>
 
-            <div *ngIf="isGameServerHealthChecked">
-                <!-- <div *ngIf="isGameServerAvailable">
-                    <h2>Game Service is Available!</h2>
-                </div> -->
-                <div *ngIf="!isGameServerAvailable" style="align-items: center; text-align: center; margin-top: 0px;">
-                    <mat-icon style="transform: scale(1.5); color: red;">warning</mat-icon>
-                    <h3 style="color: red;">Game Service is Unavailable! Contact B3FL Technical Support</h3>
-                </div>
+            <div *ngIf="isGameServerHealthChecked && !isGameServerAvailable"
+                style="align-items: center; text-align: center; margin-top: 40px;">
+                <mat-icon style="transform: scale(1.5); color: red;">warning</mat-icon>
+                <h3 style="color: red;">Game Service is Unavailable! Contact B3FL Technical Support</h3>
             </div>
 
             <simple-spinner [loading]="isGameServerHealthChecked && !isGameUserChecked && isGameServerAvailable"
@@ -33,19 +29,22 @@
                 [title]="'Checking if there is a game profile for this user ...'"></simple-spinner>
 
             <div *ngIf="isGameUserChecked && isGameUserNeedsCreation && isGameServerAvailable" class="create-nickname">
-                <h3>Your e-mail is not associated with an existing profile for Pick'ems & Survivor Pool this season.
-                    Please
-                    choose a nickname for yourself, then an account will be created for you.</h3>
-                <br>
+                <h3>Please choose a nickname for yourself, then a game profile will be created for you.</h3>
+                <h5>Your e-mail is not associated with an existing profile for Pick'ems & Survivor Pool this season. If
+                    you're seeing this and you have already been playing, try a different
+                    e-mail. Otherwise, contact B3FL Tech Support.</h5>
+
                 <input type="text" #username placeholder="Enter player nickname here" minlength="3" required
-                    style="width: 200px; height: 40px; font-size: 16px;">
+                    style="width: 200px; height: 40px; font-size: 16px; margin-bottom: 10px;">
                 <br>
-                <button (click)="createAccount(username.value)">Choose Nickname</button>
+                <button (click)="createAccount(username.value)">Submit Nickname</button>
             </div>
 
-            <div *ngIf="isGameReady" style="width: 100%; height: 100%;">
+            <div *ngIf="isGameReady" class="pickems-survivor-container">
                 <pickems-survivor-game [currentUser]="currentUser"></pickems-survivor-game>
             </div>
+
+            <!-- <pickems-survivor-calendar></pickems-survivor-calendar> -->
         </div>
     </ng-container>
 </div>

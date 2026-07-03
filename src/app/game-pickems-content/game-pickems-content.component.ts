@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { GameUser } from '../pickems-survivor-lobby/pickems-survivor-lobby.component';
+import { GameUser } from '../_Models/survivor.pickems.models';
 
 @Component({
   selector: 'game-pickems-content',

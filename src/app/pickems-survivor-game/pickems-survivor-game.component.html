@@ -12,12 +12,14 @@
 
         <!-- user loaded the game state in-season -->
         <div *ngIf="isGameStateLoaded && gamePhase==1">
-            <mat-tab-group class="toolbar" animationDuration="200ms">
+            <mat-tab-group class="game-tab-group" animationDuration="200ms" dynamicHeight>
                 <mat-tab label="Survivor">
                     <ng-template matTabContent>
-                        <game-survivor-pool-content [currentUser]="currentUser" [gameState]="gameState"
-                            [made_choices_sleeper_ids]="made_choices_sleeper_ids" [survivorEntries]="survivorEntries"
-                            [gameUsers]="gameUsers"></game-survivor-pool-content>
+                        <game-survivor-pool-content [dataSource]="dataSource" [currentUser]="currentUser"
+                            [gameState]="gameState" [made_choices_sleeper_ids]="made_choices_sleeper_ids"
+                            [gameUsers]="gameUsers" [userEliminated]="currentSurvivorUserEliminated"
+                            [userMissedStart]="currentSurvivorUserMissedStart" (reloadData)="reloadEntries()"
+                            (reloadServerTime)="reloadServerTime()"></game-survivor-pool-content>
                     </ng-template>
                 </mat-tab>
 

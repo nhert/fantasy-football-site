@@ -27,6 +27,8 @@ export class LiveScoresComponent {
   nflData: any;
   cachedData: any; // Data that does not commonly change such as usernames, avatars, etc
 
+  isPreseason: boolean = false;
+
   constructor(private sleeperApi: SleeperApiService) { }
 
   ngOnDestroy(): void {
@@ -88,6 +90,10 @@ export class LiveScoresComponent {
       this.bLeagueMatchups = data.bLeague;
       this.nflData = data.nflData;
       this.cachedData = data.cache;
+
+      if (this.nflData.week == 0) {
+        this.isPreseason = true;
+      }
     });
   }
 

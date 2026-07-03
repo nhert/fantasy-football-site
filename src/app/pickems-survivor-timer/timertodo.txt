@@ -1,0 +1,2 @@
+1. need to recheck the server time when we receive picks from a player (can be faked)
+2. 

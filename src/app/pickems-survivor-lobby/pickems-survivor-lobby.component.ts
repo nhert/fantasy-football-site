@@ -4,23 +4,19 @@ import { AuthService } from '@auth0/auth0-angular';
 import { map } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
 import { SurvivorPickemsApiService } from '../_API/survivor-pickems-api.service';
-import { firstValueFrom, Observable, of } from 'rxjs';
+import { firstValueFrom, Observable, of, Subscription } from 'rxjs';
 import { SimpleSpinnerComponent } from "../simple-spinner/simple-spinner.component";
 import { MatIcon } from "@angular/material/icon";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { PickemsSurvivorGameComponent } from "../pickems-survivor-game/pickems-survivor-game.component";
-
-export interface GameUser {
-  picture: string,
-  email: string,
-  username: string
-}
+import { GameUser } from '../_Models/survivor.pickems.models';
+import { PickemsSurvivorCalendarComponent } from "../pickems-survivor-calendar/pickems-survivor-calendar.component";
 
 @Component({
   selector: 'app-pickems-survivor-lobby',
   standalone: true,
-  imports: [CommonModule, SimpleSpinnerComponent, MatIcon, FormsModule, ReactiveFormsModule, MatToolbarModule, PickemsSurvivorGameComponent],
+  imports: [CommonModule, SimpleSpinnerComponent, MatIcon, FormsModule, ReactiveFormsModule, MatToolbarModule, PickemsSurvivorGameComponent, PickemsSurvivorCalendarComponent],
   templateUrl: './pickems-survivor-lobby.component.html',
   styleUrl: './pickems-survivor-lobby.component.css'
 })
@@ -44,6 +40,9 @@ export class PickemsSurvivorLobbyComponent {
     username: ""
   }
 
+  private readonly dummy_user_email = "dummy.user.test@com.com";
+
+  private sub_Auth: Subscription;
   user$ = this.auth.user$;
   auth$ = this.auth.isAuthenticated$;
   /*
@@ -61,7 +60,7 @@ export class PickemsSurvivorLobbyComponent {
   constructor(private survivorPickemsApi: SurvivorPickemsApiService) { }
 
   ngOnInit(): void {
-    if (SurvivorPickemsApiService.IN_DEV_MODE) {
+    if (SurvivorPickemsApiService.SKIP_AUTH) {
       console.log("Pickems Survivor Lobby started in DEV MODE");
       this.authenticateInDevMode();
     } else {
@@ -70,15 +69,19 @@ export class PickemsSurvivorLobbyComponent {
     }
   }
 
+  ngOnDestroy(): void {
+    this.sub_Auth?.unsubscribe();
+  }
+
   private authenticateInDevMode() {
     this.isAuthenticated = true;
-    this.currentUser.email = "dummy.user.test@com.com";
+    this.currentUser.email = this.dummy_user_email;
     console.log("Hardcoding test account " + this.currentUser.email);
     this.checkGameServerStatus();
   }
 
   private authenticateAuth0() {
-    this.auth.isAuthenticated$.subscribe(async (authenticated: boolean) => {
+    this.sub_Auth = this.auth.isAuthenticated$.subscribe(async (authenticated: boolean) => {
       this.isAuthenticated = authenticated;
       if (authenticated) {
         const code = await firstValueFrom(this.code$);
@@ -151,15 +154,17 @@ export class PickemsSurvivorLobbyComponent {
   }
 
   protected handleLogout(): void {
-    this.auth.logout({
-      logoutParams: {
-        returnTo: this.doc.location.origin,
-      },
-    });
+    if (!SurvivorPickemsApiService.SKIP_AUTH) {
+      this.auth.logout({
+        logoutParams: {
+          returnTo: this.doc.location.origin,
+        },
+      });
+    }
   }
 
   protected checkAuth(): Observable<boolean> {
-    if (SurvivorPickemsApiService.IN_DEV_MODE) {
+    if (SurvivorPickemsApiService.SKIP_AUTH) {
       return of(this.isAuthenticated);
     } else {
       return this.auth$;

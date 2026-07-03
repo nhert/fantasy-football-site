@@ -40,7 +40,7 @@ export const routes: Routes = [
   { path: 'draft-videos', component: DraftVideosComponent },
   // Protected by Login
   // TODO: UNCOMMENT THIS TO RE-ENABLE AUTH0 LOGIN
-  //{ path: 'pickems-survivor-lobby', component: PickemsSurvivorLobbyComponent, canActivate: [AuthGuard] },
+  // { path: 'pickems-survivor-lobby', component: PickemsSurvivorLobbyComponent, canActivate: [AuthGuard] },
   { path: 'pickems-survivor-lobby', component: PickemsSurvivorLobbyComponent },
   {
     path: 'callback',

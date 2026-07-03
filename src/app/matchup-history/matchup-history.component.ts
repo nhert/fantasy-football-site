@@ -4,16 +4,16 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { SleeperApiService } from '../_API/sleeper-api.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { Constants } from '../_Tools/Constants';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatInputModule } from '@angular/material/input';
+import { MatInputModule, MatLabel } from '@angular/material/input';
 import { Utils } from '../_Tools/Utils';
 import { Stats } from '../_Tools/Stats';
 import { MatCardModule } from '@angular/material/card';
 import { StatsCardComponent } from "../stats-card/stats-card.component";
 import { SimpleSpinnerComponent } from "../simple-spinner/simple-spinner.component";
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-matchup-history',

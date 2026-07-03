@@ -1,73 +1,61 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { Component, EventEmitter, HostListener, inject, Input, Output, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { GameUser } from '../pickems-survivor-lobby/pickems-survivor-lobby.component';
-import { GameState } from '../pickems-survivor-game/pickems-survivor-game.component';
 import { MatSelect, MatSelectChange } from "@angular/material/select";
 import { Constants } from '../_Tools/Constants';
 import { MatOptionModule } from "@angular/material/core";
-import { MatFormFieldModule } from "@angular/material/form-field";
 import { SurvivorPickemsApiService } from '../_API/survivor-pickems-api.service';
-import { FormsModule } from '@angular/forms';
-
-export interface SurvivorEntries {
-  playerUsername: string;
-  week1: SurvivorDbRow;
-  week2: SurvivorDbRow;
-  week3: SurvivorDbRow;
-  week4: SurvivorDbRow;
-  week5: SurvivorDbRow;
-  week6: SurvivorDbRow;
-  week7: SurvivorDbRow;
-  week8: SurvivorDbRow;
-  week9: SurvivorDbRow;
-  week10: SurvivorDbRow;
-  week11: SurvivorDbRow;
-  week12: SurvivorDbRow;
-  week13: SurvivorDbRow;
-  week14: SurvivorDbRow;
-}
-
-// represents a row from the survivor entries table with only essential columns
-export interface SurvivorDbRow {
-  owner: string,
-  week: number,
-  choice_sleeper_id: string,
-  choice_gm_name: string,
-}
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ToastrService } from 'ngx-toastr';
+import { GameState, GameUser, SurvivorEntries } from '../_Models/survivor.pickems.models';
+import { PickemsSurvivorTimerComponent } from "../pickems-survivor-timer/pickems-survivor-timer.component";
 
 @Component({
   selector: 'game-survivor-pool-content',
   standalone: true,
-  imports: [MatTableModule, CommonModule, MatSelect, MatOptionModule, MatFormFieldModule],
+  imports: [MatTableModule, CommonModule, MatSelect, MatOptionModule, MatFormFieldModule, PickemsSurvivorTimerComponent],
   templateUrl: './game-survivor-pool-content.component.html',
   styleUrl: './game-survivor-pool-content.component.css'
 })
 export class GameSurvivorPoolContentComponent {
+  @Output('reloadData') reloadData = new EventEmitter<void>(); // Call reload method on parent component to reload table data and refresh.
+  @Output('reloadServerTime') reloadServerTime = new EventEmitter<void>(); // Call reload method on parent component to reload table data and refresh.
+
+  @Input('userEliminated') userEliminated: boolean;
+  @Input('userMissedStart') userMissedStart: boolean;
+  @Input('dataSource') dataSource: MatTableDataSource<SurvivorEntries>; // data source for the survivor pool table
   @Input('currentUser') currentUser: GameUser;
   @Input('gameState') gameState: GameState;
-  @Input('gameUsers') gameUsers: any[];
-  @Input('survivorEntries') survivorEntries: SurvivorEntries[];
   @Input('made_choices_sleeper_ids') made_choices_sleeper_ids: string[];
+  @Input('gameUsers') gameUsers: any[];
+
+  @ViewChild(PickemsSurvivorTimerComponent) timerComponent!: PickemsSurvivorTimerComponent;
+
+  // dependencies
+  private toastr = inject(ToastrService);
+  readonly b3fl_users = Constants.getAllActiveUsers();
 
   // Table related vars
-  displayedColumns: string[] = [];
+  displayedColumns: string[] = []; // built programmatically 
   readonly column_username = 'playerUsername';
   readonly column_week_prefix = 'week';
-  isTablePrepared: boolean = false;
-  dataSource: MatTableDataSource<SurvivorEntries>;
-  selectedGmChoiceValue: any = null;
-  disableUiControl: boolean = false;
 
-  // Useful data
-  readonly b3fl_users = Constants.getAllActiveUsers();
+  selectedGmChoiceValue: any = null; // bound to mat-select 
+
+  // flags
+  isTablePrepared: boolean = false;
+  isLoading: boolean = false;
+  disableUiControl: boolean = false;
 
   constructor(private survivorPickemsApi: SurvivorPickemsApiService) { }
 
   ngOnInit() {
     this.prepData();
     this.isTablePrepared = true;
+  }
+
+  ngAfterViewInit() {
+    this.resetTimer();
   }
 
   // handlers
@@ -85,18 +73,40 @@ export class GameSurvivorPoolContentComponent {
   // api
 
   private submitGmSurvivorChoice() {
-    this.disableUiControl = true;
+    if (this.isLoading) return;
+
     const selectedUser = this.selectedGmChoiceValue;
-    this.survivorPickemsApi.updateSurvivorChoiceForUser(this.currentUser.email, this.gameState.week, selectedUser).subscribe(response => {
-      this.disableUiControl = false;
-      // TODO: UPDATE UI AFTER SUBMIT?
+
+    this.survivorPickemsApi.getServerTime().subscribe(time => {
+      // recheck server time at submission to be sure we aren't past the deadline
+      const curServerTimeUTC = time.server_time;
+
+      // latest server UTC timestamp is before the cutoff time
+      if (curServerTimeUTC < this.gameState.current_cutoff_datetime_utc_iso) {
+        this.survivorPickemsApi.updateSurvivorChoiceForUser(this.currentUser.email, this.gameState.week, selectedUser).subscribe({
+          next: () => {
+            this.reloadTableData();
+            this.successToast('Saved Successfully', `Your Survivor Pool choice of ${selectedUser.name} for week ${this.gameState.week} has been saved!`);
+          },
+          error: (err) => {
+            this.errorToast('Error While Saving', err.message);
+          }
+        });
+      } else {
+        this.errorToast("Error While Saving", "The submission deadline has already passed!");
+      }
     });
+  }
+
+  private reloadTableData() {
+    if (this.reloadData) {
+      this.reloadData.emit();
+    }
   }
 
   // util methods
 
   private prepData() {
-    this.dataSource = new MatTableDataSource<SurvivorEntries>(this.survivorEntries);
     this.generateDisplayedColumnsForNWeeks(this.gameState.week);
   }
 
@@ -125,7 +135,93 @@ export class GameSurvivorPoolContentComponent {
     return o1 && o2 ? o1.sleeperId_current === o2.sleeperId_current : o1 === o2;
   }
 
-  protected getGameUserFromEmail(email: string) {
-    this.gameUsers.filter((user: any) => user.user_email == email);
+  protected getGameUserFromEmail(email: string): any {
+    return this.gameUsers.find(user => user.user_email == email);
+  }
+
+  protected successToast(title: string, message: string) {
+    this.toastr.success(message, title, {
+      timeOut: 5000,
+      progressBar: true
+    });
+  }
+
+  protected errorToast(title: string, message: string) {
+    this.toastr.error(message, title, {
+      timeOut: 5000,
+      progressBar: true
+    });
+  }
+
+  // Automatically catches up when user re-focuses or wakes up the tab
+  @HostListener('document:visibilitychange', [])
+  onVisibilityChange() {
+    if (document.visibilityState === 'visible') {
+      // For critical contests, re-fetch server state entirely upon wake
+      this.reloadServerTime.emit();
+    }
+  }
+
+  resetTimer() {
+    if (this.gameState) {
+      let curServerTime = this.gameState.server_current_datetime_utc_iso;
+      let cutoffTime = this.gameState.current_cutoff_datetime_utc_iso;
+
+      // get remaining seconds
+      const remainingSeconds = this.getUTCSecondsDiff(curServerTime, cutoffTime);
+      console.log(`Timer being initialized with curServerTime=${curServerTime} and cutoffTime=${cutoffTime}`);
+      //console.log("Setting the survivor pool timer to " + remainingSeconds + " seconds");
+
+      if (remainingSeconds > 0) {
+        this.disableUiControl = false;
+      } else {
+        this.disableUiControl = true;
+      }
+
+      this.timerComponent.startTimer(remainingSeconds);
+    }
+  }
+
+  getUTCSecondsDiff(isoString1: string, isoString2: string): number {
+    const date1 = new Date(isoString1).getTime();
+    const date2 = new Date(isoString2).getTime();
+    return (date2 - date1) / 1000;
+  }
+
+  handleDisableUiComponents() {
+    this.disableUiControl = true;
+  }
+
+  protected shouldDisableUiInput() {
+    return this.disableUiControl || this.userEliminated || this.userMissedStart;
+  }
+
+  protected isSurvivorPoolFinished() {
+    return this.gameState.survivor_pool_outcome != "UNKNOWN";
+  }
+
+  protected getListOfSurvivorPoolWinningUsernames() {
+    if (this.gameState.survivor_pool_outcome != "UNKNOWN" && this.gameState.survivor_pool_winning_owners) {
+      const arrayOfEmails = this.gameState.survivor_pool_winning_owners.split(",");
+      const arrayOfUsernames = [];
+
+      for (var email of arrayOfEmails) {
+        arrayOfUsernames.push(this.getGameUserFromEmail(email).username);
+      }
+
+      return arrayOfUsernames.join(", ");
+    }
+
+    return "";
+  }
+
+  protected getSurvivorPoolOutcome() {
+    if (this.gameState.survivor_pool_outcome === "WON") {
+      return "The pool was WON by a single player";
+    } else if (this.gameState.survivor_pool_outcome === "TIE") {
+      return "The pool was TIED by multiple players";
+    }
+
+    return "The pool is unfinished";
   }
 }

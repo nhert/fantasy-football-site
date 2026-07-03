@@ -1,7 +1,6 @@
 https://www.devdungeon.com/content/deploy-angular-apps-nginx
 
-These instructions help to install a fresh version of the site on a new amazon instance
-
+These instructions help to install a fresh version of the site on a new amazon ec2 instance
 
 START THE API BACKEND FOR SURVIVOR / PICKEMS (localhost:5000)
 

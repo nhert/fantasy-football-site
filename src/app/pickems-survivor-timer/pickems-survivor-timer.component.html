@@ -1,0 +1,24 @@
+<div class="countdown-container">
+    <div *ngIf="!isExpired" class="timer">
+        <div class="time-block">
+            <span class="number">{{ days() | number: '2.0-0' }}</span>
+            <span class="label">Days</span>
+        </div>
+        <div class="time-block">
+            <span class="number">{{ hours() | number: '2.0-0' }}</span>
+            <span class="label">Hours</span>
+        </div>
+        <div class="time-block">
+            <span class="number">{{ minutes() | number: '2.0-0' }}</span>
+            <span class="label">Minutes</span>
+        </div>
+        <div class="time-block">
+            <span class="number">{{ seconds() | number: '2.0-0' }}</span>
+            <span class="label">Seconds</span>
+        </div>
+    </div>
+
+    <div *ngIf="isExpired" class="expired-message">
+        <p>All picks are now locked for this week!</p>
+    </div>
+</div>
