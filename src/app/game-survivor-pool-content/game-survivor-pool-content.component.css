@@ -1,11 +1,20 @@
 .responsive-table-container {
     width: 100%;
+    max-width: 1800px;
     padding: 16px;
     box-sizing: border-box;
 }
 
 .responsive-table {
     width: 100%;
+}
+
+.demo-action-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    /* Forces buttons to full width */
+    gap: 8px;
+    padding: 16px;
 }
 
 /* @media (min-width: 1000px) {
@@ -122,4 +131,5 @@
 .elimination-text {
     color: rgb(212, 16, 16);
     font-size: 22px;
+    margin-top: 25px;
 }

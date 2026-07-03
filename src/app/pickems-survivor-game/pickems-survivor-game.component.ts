@@ -10,7 +10,7 @@ import { GamePickemsContentComponent } from "../game-pickems-content/game-pickem
 import { GamePickemsStandingsContentComponent } from "../game-pickems-standings-content/game-pickems-standings-content.component";
 import { GameSchedule, GameState, GameUser, SurvivorDbRow, SurvivorEntries } from '../_Models/survivor.pickems.models';
 import { MatTableDataSource } from '@angular/material/table';
-import { Subscription, take } from 'rxjs';
+import { firstValueFrom, Subscription, take } from 'rxjs';
 
 enum GameStatePhase {
   PreSeason, InSeason, PostSeason
@@ -27,6 +27,7 @@ export class PickemsSurvivorGameComponent {
   // provided by pickems-survivor-lobby
   // email, username, picture
   @Input('currentUser') currentUser: GameUser;
+  @Input('demoMode') demoMode: boolean = false;
 
   @ViewChild(GameSurvivorPoolContentComponent) survivorPoolContent!: GameSurvivorPoolContentComponent;
 
@@ -88,7 +89,7 @@ export class PickemsSurvivorGameComponent {
     scheduleEntries.forEach(entry => {
       this.gameSchedule.push({
         week: entry.week,
-        // The schedule.json file specifies times with EST timezone.
+        // The schedule.json file specifies times with EST/EDT timezone.
         // If "new Date" sees the timezone, it can convert to UTC using toISOString without using users locale/timezone
         start_datetime: new Date(entry.start_datetime).toISOString(),
         cutoff_datetime: new Date(entry.cutoff_datetime).toISOString()
@@ -97,13 +98,14 @@ export class PickemsSurvivorGameComponent {
   }
 
   setGameState(state, time, scheduleEntries, survivorPickemsState) {
-    let week = state.week;
+    let nflStateWeek = state.week;
     const year = state.season;
     let server_time_utc_iso = time.server_time;
 
-    //TODO: REMOVE THIS. FOR TESTING.
-    week = 1;
-    server_time_utc_iso = "2026-12-11T01:14:40.000Z";
+    if (this.demoMode) {
+      nflStateWeek = survivorPickemsState.last_processed_week >= 14 ? 14 : survivorPickemsState.last_processed_week + 1;
+      server_time_utc_iso = this.demo_getCurrentTimeBasedOnSchedule(nflStateWeek, 3600000);
+    }
     /*
       Testing values for server time
 
@@ -111,14 +113,14 @@ export class PickemsSurvivorGameComponent {
     */
 
     // Its the pre-season
-    if (week <= 0) {
+    if (nflStateWeek <= 0) {
       console.log("Pickems/Survivor Pool page has been loaded pre-season");
       this.gamePhase = GameStatePhase.PreSeason;
       this.firstGameDate = new Date(scheduleEntries[0].cutoff_datetime);
       this.isGameStateLoaded = true;
     }
     // Its the post-season
-    else if (week > PickemsSurvivorGameComponent.FANTASY_WEEKS_REGULAR_SEASON) {
+    else if (nflStateWeek > PickemsSurvivorGameComponent.FANTASY_WEEKS_REGULAR_SEASON) {
       console.log("Pickems/Survivor Pool page has been loaded post-season");
       this.gamePhase = GameStatePhase.PostSeason;
       this.isGameStateLoaded = true;
@@ -138,6 +140,7 @@ export class PickemsSurvivorGameComponent {
         last_processed_week: survivorPickemsState.last_processed_week,
         survivor_pool_outcome: survivorPickemsState.survivor_pool_outcome,
         survivor_pool_winning_owners: survivorPickemsState.survivor_pool_winning_owners,
+        survivor_pool_winning_week: survivorPickemsState.survivor_pool_winning_week
       }
       this.gamePhase = GameStatePhase.InSeason;
 
@@ -181,6 +184,10 @@ export class PickemsSurvivorGameComponent {
       this.determineCurrentUserEliminated(entries);
       this.convertToSurvivorEntriesElement(entries);
       this.isGameStateLoaded = true;
+
+      if (this.demoMode) {
+        this.survivorPoolContent?.demo_refreshDisplay();
+      }
     });
   }
 
@@ -191,6 +198,7 @@ export class PickemsSurvivorGameComponent {
     });
   }
 
+  // Check if the current user has been eliminated from Survivor Pool, and lock inputs if so.
   private determineCurrentUserEliminated(entries: any[]) {
     this.currentSurvivorUserEliminated = false;
     this.currentSurvivorUserMissedStart = false;
@@ -210,6 +218,7 @@ export class PickemsSurvivorGameComponent {
   }
 
   // TODO: OPTIMIZE THIS
+  // Accept multiple rows of entry data per user, and pivot this so that there is a single row per user with one column per entry
   protected convertToSurvivorEntriesElement(entries: any[]) {
     // key = email
     const survivorRowsGroupedByUser = new Map<string, SurvivorDbRow[]>();
@@ -254,6 +263,7 @@ export class PickemsSurvivorGameComponent {
     this.refreshDataSource();
   }
 
+  // Sort entries so that if current user has any, it appears at the top, followed by alphabetical order for the rest
   private sortSurvivorEntries(tempArray: SurvivorEntries[]) {
     let sortedArray: SurvivorEntries[] = [];
     this.survivorEntries = [];
@@ -269,10 +279,12 @@ export class PickemsSurvivorGameComponent {
     this.survivorEntries = this.survivorEntries.concat(sortedArray);
   }
 
+  // Refresh the mat-table data source with latest data
   private refreshDataSource() {
     this.dataSource = new MatTableDataSource<SurvivorEntries>(this.survivorEntries);
   }
 
+  // Accepts multiple db rows for a single user, and returns the one that matches the week parameter provided.
   private getSurvivorDbRowRecordWithWeek(rows: SurvivorDbRow[], week: number): SurvivorDbRow {
     let record: SurvivorDbRow = {
       owner: "",
@@ -289,7 +301,7 @@ export class PickemsSurvivorGameComponent {
     return record;
   }
 
-  // Get the schedule info for the current nfl week
+  // Get the schedule info for the current nfl week based on current server time
   protected getCurrentSchedule(server_time_iso: string): GameSchedule {
     const emptyEntry: GameSchedule = {
       week: -1,
@@ -323,4 +335,75 @@ export class PickemsSurvivorGameComponent {
     return this.gameUsers.find(user => user.user_email == email);
   }
 
+  // DEMO-ONLY RELATED METHODS
+
+  private demo_getCurrentTimeBasedOnSchedule(week, offset) {
+    // get the cutoff time based on input week, then get a current time X mins before the cutoff
+    const sched = this.gameSchedule.find(s => s.week == week);
+
+    const dateObj = new Date(sched.cutoff_datetime);
+    dateObj.setTime(dateObj.getTime() - offset);
+    return dateObj.toISOString();
+  }
+
+  // simulates the natural server progression to next week that happens via cron job, but triggered manually.
+  // Will get whatever week were currently on and add 1, rotate server_time to a time close to the new cutoff date and refresh display.
+  protected async demo_NextWeek() {
+    console.log("demo_NextWeek");
+
+    await firstValueFrom(this.survivorPickemsApi.demo_PerformWeekEndLogic());
+
+    let curWeek = this.gameState.week;
+    let serverTime = this.demo_getCurrentTimeBasedOnSchedule(curWeek, 3600000);
+    let scheduleEntry = this.getCurrentSchedule(serverTime);
+
+    if (this.gameState.week != 14) { // rotate to next week if not last week
+      curWeek++;
+      serverTime = this.demo_getCurrentTimeBasedOnSchedule(curWeek, 3600000);
+      scheduleEntry = this.getCurrentSchedule(serverTime);
+    }
+
+    this.survivorPickemsApi.getSurvivorPickemsGameStates().subscribe(survivorPickemsState => {
+      // initialize the gamestate variable
+      // Remember: this isnt necessarily the sleeper nflstate week, this is the week for pickems/survivor which rotates forward on tuesday night / wednesday morning (2am).
+
+      console.log("Entry being used after clicking demo NEXT WEEK");
+      console.log(scheduleEntry);
+      this.gameState = {
+        season: 2025,
+        week: scheduleEntry.week,
+        server_current_datetime_utc_iso: serverTime,
+        current_start_datetime_utc_iso: scheduleEntry.start_datetime,
+        current_cutoff_datetime_utc_iso: scheduleEntry.cutoff_datetime,
+        last_processed_week: survivorPickemsState.last_processed_week,
+        survivor_pool_outcome: survivorPickemsState.survivor_pool_outcome,
+        survivor_pool_winning_owners: survivorPickemsState.survivor_pool_winning_owners,
+        survivor_pool_winning_week: survivorPickemsState.survivor_pool_winning_week
+      }
+      this.gamePhase = GameStatePhase.InSeason;
+
+      console.log("new game state");
+      console.log(this.gameState);
+
+      this.initializeGame();
+      this.survivorPoolContent?.resetTimer();
+    });
+  }
+
+  protected async demo_Reset() {
+    console.log("demo_Reset");
+    // will remove db records for users, gamestate, entries
+    await firstValueFrom(this.survivorPickemsApi.demo_Reset());
+    window.location.reload();
+  }
+
+  protected demo_TestTimer() {
+    console.log("demo_TestTimer");
+
+    let curWeek = this.gameState.week;
+    let serverTime = this.demo_getCurrentTimeBasedOnSchedule(curWeek, 1000 * 20);
+
+    this.gameState.server_current_datetime_utc_iso = serverTime;
+    this.survivorPoolContent.resetTimer();
+  }
 }

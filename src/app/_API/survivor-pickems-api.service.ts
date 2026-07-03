@@ -6,12 +6,13 @@ import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class SurvivorPickemsApiService {
     //TODO: SET THIS
-    static SKIP_AUTH: boolean = true; // skip auth0 login. Also update the router to include authguard 
-    static IN_LOCAL_TESTING_MODE: boolean = true; // set to true for production (nginx) mode
+    static SKIP_AUTH: boolean = true; // skip auth0 login
+    static IN_LOCAL_TESTING_MODE: boolean = false; // set to false for production (nginx) mode
 
     private apiUrl = SurvivorPickemsApiService.IN_LOCAL_TESTING_MODE ? 'http://localhost:5000/api' : '/api';
     private usersApiUrl = this.apiUrl + '/users';
     private survivorApiUrl = this.apiUrl + '/survivor_pool';
+    private demoApiUrl = this.apiUrl + "/demo";
     //private pickemsApiUrl = this.apiUrl + '/pickems';
 
     constructor(private http: HttpClient) { }
@@ -32,6 +33,16 @@ export class SurvivorPickemsApiService {
 
     getSurvivorPickemsGameStates(): Observable<any> {
         return this.http.get(this.apiUrl + "/game_states");
+    }
+
+    // DEMO ONLY
+
+    demo_PerformWeekEndLogic(): Observable<any> {
+        return this.http.get(this.demoApiUrl + "/next_week");
+    }
+
+    demo_Reset(): Observable<any> {
+        return this.http.get(this.demoApiUrl + "/reset");
     }
 
     // USERS

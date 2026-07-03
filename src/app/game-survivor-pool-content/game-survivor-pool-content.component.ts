@@ -9,11 +9,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ToastrService } from 'ngx-toastr';
 import { GameState, GameUser, SurvivorEntries } from '../_Models/survivor.pickems.models';
 import { PickemsSurvivorTimerComponent } from "../pickems-survivor-timer/pickems-survivor-timer.component";
+import { MatExpansionModule } from "@angular/material/expansion";
+import { MatListModule } from "@angular/material/list";
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'game-survivor-pool-content',
   standalone: true,
-  imports: [MatTableModule, CommonModule, MatSelect, MatOptionModule, MatFormFieldModule, PickemsSurvivorTimerComponent],
+  imports: [MatTableModule, CommonModule, MatSelect, MatOptionModule, MatFormFieldModule, PickemsSurvivorTimerComponent, MatExpansionModule, MatListModule, MatTooltipModule],
   templateUrl: './game-survivor-pool-content.component.html',
   styleUrl: './game-survivor-pool-content.component.css'
 })
@@ -28,6 +31,12 @@ export class GameSurvivorPoolContentComponent {
   @Input('gameState') gameState: GameState;
   @Input('made_choices_sleeper_ids') made_choices_sleeper_ids: string[];
   @Input('gameUsers') gameUsers: any[];
+
+  // Demo related inputs
+  @Input('demoMode') demoMode: boolean = false;
+  @Output('demoNextWeek') demoNextWeek = new EventEmitter<void>();
+  @Output('demoReset') demoReset = new EventEmitter<void>();
+  @Output('demoTestTimer') demoTestTimer = new EventEmitter<void>();
 
   @ViewChild(PickemsSurvivorTimerComponent) timerComponent!: PickemsSurvivorTimerComponent;
 
@@ -50,7 +59,7 @@ export class GameSurvivorPoolContentComponent {
   constructor(private survivorPickemsApi: SurvivorPickemsApiService) { }
 
   ngOnInit() {
-    this.prepData();
+    this.prepTable();
     this.isTablePrepared = true;
   }
 
@@ -77,6 +86,7 @@ export class GameSurvivorPoolContentComponent {
 
     const selectedUser = this.selectedGmChoiceValue;
 
+    this.isLoading = true;
     this.survivorPickemsApi.getServerTime().subscribe(time => {
       // recheck server time at submission to be sure we aren't past the deadline
       const curServerTimeUTC = time.server_time;
@@ -87,13 +97,16 @@ export class GameSurvivorPoolContentComponent {
           next: () => {
             this.reloadTableData();
             this.successToast('Saved Successfully', `Your Survivor Pool choice of ${selectedUser.name} for week ${this.gameState.week} has been saved!`);
+            this.isLoading = false;
           },
           error: (err) => {
             this.errorToast('Error While Saving', err.message);
+            this.isLoading = false;
           }
         });
       } else {
         this.errorToast("Error While Saving", "The submission deadline has already passed!");
+        this.isLoading = false;
       }
     });
   }
@@ -106,8 +119,17 @@ export class GameSurvivorPoolContentComponent {
 
   // util methods
 
-  private prepData() {
-    this.generateDisplayedColumnsForNWeeks(this.gameState.week);
+  private prepTable() {
+    this.generateDisplayedColumnsForNWeeks(this.getNumTableWeeksToDisplay());
+  }
+
+  private getNumTableWeeksToDisplay(): number {
+    if (this.isSurvivorPoolFinished()) {
+      // Return the week that the pool was won if it has finished.
+      // Don't show up to the current NFL week because it will just be empty columns.
+      return this.gameState.survivor_pool_winning_week;
+    }
+    return this.gameState.week;
   }
 
   private generateDisplayedColumnsForNWeeks(weeks: number) {
@@ -178,7 +200,7 @@ export class GameSurvivorPoolContentComponent {
         this.disableUiControl = true;
       }
 
-      this.timerComponent.startTimer(remainingSeconds);
+      this.timerComponent?.startTimer(remainingSeconds);
     }
   }
 
@@ -223,5 +245,12 @@ export class GameSurvivorPoolContentComponent {
     }
 
     return "The pool is unfinished";
+  }
+
+  // DEMO-ONLY RELATED METHODS
+
+  // called by parent method to manually refresh 
+  public demo_refreshDisplay() {
+    this.prepTable();
   }
 }

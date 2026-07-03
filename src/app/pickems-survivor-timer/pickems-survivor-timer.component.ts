@@ -58,8 +58,6 @@ export class PickemsSurvivorTimerComponent {
     const elapsedMs = now - this.lastPerformanceTick;
     const elapsedSeconds = Math.round(elapsedMs / 1000);
 
-    //console.log("Tick!");
-
     if (elapsedSeconds >= 1) {
       //console.log("MADE timing");
       this.lastPerformanceTick = now; // Update anchor time

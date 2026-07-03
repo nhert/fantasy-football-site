@@ -1,0 +1,6 @@
+:host {
+    display: block;
+    /* Allows the component to honor width settings */
+    width: 100%;
+    /* Forces it to stretch to the parent grid bounds */
+}

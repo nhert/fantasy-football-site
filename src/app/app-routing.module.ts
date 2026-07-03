@@ -15,6 +15,8 @@ import { AuthGuard } from '@auth0/auth0-angular';
 import { Constants } from './_Tools/Constants';
 import { PickemsSurvivorLobbyComponent } from './pickems-survivor-lobby/pickems-survivor-lobby.component';
 import { Auth0Guard } from './_Tools/Auth0Guard';
+import { PickemsSurvivorDemoComponent } from './pickems-survivor-demo/pickems-survivor-demo.component';
+import { SurvivorPickemsApiService } from './_API/survivor-pickems-api.service';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -39,9 +41,8 @@ export const routes: Routes = [
   { path: 'jordan-show', component: JordanShowComponent },
   { path: 'draft-videos', component: DraftVideosComponent },
   // Protected by Login
-  // TODO: UNCOMMENT THIS TO RE-ENABLE AUTH0 LOGIN
-  // { path: 'pickems-survivor-lobby', component: PickemsSurvivorLobbyComponent, canActivate: [AuthGuard] },
-  { path: 'pickems-survivor-lobby', component: PickemsSurvivorLobbyComponent },
+  { path: 'pickems-survivor-lobby', component: PickemsSurvivorLobbyComponent, canActivate: SurvivorPickemsApiService.SKIP_AUTH ? [] : [AuthGuard] },
+  { path: 'demo', component: PickemsSurvivorDemoComponent },
   {
     path: 'callback',
     loadChildren: () =>

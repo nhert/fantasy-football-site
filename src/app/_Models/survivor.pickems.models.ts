@@ -9,7 +9,8 @@ export interface GameState {
     // Game logic fields
     last_processed_week: number,
     survivor_pool_outcome: string,
-    survivor_pool_winning_owners: string
+    survivor_pool_winning_owners: string,
+    survivor_pool_winning_week: number
 }
 
 export interface GameSchedule {

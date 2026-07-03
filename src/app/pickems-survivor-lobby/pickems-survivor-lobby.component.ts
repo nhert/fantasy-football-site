@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { map } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
@@ -16,11 +16,13 @@ import { PickemsSurvivorCalendarComponent } from "../pickems-survivor-calendar/p
 @Component({
   selector: 'app-pickems-survivor-lobby',
   standalone: true,
-  imports: [CommonModule, SimpleSpinnerComponent, MatIcon, FormsModule, ReactiveFormsModule, MatToolbarModule, PickemsSurvivorGameComponent, PickemsSurvivorCalendarComponent],
+  imports: [CommonModule, SimpleSpinnerComponent, MatIcon, FormsModule, ReactiveFormsModule, MatToolbarModule, PickemsSurvivorGameComponent],
   templateUrl: './pickems-survivor-lobby.component.html',
   styleUrl: './pickems-survivor-lobby.component.css'
 })
 export class PickemsSurvivorLobbyComponent {
+  @Input('demoMode') demoMode: boolean = false;
+
   private auth = inject(AuthService);
   private doc = inject(DOCUMENT);
 
@@ -41,6 +43,7 @@ export class PickemsSurvivorLobbyComponent {
   }
 
   private readonly dummy_user_email = "dummy.user.test@com.com";
+  private readonly demo_user_email = "demo.user@b3fl.com";
 
   private sub_Auth: Subscription;
   user$ = this.auth.user$;
@@ -60,7 +63,7 @@ export class PickemsSurvivorLobbyComponent {
   constructor(private survivorPickemsApi: SurvivorPickemsApiService) { }
 
   ngOnInit(): void {
-    if (SurvivorPickemsApiService.SKIP_AUTH) {
+    if (SurvivorPickemsApiService.SKIP_AUTH || this.demoMode) {
       console.log("Pickems Survivor Lobby started in DEV MODE");
       this.authenticateInDevMode();
     } else {
@@ -75,7 +78,7 @@ export class PickemsSurvivorLobbyComponent {
 
   private authenticateInDevMode() {
     this.isAuthenticated = true;
-    this.currentUser.email = this.dummy_user_email;
+    this.currentUser.email = this.demoMode ? this.demo_user_email : this.dummy_user_email;
     console.log("Hardcoding test account " + this.currentUser.email);
     this.checkGameServerStatus();
   }

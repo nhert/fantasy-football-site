@@ -19,7 +19,9 @@
                             [gameState]="gameState" [made_choices_sleeper_ids]="made_choices_sleeper_ids"
                             [gameUsers]="gameUsers" [userEliminated]="currentSurvivorUserEliminated"
                             [userMissedStart]="currentSurvivorUserMissedStart" (reloadData)="reloadEntries()"
-                            (reloadServerTime)="reloadServerTime()"></game-survivor-pool-content>
+                            (reloadServerTime)="reloadServerTime()" [demoMode]="demoMode"
+                            (demoNextWeek)="demo_NextWeek()" (demoReset)="demo_Reset()"
+                            (demoTestTimer)="demo_TestTimer()"></game-survivor-pool-content>
                     </ng-template>
                 </mat-tab>
 

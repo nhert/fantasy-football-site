@@ -1,5 +1,32 @@
 <ng-container *ngIf="isTablePrepared">
 
+    <ng-container *ngIf="demoMode">
+        <mat-expansion-panel style="width: 350px; background-color:chocolate;">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Demo Actions
+                </mat-panel-title>
+                <mat-panel-description>
+                    Click to expand and perform demo actions
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div mat-subheader>Hover mouse over button to see what it does</div>
+            <mat-action-row class="demo-action-row">
+                <button mat-raised-button color="primary"
+                    matTooltip="Click to move the current NFL week forward and process win/loss for each survivor entry"
+                    (click)="demoNextWeek.emit()">Move
+                    to Next Week</button>
+                <button mat-raised-button color="primary"
+                    matTooltip="Click to reset the Survivor Pool to it's starting values"
+                    (click)="demoReset.emit()">Reset</button>
+                <button mat-raised-button color="primary"
+                    matTooltip="Click to set the current time to 20s before the timer expires"
+                    (click)="demoTestTimer.emit()">Test Timer Expiry</button>
+            </mat-action-row>
+        </mat-expansion-panel>
+    </ng-container>
+
     <!-- The survivor pool is still ongoing, so show the week, timer, and inputs. -->
     <ng-container *ngIf="!isSurvivorPoolFinished()">
         <span style="font-size: 36px; margin-bottom: 40;">NFL Week {{gameState.week}}</span>
@@ -9,7 +36,7 @@
 
         <pickems-survivor-timer (disableUiComponents)="handleDisableUiComponents()"></pickems-survivor-timer>
 
-        <div class="survivor-inputs">
+        <div class="survivor-inputs" *ngIf="!userEliminated && !userMissedStart">
             <mat-form-field style="padding-top: 20px;">
                 <mat-label>Choose a GM</mat-label>
                 <mat-select [compareWith]="compareUsers" (selectionChange)="onGmSelectionChange($event)"
@@ -46,9 +73,9 @@
     <ng-container *ngIf="isSurvivorPoolFinished()">
         <span style="font-size: 36px;">Survivor Pool Finished!</span>
         <br><br>
-        <span style="font-size: 22px;">{{getSurvivorPoolOutcome()}}</span>
-        <br><br>
-        <span style="font-size: 18px; color:blueviolet">Congratulations to
+        <span style="font-size: 18px;">{{getSurvivorPoolOutcome()}}</span>
+        <br><br><br>
+        <span style="font-size: 30px; color:gold">Congratulations to
             {{getListOfSurvivorPoolWinningUsernames()}}!</span>
     </ng-container>
 
