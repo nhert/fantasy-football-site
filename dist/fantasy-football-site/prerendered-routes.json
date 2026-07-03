@@ -1,21 +1,24 @@
 {
-  "routes": [
-    "/calendar",
-    "/draft-videos",
-    "/drafts",
-    "/elimination-line",
-    "/gm-list",
-    "/home",
-    "/jordan-show",
-    "/live-scores",
-    "/manifesto",
-    "/matchup-history",
-    "/pickems-survivor-lobby",
-    "/pistol-guncop",
-    "/playoff-predictor",
-    "/profiles",
-    "/records",
-    "/standings",
-    "/upcoming-matchup"
-  ]
+  "routes": {
+    "/": {},
+    "/calendar": {},
+    "/callback": {},
+    "/demo": {},
+    "/draft-videos": {},
+    "/drafts": {},
+    "/elimination-line": {},
+    "/gm-list": {},
+    "/home": {},
+    "/jordan-show": {},
+    "/live-scores": {},
+    "/manifesto": {},
+    "/matchup-history": {},
+    "/pickems-survivor-lobby": {},
+    "/pistol-guncop": {},
+    "/playoff-predictor": {},
+    "/profiles": {},
+    "/records": {},
+    "/standings": {},
+    "/upcoming-matchup": {}
+  }
 }

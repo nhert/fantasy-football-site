@@ -1,4 +1,4 @@
-<!doctype html>
+export default `<!doctype html>
 <html lang="en">
 
 <head><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
@@ -16,4 +16,4 @@
   <app-root></app-root>
 <link rel="modulepreload" href="chunk-6H7IO7EI.js"><link rel="modulepreload" href="chunk-7MX6CTCL.js"><link rel="modulepreload" href="chunk-USQJYYEN.js"><script src="polyfills-5CFQRCPP.js" type="module"></script><script src="main-DV2Y65EN.js" type="module"></script></body>
 
-</html>
+</html>`;
