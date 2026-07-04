@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Constants } from '../_Tools/Constants';
 
 
 @Injectable({ providedIn: 'root' })
 export class SurvivorPickemsApiService {
-    //TODO: SET THIS
-    static SKIP_AUTH: boolean = true; // skip auth0 login
-    static IN_LOCAL_TESTING_MODE: boolean = false; // set to false for production (nginx) mode
-
-    private apiUrl = SurvivorPickemsApiService.IN_LOCAL_TESTING_MODE ? 'http://localhost:5000/api' : '/api';
+    private apiUrl = Constants.PICKEMS_SURVIVOR_IN_LOCAL_TESTING_MODE ? 'http://localhost:5000/api' : '/api';
     private usersApiUrl = this.apiUrl + '/users';
     private survivorApiUrl = this.apiUrl + '/survivor_pool';
     private demoApiUrl = this.apiUrl + "/demo";

@@ -2,12 +2,26 @@ https://www.devdungeon.com/content/deploy-angular-apps-nginx
 
 These instructions help to install a fresh version of the site on a new amazon ec2 instance
 
+IMPORTANT LOCATIONS
+
+- nginx config -> /etc/nginx/sites-available/default
+- 
+
+PM2 COMMANDS
+
+pm2 start server.js --name pickems-survivor-db (CD TO DB DIR /var/www/b3fl_db/pickems-survivor-db/)
+pm2 logs pickems-survivor-db 
+pm2 delete pickems-survivor-db (Stop and remove the application from PM2's tracking list.)
+pm2 stop pickems-survivor-db (Stop your app without deleting it from the registry.)
+pm2 reload pickems-survivor-db (Zero-downtime reload (reloads workers sequentially).)
+pm2 monit (Launch a rich terminal-based dashboard for real-time diagnostics.)
+
 START THE API BACKEND FOR SURVIVOR / PICKEMS (localhost:5000)
 
 1. npm install -g pm2 (install package manager2 globally if not already)
-2. Make a folder somewhere that makes sense and drop the pullPickemsSurvivorDbData.sh script.
+2. cd to /var/www/ and make a folder name that makes sense and drop the pullPickemsSurvivorDbData.sh script inside it.
 3. Run ". pullPickemsSurvivorDbData.sh" (this clones/pulls latest github version of the pickem/survivor db to the directory)
-4. Run "pm2 start server.js --name express-api" (api will listen on localhost in the background for reverse proxy from nginx)
+4. Run "pm2 start server.js --name pickems-survivor-db" (api will listen on localhost in the background for reverse proxy from nginx)
 
 SETUP NGINX FOR ANGULAR FRONTEND
 
@@ -15,8 +29,6 @@ SETUP NGINX FOR ANGULAR FRONTEND
 2. Run "apt install nginx" to get the service. Also run "apt install certbot" for SSL.
 3. Go to /usr/share/nginx/html/ and drop the pullSiteData.sh script. 
 4. Run ". pullSiteData.sh" (this clones/pulls latest github version of the site to the directory)
-5. Copy the contents of "default.txt" to /etc/nginx/sites-available/default/
+5. Copy the contents of "default.txt" to /etc/nginx/sites-available/default with "vi /etc/nginx/sites-available/default"
 6. Certbot instructions: https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal&tab=standard
 7. service nginx restart
-
-

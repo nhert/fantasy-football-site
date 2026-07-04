@@ -10,7 +10,7 @@ server {
   ssl_certificate_key /etc/letsencrypt/live/b3fl.com/privkey.pem;
 
   location / {
-    try_files $uri $uri/ /index.html;
+    try_files $uri /index.csr.html;
   }
  
   location /api/ {

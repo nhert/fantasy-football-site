@@ -4,6 +4,12 @@ import nflPlayersJson from '../../assets/nflPlayers/nfl_players.json'
 
 // Class holding constants related to the site
 export class Constants {
+
+	// Set to the most current Sleeper League ID. This will update when commish starts a new season.
+	static A_LEAGUE_SLEEPER_ID = "1257104499407863808";
+	static B_LEAGUE_SLEEPER_ID = "1257479897941553152";
+
+	// PICKEMS / SURVIVOR POOL RELATED CONSTANTS	
 	static AUTH0_DOMAIN = "dev-bk2yk7ww7yqyitvv.us.auth0.com";
 	static AUTH0_CLIENT_ID = "iDWar2e5ka8RXvdJTQT60w5DytBEyz9J";
 	//static AUTH0_CALLBACK = "https://b3fl.com/";
@@ -17,12 +23,11 @@ export class Constants {
 		},
 		errorPath: '/callback',
 	}
+	static PICKEMS_SURVIVOR_SKIP_AUTH: boolean = true; // FALSE IN PRODUCTION MODE. skip auth0 login
+	static PICKEMS_SURVIVOR_IN_LOCAL_TESTING_MODE: boolean = true; // FALSE IN PRODUCTION MODE. set to false for (nginx) deployment.
 
-	// Set to the most current Sleeper League ID. This will update when commish starts a new season.
-	static A_LEAGUE_SLEEPER_ID = "1257104499407863808";
-	static B_LEAGUE_SLEEPER_ID = "1257479897941553152";
-
-	static PICKEMS_URL = "https://leagueside.app/";
+	// HARDCODED URLS
+	static PICKEMS_URL = "https://leagueside.app/"; // deprecated ;)
 	static PISTOL_GUNCOP_URL = "https://www.youtube.com/@bfltwo5555";
 	static PISTOL_GUNCOP_YT_CHANNEL_ID = "UCqd9SN4AnC9RfJDMwzzVsfQ";
 	static JORDAN_SHOW_URL = "https://www.twitch.tv/jordstirling";

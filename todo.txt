@@ -19,3 +19,15 @@ FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaS
 10: 00007FF6E6974876 uv_timer_set_repeat+20694
 11: 00007FF6E65465B7 v8::String::Value::~Value+144199
 12: 000001AD45D775FA 
+
+CRITICAL
+- BUG IN S/P if a user misses a submission after a winning pick, they arent eliminated.
+- the allow/deny for nginx config /api/ is forbidden. Is this because SSR isnt being used?
+
+MINOR
+- Reduce size of s/p timer so that it fits width=360
+- field validation for nickname
+- DARK MODE
+- Standings
+- HELP section for s/p that explains the schedule, how to play, scoring, when things process, when entries lock/unlock etc
+- Popup warning that says "you have not made your pick(s) yet this week" if you have no entry before deadline

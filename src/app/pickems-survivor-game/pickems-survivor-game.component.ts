@@ -217,7 +217,7 @@ export class PickemsSurvivorGameComponent {
     }
   }
 
-  // TODO: OPTIMIZE THIS
+  // TODO: OPTIMIZE THIS SPAGHETTI
   // Accept multiple rows of entry data per user, and pivot this so that there is a single row per user with one column per entry
   protected convertToSurvivorEntriesElement(entries: any[]) {
     // key = email

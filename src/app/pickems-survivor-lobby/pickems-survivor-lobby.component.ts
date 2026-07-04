@@ -12,6 +12,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { PickemsSurvivorGameComponent } from "../pickems-survivor-game/pickems-survivor-game.component";
 import { GameUser } from '../_Models/survivor.pickems.models';
 import { PickemsSurvivorCalendarComponent } from "../pickems-survivor-calendar/pickems-survivor-calendar.component";
+import { Constants } from '../_Tools/Constants';
 
 @Component({
   selector: 'app-pickems-survivor-lobby',
@@ -63,7 +64,7 @@ export class PickemsSurvivorLobbyComponent {
   constructor(private survivorPickemsApi: SurvivorPickemsApiService) { }
 
   ngOnInit(): void {
-    if (SurvivorPickemsApiService.SKIP_AUTH || this.demoMode) {
+    if (Constants.PICKEMS_SURVIVOR_SKIP_AUTH || this.demoMode) {
       console.log("Pickems Survivor Lobby started in DEV MODE");
       this.authenticateInDevMode();
     } else {
@@ -157,7 +158,7 @@ export class PickemsSurvivorLobbyComponent {
   }
 
   protected handleLogout(): void {
-    if (!SurvivorPickemsApiService.SKIP_AUTH) {
+    if (!Constants.PICKEMS_SURVIVOR_SKIP_AUTH) {
       this.auth.logout({
         logoutParams: {
           returnTo: this.doc.location.origin,
@@ -167,11 +168,10 @@ export class PickemsSurvivorLobbyComponent {
   }
 
   protected checkAuth(): Observable<boolean> {
-    if (SurvivorPickemsApiService.SKIP_AUTH) {
+    if (Constants.PICKEMS_SURVIVOR_SKIP_AUTH) {
       return of(this.isAuthenticated);
     } else {
       return this.auth$;
     }
   }
-
 }
