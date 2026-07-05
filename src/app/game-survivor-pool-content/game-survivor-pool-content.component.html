@@ -36,6 +36,16 @@
 
         <pickems-survivor-timer (disableUiComponents)="handleDisableUiComponents()"></pickems-survivor-timer>
 
+        <div class="no-pick-made-container" *ngIf="getShouldShowWarningToMakePick()">
+            <mat-card class="no-pick-made-warning mat-elevation-z0">
+                <mat-card-content style="padding: 0;">
+                    <mat-icon inline="true" style="margin-right: 3px;">warning</mat-icon>
+                    <strong>Warning:</strong> You have not submitted a pick yet this week.
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+
         <div class="survivor-inputs" *ngIf="!userEliminated && !userMissedStart">
             <mat-form-field style="padding-top: 20px;">
                 <mat-label>Choose a GM</mat-label>

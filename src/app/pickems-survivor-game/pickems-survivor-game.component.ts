@@ -46,6 +46,7 @@ export class PickemsSurvivorGameComponent {
   public dataSource: MatTableDataSource<SurvivorEntries>;
   public currentSurvivorUserEliminated: boolean = false;
   public currentSurvivorUserMissedStart: boolean = false;
+  public currentSurvivorUserNeedsPickForThisWeek: boolean = false;
 
   // loading booleans
   isGameStateLoaded: boolean = false;
@@ -69,6 +70,7 @@ export class PickemsSurvivorGameComponent {
     */
     this.currentSurvivorUserEliminated = false;
     this.currentSurvivorUserMissedStart = false;
+    this.currentSurvivorUserNeedsPickForThisWeek = false;
     this.sleeperApi.getNflState().then(state => {
       // Get the schedule
       this.survivorPickemsApi.getGameSchedule().subscribe(scheduleEntries => {
@@ -181,7 +183,7 @@ export class PickemsSurvivorGameComponent {
             "choice_gm_name": ""
         }
       */
-      this.determineCurrentUserEliminated(entries);
+      this.determineCurrentUserGameState(entries);
       this.convertToSurvivorEntriesElement(entries);
       this.isGameStateLoaded = true;
 
@@ -199,9 +201,10 @@ export class PickemsSurvivorGameComponent {
   }
 
   // Check if the current user has been eliminated from Survivor Pool, and lock inputs if so.
-  private determineCurrentUserEliminated(entries: any[]) {
+  private determineCurrentUserGameState(entries: any[]) {
     this.currentSurvivorUserEliminated = false;
     this.currentSurvivorUserMissedStart = false;
+    this.currentSurvivorUserNeedsPickForThisWeek = false;
 
     const currentUserRecord = entries.filter(obj => obj.owner == this.currentUser.email);
     const isRecordPresent = currentUserRecord && currentUserRecord.length > 0;
@@ -211,9 +214,17 @@ export class PickemsSurvivorGameComponent {
       if (foundLossRecord) {
         this.currentSurvivorUserEliminated = true;
       }
+
+      const foundCurrentWeekRecord = currentUserRecord.find(entry => entry.week == this.gameState.week);
+      if (!foundCurrentWeekRecord) {
+        this.currentSurvivorUserNeedsPickForThisWeek = true;
+      }
     } else if (!isRecordPresent && this.gameState.week > 1) {
       // user joined after survivor pool started and has no records
       this.currentSurvivorUserMissedStart = true;
+    } else if (!isRecordPresent && this.gameState.week == 1) {
+      // user has no record, and its the first week (they should be prompted to make an entry before deadline)
+      this.currentSurvivorUserNeedsPickForThisWeek = true;
     }
   }
 
@@ -357,6 +368,8 @@ export class PickemsSurvivorGameComponent {
     let serverTime = this.demo_getCurrentTimeBasedOnSchedule(curWeek, 3600000);
     let scheduleEntry = this.getCurrentSchedule(serverTime);
 
+    this.survivorPoolContent.didUserSuccessfullySubmit = false;
+
     if (this.gameState.week != 14) { // rotate to next week if not last week
       curWeek++;
       serverTime = this.demo_getCurrentTimeBasedOnSchedule(curWeek, 3600000);
@@ -367,8 +380,6 @@ export class PickemsSurvivorGameComponent {
       // initialize the gamestate variable
       // Remember: this isnt necessarily the sleeper nflstate week, this is the week for pickems/survivor which rotates forward on tuesday night / wednesday morning (2am).
 
-      console.log("Entry being used after clicking demo NEXT WEEK");
-      console.log(scheduleEntry);
       this.gameState = {
         season: 2025,
         week: scheduleEntry.week,
@@ -381,9 +392,6 @@ export class PickemsSurvivorGameComponent {
         survivor_pool_winning_week: survivorPickemsState.survivor_pool_winning_week
       }
       this.gamePhase = GameStatePhase.InSeason;
-
-      console.log("new game state");
-      console.log(this.gameState);
 
       this.initializeGame();
       this.survivorPoolContent?.resetTimer();

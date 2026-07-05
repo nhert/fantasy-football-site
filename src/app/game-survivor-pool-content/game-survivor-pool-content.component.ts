@@ -12,11 +12,13 @@ import { PickemsSurvivorTimerComponent } from "../pickems-survivor-timer/pickems
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatListModule } from "@angular/material/list";
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCardModule } from "@angular/material/card";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: 'game-survivor-pool-content',
   standalone: true,
-  imports: [MatTableModule, CommonModule, MatSelect, MatOptionModule, MatFormFieldModule, PickemsSurvivorTimerComponent, MatExpansionModule, MatListModule, MatTooltipModule],
+  imports: [MatTableModule, CommonModule, MatSelect, MatOptionModule, MatFormFieldModule, PickemsSurvivorTimerComponent, MatExpansionModule, MatListModule, MatTooltipModule, MatCardModule, MatIconModule],
   templateUrl: './game-survivor-pool-content.component.html',
   styleUrl: './game-survivor-pool-content.component.css'
 })
@@ -26,6 +28,7 @@ export class GameSurvivorPoolContentComponent {
 
   @Input('userEliminated') userEliminated: boolean;
   @Input('userMissedStart') userMissedStart: boolean;
+  @Input('userNeedsToMakePickThisWeek') userNeedsToMakePickThisWeek: boolean;
   @Input('dataSource') dataSource: MatTableDataSource<SurvivorEntries>; // data source for the survivor pool table
   @Input('currentUser') currentUser: GameUser;
   @Input('gameState') gameState: GameState;
@@ -54,13 +57,15 @@ export class GameSurvivorPoolContentComponent {
   // flags
   isTablePrepared: boolean = false;
   isLoading: boolean = false;
-  disableUiControl: boolean = false;
+  passedDeadlineDisableUi: boolean = false;
+  didUserSuccessfullySubmit: boolean = false;
 
   constructor(private survivorPickemsApi: SurvivorPickemsApiService) { }
 
   ngOnInit() {
     this.prepTable();
     this.isTablePrepared = true;
+    this.didUserSuccessfullySubmit = false;
   }
 
   ngAfterViewInit() {
@@ -97,6 +102,7 @@ export class GameSurvivorPoolContentComponent {
           next: () => {
             this.reloadTableData();
             this.successToast('Saved Successfully', `Your Survivor Pool choice of ${selectedUser.name} for week ${this.gameState.week} has been saved!`);
+            this.didUserSuccessfullySubmit = true;
             this.isLoading = false;
           },
           error: (err) => {
@@ -195,9 +201,9 @@ export class GameSurvivorPoolContentComponent {
       //console.log("Setting the survivor pool timer to " + remainingSeconds + " seconds");
 
       if (remainingSeconds > 0) {
-        this.disableUiControl = false;
+        this.passedDeadlineDisableUi = false;
       } else {
-        this.disableUiControl = true;
+        this.passedDeadlineDisableUi = true;
       }
 
       this.timerComponent?.startTimer(remainingSeconds);
@@ -210,12 +216,13 @@ export class GameSurvivorPoolContentComponent {
     return (date2 - date1) / 1000;
   }
 
+  //called by timer to disable ui controls the moment timer elapses
   handleDisableUiComponents() {
-    this.disableUiControl = true;
+    this.passedDeadlineDisableUi = true;
   }
 
   protected shouldDisableUiInput() {
-    return this.disableUiControl || this.userEliminated || this.userMissedStart;
+    return this.passedDeadlineDisableUi || this.userEliminated || this.userMissedStart;
   }
 
   protected isSurvivorPoolFinished() {
@@ -245,6 +252,12 @@ export class GameSurvivorPoolContentComponent {
     }
 
     return "The pool is unfinished";
+  }
+
+  protected getShouldShowWarningToMakePick() {
+    // if player is not eliminated, and they do NOT have an entry for this week, and it is not after the deadline, and they did not just click the submit button successfully without reloading the page
+    const eliminated = this.userEliminated || this.userMissedStart;
+    return !eliminated && !this.passedDeadlineDisableUi && this.userNeedsToMakePickThisWeek && !this.didUserSuccessfullySubmit;
   }
 
   // DEMO-ONLY RELATED METHODS
