@@ -8,7 +8,6 @@
 .game-container {
     width: 100%;
     height: 100%;
-    background-color: #424242;
 
     justify-content: center;
     align-items: center;
@@ -27,7 +26,7 @@
     justify-content: space-between;
     align-items: center;
     height: 50px;
-    background-color: #0c3ec3;
+    background-color: var(--b3fl-blue);
     color: white;
     width: 100%;
     /* freeze position of the toolbar */

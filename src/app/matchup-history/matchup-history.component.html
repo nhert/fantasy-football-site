@@ -1,6 +1,6 @@
 <div class="matchups-container">
   <h2>Matchup History</h2>
-  <mat-card class="card-default">
+  <mat-card style="background-color: var(--accent-color);">
     <mat-card-content>
       <h4>View your historical matchups against other managers</h4>
       <h5><i>This tool includes all historical games against the opponent, even games played after playoff
@@ -33,7 +33,7 @@
           </mat-error>
         </mat-form-field>
         <br>
-        <mat-form-field class="form-field-default">
+        <mat-form-field class="form-field-default default-margin">
           <mat-label>Timespan</mat-label>
           <mat-select [disabled]="loading" [(ngModel)]="timespanValue" name="timespanValue"
             (selectionChange)="refreshDisplayedData()">
@@ -42,7 +42,7 @@
             <mat-option value="legacyOnly">NFL.com Era</mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field class="form-field-default">
+        <mat-form-field class="form-field-default default-margin">
           <mat-label>League</mat-label>
           <mat-select [disabled]="loading" [(ngModel)]="leagueValue" name="leagueValue"
             (selectionChange)="refreshDisplayedData()">

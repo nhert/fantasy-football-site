@@ -14,7 +14,14 @@
                 </tr>
                 <tr>
                     <td>
-                        <div style="height: 30px;"></div>
+                        <div style="height: 20px;"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button class="theme-toggle" (click)="toggleTheme()">
+                            {{ isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}
+                        </button>
                     </td>
                 </tr>
                 <tr>

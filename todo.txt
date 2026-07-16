@@ -33,11 +33,9 @@ PICKEMS
 - handle when users miss picks
 
 MINOR
-- DARK MODE
 - HELP section for s/p that explains the schedule, how to play, scoring, when things process, when entries lock/unlock etc
 - improve the visuals of the survivor pool finished screen. Dont just use text
 - make a calendar that shows the schedule
 - improve how the survivor pickems timer displays (make it a panel with box shadowing?)
 - fix how ResetTimer works in Survivor Content. Gets called repeatedly whenever tab is changed and will have the wrong new server time since ngOnInit gets called in the content classes. 
     (basically might need a small refactor to how timer component works - maybe i should just have the getServerTime API directly in there)
-- 

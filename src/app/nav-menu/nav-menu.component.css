@@ -2,3 +2,46 @@
     height: 100%;
     width: 100%;
 }
+
+.side-nav {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+    min-width: 300px !important;
+}
+
+.home-button-text {
+    font-size: 20px;
+    padding-left: 10px;
+}
+
+.default-text {
+    font-size: 16px;
+    padding-left: 15px;
+    color: var(--text-color);
+}
+
+.menu-background {
+    background-color: var(--bg-color) !important;
+}
+
+/* 2. Sidenav Background and Text */
+.menu-background mat-sidenav {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+}
+
+/* 3. Text and Active Highlights within lists */
+.menu-background mat-sidenav mat-nav-list .mat-mdc-list-item {
+    color: var(--text-color);
+}
+
+/* Hover Highlight State */
+.menu-background mat-sidenav mat-nav-list .mat-mdc-list-item:hover {
+    background-color: var(--bg-color) !important;
+}
+
+/* Active Highlight State (paired with routerLinkActive) */
+.menu-background mat-sidenav mat-nav-list .mat-mdc-list-item.is-active {
+    background-color: #3f51b5 !important;
+    color: var(--text-color) !important;
+}

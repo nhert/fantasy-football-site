@@ -1,7 +1,7 @@
 <div class="records-container">
     <h2>GM Records</h2>
     <br>
-    <mat-card>
+    <mat-card style="background-color: var(--accent-color);">
         <mat-card-content>
             <h4>View a GM's game record in the B3FL</h4>
             <form>
@@ -39,9 +39,10 @@
                 </mat-form-field>
                 <section>
                     <mat-checkbox [disabled]="loading" [(ngModel)]="showEliminatedGamesValue"
-                        name="showEliminatedGamesValue" (change)="refreshDisplayedData()" [color]="primary">Show
-                        Post-Elimination Playoff
-                        Games?</mat-checkbox>
+                        name="showEliminatedGamesValue" (change)="refreshDisplayedData()" [color]="primary"><span
+                            style="color: var(--text-color);">Show
+                            Post-Elimination Playoff
+                            Games?</span></mat-checkbox>
                 </section>
             </form>
         </mat-card-content>

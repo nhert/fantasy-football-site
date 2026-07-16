@@ -4,8 +4,8 @@
 
 .stats-card {
     text-align: center;
-    background-color: #313131;
-    color: #f0f0f0;
+    background-color: var(--accent-color);
+    color: var(--text-color);
 }
 
 .stats-details {
@@ -23,5 +23,5 @@
 
 .win-loss-h1 {
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    color: #f0f0f0;
+    color: var(--text-color);
 }

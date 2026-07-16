@@ -600,7 +600,7 @@ export class SleeperApiService {
 			// If we are currently on the elapsed Sleeper season (this year), only load weeks up to the current NFL week.
 			// I.e., do not load weeks that have not happened yet
 			var weekMax = 17;
-			if (leagueId == Constants.A_LEAGUE_SLEEPER_ID || leagueId == Constants.B_LEAGUE_SLEEPER_ID) {
+			if (nflState.season == leagueData.season && (leagueId == Constants.A_LEAGUE_SLEEPER_ID || leagueId == Constants.B_LEAGUE_SLEEPER_ID)) {
 				weekMax = currentNflWeek - 1;
 			}
 
@@ -764,7 +764,9 @@ export class SleeperApiService {
 		var isJer_Rule = sleeperId == Constants.JER_SLEEPER_ID_RECORD_CORRECTION;
 
 		const nflState = await fetch(this.getNflStateRestAPI()).then((res) => res.json());
-		var currentNflWeek = nflState.week;
+		console.log("current state");
+		console.log(nflState);
+		var currentNflWeek = nflState.week; // 1, 2, 3 
 		/*
 			example object
 			{
@@ -785,6 +787,7 @@ export class SleeperApiService {
 		for (var curLeague of allLeagues) {
 			var leagueId = curLeague.LeagueId;
 
+			console.log("*****PROCESSING A LEAGUE: ");
 			console.log(curLeague);
 
 			const leagueRosterData = await this.getSleeperRosterRecords(leagueId);
@@ -793,8 +796,8 @@ export class SleeperApiService {
 			const playoffData = await fetch(this.getLeagueRestAPI(leagueId) + "/winners_bracket")
 				.then((res) => res.json());
 
-			//console.log(leagueRosterData);
-			//console.log(leagueData);
+			console.log(leagueRosterData);
+			console.log(leagueData);
 
 			var winningRosters = [];
 			playoffData.forEach(round => {
@@ -829,7 +832,7 @@ export class SleeperApiService {
 			// If we are currently on the elapsed Sleeper season (this year), only load weeks up to the current NFL week.
 			// I.e., do not load weeks that have not happened yet
 			var weekMax = 17;
-			if (leagueId == Constants.A_LEAGUE_SLEEPER_ID || leagueId == Constants.B_LEAGUE_SLEEPER_ID) {
+			if (nflState.season == leagueData.season && (leagueId == Constants.A_LEAGUE_SLEEPER_ID || leagueId == Constants.B_LEAGUE_SLEEPER_ID)) {
 				weekMax = currentNflWeek - 1;
 			}
 
@@ -837,6 +840,9 @@ export class SleeperApiService {
 
 			var lastPlayoffResult = "";
 			var isPlayoffsPostElim = false;
+
+			console.log("rosterid=" + rosterId);
+			console.log("weekMax=" + weekMax);
 
 			if (rosterId != -1) {
 				for (let week = 1; week <= weekMax; week++) {

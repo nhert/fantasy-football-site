@@ -1,7 +1,7 @@
 <div class="profiles-container">
     <h2>GM Profiles</h2>
     <br>
-    <mat-card>
+    <mat-card style="background-color: var(--accent-color);">
         <mat-card-content>
             <h4>Stats and analysis</h4>
             <form>
@@ -30,7 +30,7 @@
     <stats-card [statsSource]="stats" [loading]="loading" [expanded]="true" [showAdvancedStats]="true"></stats-card>
 
     <div *ngIf="showCore3 && !loading" class="core3">
-        <mat-card>
+        <mat-card style="background-color: var(--accent-color);">
             <mat-card-content>
 
                 <span style="font-size: 20px; padding-right: 5px;"><b>Core 3</b></span>
@@ -41,13 +41,13 @@
                 <table style="margin-left: auto; margin-right: auto; width: auto;">
                     <tr>
                         <td>
-                            <h2>#1</h2>
+                            <h2 style="color: #868686;">#1</h2>
                         </td>
                         <td>
-                            <h2>#2</h2>
+                            <h2 style="color: #868686;">#2</h2>
                         </td>
                         <td>
-                            <h2>#3</h2>
+                            <h2 style="color: #868686;">#3</h2>
                         </td>
                     </tr>
                     <tr>

@@ -1,19 +1,20 @@
-<mat-sidenav-container>
-  <mat-sidenav #sidenav fixedInViewport="true" mode="over" style="min-width: 300px !important;">
-    <mat-nav-list dense>
-      <a mat-list-item routerLink="home" (click)="sidenav.toggle()"><mat-icon>home</mat-icon><span
-          style="font-size: 20px; padding-left: 10px;">Home</span></a>
-      <mat-expansion-panel [class.mat-elevation-z0]="true" dense expanded>
-        <mat-expansion-panel-header>
-          <mat-icon>sports_football</mat-icon><span style="font-size: 16px; padding-left: 15px;"> Live</span>
+<mat-sidenav-container class="menu-background">
+  <mat-sidenav #sidenav fixedInViewport="true" mode="over" class="side-nav">
+
+    <mat-nav-list dense class="bg-color">
+      <a mat-list-item routerLink="home" (click)="sidenav.toggle()"><mat-icon class="text-color">home</mat-icon><span
+          class="home-button-text text-color">Home</span></a>
+
+      <mat-expansion-panel dense expanded class="menu-background">
+        <mat-expansion-panel-header class="bg-color">
+          <mat-icon class="text-color">sports_football</mat-icon><span class="default-text"> Live</span>
         </mat-expansion-panel-header>
         <mat-nav-list dense (click)="sidenav.toggle()">
-          <a mat-list-item routerLink="live-scores">Live Scores</a>
-          <a mat-list-item routerLink="demo">Demo Pick'ems & Survivor Pool [BETA] </a>
+          <a mat-list-item routerLink="live-scores"><span class="text-color">Live Scores</span></a>
+          <a mat-list-item routerLink="demo"><span class="text-color">Demo Pick'ems & Survivor Pool [BETA]</span> </a>
           <!-- <a mat-list-item routerLink="pickems-survivor-lobby">Pick'ems & Survivor Pool</a> -->
 
           <!--
-
           these are yet to be implemented
            <a mat-list-item routerLink="upcoming-matchup">Upcoming Matchups</a>
           <a mat-list-item routerLink="playoff-predictor">Playoff Predictor</a>
@@ -22,37 +23,43 @@
           <a mat-list-item routerLink="calendar">Calendar</a> -->
         </mat-nav-list>
       </mat-expansion-panel>
-      <mat-expansion-panel [class.mat-elevation-z0]="true" dense expanded>
-        <mat-expansion-panel-header>
-          <mat-icon>account_circle</mat-icon><span style="font-size: 16px; padding-left: 15px;"> Owners</span>
+
+      <mat-expansion-panel dense expanded class="menu-background">
+        <mat-expansion-panel-header class="bg-color">
+          <mat-icon class="text-color">account_circle</mat-icon><span class="default-text">
+            Owners</span>
         </mat-expansion-panel-header>
         <mat-nav-list dense (click)="sidenav.toggle()">
-          <a mat-list-item routerLink="gm-list">List of GMs</a>
-          <a mat-list-item routerLink="matchup-history">Matchup History</a>
-          <a mat-list-item routerLink="profiles">Profiles</a>
-          <a mat-list-item routerLink="records">Records</a>
-          <a mat-list-item routerLink="drafts">Draft History</a>
+          <a mat-list-item routerLink="gm-list"><span class="text-color">List of GMs</span></a>
+          <a mat-list-item routerLink="matchup-history"><span class="text-color">Matchup History</span></a>
+          <a mat-list-item routerLink="profiles"><span class="text-color">Profiles</span></a>
+          <a mat-list-item routerLink="records"><span class="text-color">Records</span></a>
+          <a mat-list-item routerLink="drafts"><span class="text-color">Draft History</span></a>
         </mat-nav-list>
       </mat-expansion-panel>
-      <mat-expansion-panel [class.mat-elevation-z0]="true" dense expanded>
-        <mat-expansion-panel-header>
-          <mat-icon>video_library</mat-icon><span style="font-size: 16px; padding-left: 15px;"> Media</span>
+
+      <mat-expansion-panel dense expanded class="menu-background">
+        <mat-expansion-panel-header class="bg-color">
+          <mat-icon class="text-color">video_library</mat-icon><span class="default-text">
+            Media</span>
         </mat-expansion-panel-header>
         <mat-nav-list dense (click)="sidenav.toggle()">
-          <a mat-list-item routerLink="pistol-guncop">Pistol & The Guncops</a>
-          <a mat-list-item routerLink="jordan-show">The Jordan Show</a>
-          <a mat-list-item routerLink="draft-videos">Draft Videos</a>
+          <a mat-list-item routerLink="pistol-guncop"><span class="text-color">Pistol & The Guncops</span></a>
+          <a mat-list-item routerLink="jordan-show"><span class="text-color">The Jordan Show</span></a>
+          <a mat-list-item routerLink="draft-videos"><span class="text-color">Draft Videos</span></a>
         </mat-nav-list>
       </mat-expansion-panel>
-      <mat-expansion-panel [class.mat-elevation-z0]="true" dense expanded>
-        <mat-expansion-panel-header>
-          <mat-icon>info</mat-icon>
-          <div><span style="font-size: 16px; padding-left: 15px;">League Info</span></div>
+
+      <mat-expansion-panel dense expanded class="menu-background">
+        <mat-expansion-panel-header class="bg-color">
+          <mat-icon class="text-color">info</mat-icon>
+          <div><span class="default-text">League Info</span></div>
         </mat-expansion-panel-header>
         <mat-nav-list dense (click)="sidenav.toggle()">
-          <a mat-list-item routerLink="manifesto">Manifesto</a>
+          <a mat-list-item routerLink="manifesto"><span class="text-color">Manifesto</span></a>
         </mat-nav-list>
       </mat-expansion-panel>
+
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -65,7 +72,7 @@
       </button>
     </div> -->
 
-    <div class="main">
+    <div #mainDiv class="main">
       <router-outlet></router-outlet>
       <!-- <div class="content">
         
