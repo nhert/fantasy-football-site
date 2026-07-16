@@ -19,7 +19,7 @@ sudo pm2 monit (Launch a rich terminal-based dashboard for real-time diagnostics
 START THE API BACKEND FOR SURVIVOR / PICKEMS (localhost:5000)
 
 1. npm install -g pm2 (install package manager2 globally if not already)
-2. cd to /var/www/ and make a folder name that makes sense and drop the pullPickemsSurvivorDbData.sh script inside it.
+2. cd to /var/www/ and make a folder "b3fl_db" and drop the pullPickemsSurvivorDbData.sh script inside it (example cd /var/www/b3fl_db/)
 3. Run ". pullPickemsSurvivorDbData.sh" (this clones/pulls latest github version of the pickem/survivor db to the directory)
 4. Run "sudo pm2 start server.js --name pickems-survivor-db" (api will listen on localhost in the background for reverse proxy from nginx)
 
