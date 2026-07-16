@@ -29,28 +29,17 @@
 
     <!-- The survivor pool is still ongoing, so show the week, timer, and inputs. -->
     <ng-container *ngIf="!isSurvivorPoolFinished()">
-        <span style="font-size: 36px; margin-bottom: 40;">NFL Week {{gameState.week}}</span>
+        <pickems-survivor-timer [gameState]="gameState" [currentUserEliminated]="userEliminated || userMissedStart"
+            (disableUiComponents)="handleDisableUiComponents()"></pickems-survivor-timer>
 
-        <p style="font-size: 16px; margin-bottom: 20px;">Picks Must be Submitted by: {{
-            gameState.current_cutoff_datetime_utc_iso| date: 'medium' }}</p>
+        <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Warning"
+            [shouldDisplay]="getShouldShowWarningToMakePick()"
+            [message]="'You have not submitted a pick yet this week.'"></app-pickems-survivor-warning-info-box>
 
-        <pickems-survivor-timer (disableUiComponents)="handleDisableUiComponents()"></pickems-survivor-timer>
-
-        <div class="no-pick-made-container" *ngIf="getShouldShowWarningToMakePick()">
-            <mat-card class="no-pick-made-warning mat-elevation-z0">
-                <mat-card-content style="padding: 0;">
-                    <mat-icon inline="true" style="margin-right: 3px;">warning</mat-icon>
-                    <strong>Warning:</strong> You have not submitted a pick yet this week.
-                </mat-card-content>
-            </mat-card>
-        </div>
-
-
-        <div class="survivor-inputs" *ngIf="!userEliminated && !userMissedStart">
+        <div class="survivor-inputs" *ngIf="getIsCurrentUserAlive()">
             <mat-form-field style="padding-top: 20px;">
                 <mat-label>Choose a GM</mat-label>
-                <mat-select [compareWith]="compareUsers" (selectionChange)="onGmSelectionChange($event)"
-                    [disabled]="shouldDisableUiInput()">
+                <mat-select #gmSelectorComponent [compareWith]="compareUsers" [disabled]="shouldDisableUiInput()">
                     <mat-optgroup label='A League' style="font-size: 12px;">
                         <mat-option *ngFor="let user of getAlphabetizedUsersForALeague()" [value]="user"
                             [disabled]="isSleeperIdInListOfSurvivorChoices(user.sleeperId_current)">

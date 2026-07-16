@@ -1,7 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
 
+:root {
+  --b3fl-blue: #0c3ec3;
+  /* Tomato hex */
+  --text-color-light-mode: #242424;
+  --text-color-dark-mode: #eeeeee;
+  --background-light-mode: #f5f5f5;
+  --background-dark-mode: #424242;
+}
+
+html {
+  background-color: var(--background-dark-mode);
+}
+
 h1 {
-  color: #369;
+  color: var(--b3fl-blue);
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   font-size: 250%;
 }
@@ -21,13 +34,9 @@ h3 {
   justify-content: safe center;
   box-sizing: inherit;
   position: relative;
-}
 
-/* .content {
-  display: grid;
-  justify-content: safe center;
-  width: 100%;
-} */
+  /* background-color: var(--background-dark-mode); */
+}
 
 .card-default {
   margin-top: 5px;
@@ -53,9 +62,6 @@ button {
   color: black;
   font-size: 1.2rem;
   padding: 1rem;
-  /* margin-right: 1rem;
-  margin-bottom: 1rem;
-  margin-top: 1rem; */
 }
 
 button:hover {

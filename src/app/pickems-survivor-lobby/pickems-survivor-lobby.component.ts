@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
-import { map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
 import { SurvivorPickemsApiService } from '../_API/survivor-pickems-api.service';
 import { firstValueFrom, Observable, of, Subscription } from 'rxjs';
 import { SimpleSpinnerComponent } from "../simple-spinner/simple-spinner.component";
 import { MatIcon } from "@angular/material/icon";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { PickemsSurvivorGameComponent } from "../pickems-survivor-game/pickems-survivor-game.component";
 import { GameUser } from '../_Models/survivor.pickems.models';
@@ -26,6 +26,8 @@ export class PickemsSurvivorLobbyComponent {
 
   private auth = inject(AuthService);
   private doc = inject(DOCUMENT);
+
+  userForm: FormGroup;
 
   isAuthenticated = false;
 
@@ -46,6 +48,8 @@ export class PickemsSurvivorLobbyComponent {
   private readonly dummy_user_email = "dummy.user.test@com.com";
   private readonly demo_user_email = "demo.user@b3fl.com";
 
+  protected existingUsernames: string[];
+
   private sub_Auth: Subscription;
   user$ = this.auth.user$;
   auth$ = this.auth.isAuthenticated$;
@@ -61,7 +65,23 @@ export class PickemsSurvivorLobbyComponent {
   */
   code$ = this.user$.pipe(map((user) => JSON.stringify(user, null, 2)));
 
-  constructor(private survivorPickemsApi: SurvivorPickemsApiService) { }
+  test: string[] = ['test'];
+  constructor(private survivorPickemsApi: SurvivorPickemsApiService, private fb: FormBuilder) {
+    this.userForm = this.fb.group({
+      // Field defaults to empty string with 3 validation rules
+      username: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(18),
+        Validators.pattern('^[a-zA-Z0-9]+$'), // Only letters and numbers
+        this.uniqueUsernameValidator()
+      ]]
+    });
+  }
+
+  get username() {
+    return this.userForm.get('username');
+  }
 
   ngOnInit(): void {
     if (Constants.PICKEMS_SURVIVOR_SKIP_AUTH || this.demoMode) {
@@ -123,11 +143,11 @@ export class PickemsSurvivorLobbyComponent {
           this.currentUser.username = data.username;
           this.isGameUserNeedsCreation = false;
           this.isGameReady = true;
+          this.isGameUserChecked = true;
         } else {
           console.log("A game profile must be created for this user");
-          this.isGameUserNeedsCreation = true;
+          this.prepareForNicknameCreation();
         }
-        this.isGameUserChecked = true;
       },
       error: (err) => {
         this.isGameUserChecked = true;
@@ -137,13 +157,35 @@ export class PickemsSurvivorLobbyComponent {
     });
   }
 
+  private prepareForNicknameCreation() {
+    this.survivorPickemsApi.getExistingUsernames().subscribe(usernames => {
+      this.existingUsernames = usernames;
+      this.isGameUserChecked = true;
+      this.isGameUserNeedsCreation = true;
+    });
+  }
+
+  protected uniqueUsernameValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) return null;
+      if (!this.existingUsernames) return null;
+
+      // Convert array to lowercase for case-insensitive comparison
+      const lowerCaseUsernames = this.existingUsernames.map(u => u.toLowerCase());
+      const isTaken = lowerCaseUsernames.includes(control.value.toLowerCase());
+
+      return isTaken ? { uniqueUsername: { value: control.value } } : null;
+    };
+  }
+
   // create a b3fl game account with nickname
-  protected createAccount(nickname: string): void {
+  protected createAccount(): void {
+    console.log(`acct name [${this.username.value}]`);
     const user = {
       email: this.currentUser.email,
-      username: nickname
+      username: this.username.value
     }
-    this.currentUser.username = nickname;
+    this.currentUser.username = this.username.value;
     this.survivorPickemsApi.addUser(user).subscribe({
       next: () => {
         this.isGameUserNeedsCreation = false;

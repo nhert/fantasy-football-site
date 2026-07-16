@@ -9,6 +9,8 @@ export class SurvivorPickemsApiService {
     private apiUrl = Constants.PICKEMS_SURVIVOR_IN_LOCAL_TESTING_MODE ? 'http://localhost:5000/api' : '/api';
     private usersApiUrl = this.apiUrl + '/users';
     private survivorApiUrl = this.apiUrl + '/survivor_pool';
+    private pickemsApiUrl = this.apiUrl + '/pickems';
+
     private demoApiUrl = this.apiUrl + "/demo";
     //private pickemsApiUrl = this.apiUrl + '/pickems';
 
@@ -60,14 +62,14 @@ export class SurvivorPickemsApiService {
         return this.http.get(this.usersApiUrl + "/all");
     }
 
+    getExistingUsernames(): Observable<any> {
+        return this.http.get(this.usersApiUrl + "/usernames");
+    }
+
     // SURVIVOR
 
     getAllSurvivorEntries(): Observable<any> {
         return this.http.get(this.survivorApiUrl + "/entries");
-    }
-
-    getSurvivorChoicesMadeByUser(userEmail: string): Observable<any> {
-        return this.http.get(this.survivorApiUrl + "/choices/" + userEmail);
     }
 
     updateSurvivorChoiceForUser(userEmail: string, week: number, userChoice: any) {
@@ -78,6 +80,37 @@ export class SurvivorPickemsApiService {
         return this.http.post(this.survivorApiUrl + "/update/" + userEmail + "/" + week, userChoiceJson);
     }
 
+    // PICKEMS
+
+    getAllPickemsEntriesForWeek(week: number): Observable<any> {
+        return this.http.get(this.pickemsApiUrl + "/entries/" + week);
+    }
+
+    getPickemsScores(): Observable<any> {
+        return this.http.get(this.pickemsApiUrl + "/scores");
+    }
+
+    deletePickemsEntryForUser(userEmail: string, week: number, choice_sleeper_id: string) {
+        return this.http.get(this.pickemsApiUrl + "/delete/" + userEmail + "/" + week + "/" + choice_sleeper_id);
+    }
+
+    makePickemsEntryForUser(userEmail: string, week: number, choice_sleeper_id: string, choice_gm_name: string): Observable<any> {
+        let userChoiceJson = {
+            choice_sleeper_id: choice_sleeper_id,
+            choice_gm_name: choice_gm_name
+        }
+        return this.http.post(this.pickemsApiUrl + "/make_pick/" + userEmail + "/" + week, userChoiceJson);
+    }
+
+    makePickemsEntryWithBonusesForUser(userEmail: string, week: number, choice_sleeper_id: string, choice_gm_name: string, isDouble: boolean, isTriple: boolean): Observable<any> {
+        let userChoiceJson = {
+            choice_sleeper_id: choice_sleeper_id,
+            choice_gm_name: choice_gm_name,
+            is_double_down: isDouble,
+            is_triple_down: isTriple
+        }
+        return this.http.post(this.pickemsApiUrl + "/make_bonus_pick/" + userEmail + "/" + week, userChoiceJson);
+    }
 }
 
 

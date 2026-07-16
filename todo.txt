@@ -20,14 +20,24 @@ FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaS
 11: 00007FF6E65465B7 v8::String::Value::~Value+144199
 12: 000001AD45D775FA 
 
+
+
 CRITICAL
-- BUG IN S/P if a user misses a submission after a winning pick, they arent eliminated.
 - the allow/deny for nginx config /api/ is forbidden. Is this because SSR isnt being used?
 
+MAJOR
+- Instead of only checking existence in the Users DB table, create new DB table that tracks "enlistment" in Survivor / Pickems
+
+PICKEMS
+- handle underdog scoring
+- handle when users miss picks
+
 MINOR
-- Reduce size of s/p timer so that it fits width=360
-- field validation for nickname
 - DARK MODE
-- Standings
 - HELP section for s/p that explains the schedule, how to play, scoring, when things process, when entries lock/unlock etc
-- Popup warning that says "you have not made your pick(s) yet this week" if you have no entry before deadline
+- improve the visuals of the survivor pool finished screen. Dont just use text
+- make a calendar that shows the schedule
+- improve how the survivor pickems timer displays (make it a panel with box shadowing?)
+- fix how ResetTimer works in Survivor Content. Gets called repeatedly whenever tab is changed and will have the wrong new server time since ngOnInit gets called in the content classes. 
+    (basically might need a small refactor to how timer component works - maybe i should just have the getServerTime API directly in there)
+- 

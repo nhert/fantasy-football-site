@@ -27,10 +27,13 @@
     "@angular/ssr": "^19.2.27",
     "@auth0/auth0-angular": "^2.9.0",
     "@syncfusion/ej2-angular-pdfviewer": "^25.2.5",
+    "@tailwindcss/postcss": "^4.3.2",
     "express": "^4.18.2",
     "localstorage-polyfill": "^1.0.1",
     "ngx-toastr": "^19.1.0",
+    "postcss": "^8.5.19",
     "rxjs": "~7.8.0",
+    "tailwindcss": "^4.3.2",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.1"
   },

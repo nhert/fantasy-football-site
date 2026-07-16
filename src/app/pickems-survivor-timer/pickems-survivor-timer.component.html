@@ -1,4 +1,10 @@
-<div class="countdown-container">
+<div>
+    <span style="font-size: 36px; margin-bottom: 40;">NFL Week {{getCurrentWeek()}}</span>
+
+    <p style="font-size: 16px; margin-bottom: 20px;">Picks Must be Submitted by: {{
+        getCurrentDeadline()| date: 'medium' }}</p>
+</div>
+<div class="countdown-container" *ngIf="!currentUserEliminated">
     <div *ngIf="!isExpired" class="timer">
         <div class="time-block">
             <span class="number">{{ days() | number: '2.0-0' }}</span>
@@ -18,7 +24,6 @@
         </div>
     </div>
 
-    <div *ngIf="isExpired" class="expired-message">
-        <p>All picks are now locked for this week!</p>
-    </div>
+    <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.SubmissionLock" [shouldDisplay]="isExpired"
+        [message]="getLockMessage"></app-pickems-survivor-warning-info-box>
 </div>

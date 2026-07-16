@@ -1,15 +1,21 @@
 import { Component, computed, EventEmitter, HostListener, Input, Output, signal } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
+import { GameState } from '../_Models/survivor.pickems.models';
+import { MatCardModule } from "@angular/material/card";
+import { MatIconModule } from "@angular/material/icon";
+import { DisplayMode, PickemsSurvivorWarningInfoBoxComponent } from "../pickems-survivor-warning-info-box/pickems-survivor-warning-info-box.component";
 
 @Component({
   selector: 'pickems-survivor-timer',
   standalone: true,
-  imports: [DecimalPipe, CommonModule],
+  imports: [DecimalPipe, CommonModule, MatCardModule, MatIconModule, PickemsSurvivorWarningInfoBoxComponent],
   templateUrl: './pickems-survivor-timer.component.html',
   styleUrl: './pickems-survivor-timer.component.css'
 })
 export class PickemsSurvivorTimerComponent {
+  @Input('gameState') gameState: GameState;
+  @Input('currentUserEliminated') currentUserEliminated: boolean = false;
   @Output('disableUiComponents') disableUiComponents = new EventEmitter<void>();
 
   // Remaining seconds signal for UI
@@ -24,6 +30,8 @@ export class PickemsSurvivorTimerComponent {
   private timerSub!: Subscription;
   private lastPerformanceTick!: number;
   isExpired: boolean = false;
+
+  public DisplayModeEnum = DisplayMode;
 
   public startTimer(timerLengthSeconds: number) {
     this.isExpired = false;
@@ -77,6 +85,24 @@ export class PickemsSurvivorTimerComponent {
     if (this.timerSub) this.timerSub.unsubscribe();
     this.isExpired = true;
     this.disableUiComponents.emit();
+  }
+
+  protected getCurrentWeek() {
+    if (this.gameState) {
+      return this.gameState.week;
+    }
+    return 0;
+  }
+
+  protected getCurrentDeadline() {
+    if (this.gameState) {
+      return this.gameState.current_cutoff_datetime_utc_iso;
+    }
+    return "";
+  }
+
+  get getLockMessage() {
+    return `All submissions for week ${this.getCurrentWeek()} are now locked!`
   }
 
   ngOnDestroy() {

@@ -1,5 +1,7 @@
 // Generic
 
+import { PickemsPickStatus } from "../game-pickems-content/game-pickems-content.component";
+
 export interface GameState {
     season: number,
     week: number,
@@ -57,4 +59,50 @@ export interface SurvivorDbRow {
 
 // Pickems
 
-// ....
+export interface PickemsDbRow {
+    owner: string,
+    week: number,
+    choice_sleeper_id: string,
+    choice_gm_name: string,
+    outcome: string,
+    score: number,
+    is_double_down: boolean,
+    is_triple_down: boolean
+}
+
+export interface PickemsMatchup {
+    league_type: string,
+    allow_pick: boolean,
+
+    manager_1_sleeper_id: string,
+    manager_1_real_name: string,
+    manager_1_sleeper_name: string,
+    manager_1_team_name: string,
+    manager_1_avatar_url: string,
+    manager_1_starters: any[],
+    manager_1_points: number,
+    manager_1_pick_status: PickemsPickStatus,
+
+    manager_2_sleeper_id: string,
+    manager_2_real_name: string,
+    manager_2_sleeper_name: string,
+    manager_2_team_name: string,
+    manager_2_avatar_url: string,
+    manager_2_starters: any[],
+    manager_2_points: number,
+    manager_2_pick_status: PickemsPickStatus,
+
+    // underdog related fields
+}
+
+export interface PickemsMatchupCache {
+    aLeagueRosterMap: Map<number, any>,
+    bLeagueRosterMap: Map<number, any>,
+    userInfoMap: Map<number, any>
+}
+
+export interface PickemsScore {
+    owner: string,
+    username: string,
+    score: number
+}

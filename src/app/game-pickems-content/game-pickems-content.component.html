@@ -1,1 +1,286 @@
-<p>Page under construction!</p>
+<ng-container *ngIf="isPickemsLoaded">
+    <pickems-survivor-timer [gameState]="gameState"
+        (disableUiComponents)="handleDisableUiComponents()"></pickems-survivor-timer>
+
+    <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Warning"
+        [shouldDisplay]="shouldShowWarningToMakePick"
+        [message]="'You have not submitted all your picks yet this week.'"></app-pickems-survivor-warning-info-box>
+
+    <div class="pickems-inputs">
+        <mat-form-field style="padding-top: 20px;">
+            <mat-label>Choose a Profile</mat-label>
+            <mat-select #profileSelector [(value)]="selectedProfile"
+                (selectionChange)="onProfileSelectionChange($event)">
+                <mat-option *ngFor="let user of gameUsers" [value]="user">
+                    {{ user.username }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field style="padding-top: 20px;">
+            <mat-label>Choose a Week</mat-label>
+            <mat-select #weekSelector [(value)]="selectedWeek" (selectionChange)="onWeekSelectionChange($event)">
+                <mat-option *ngFor="let week of weekOptions" [value]="week">
+                    Week {{ week }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <ng-container *ngIf="isPickemsGridPrepared">
+        <h1>A League</h1>
+        <div class="pickems-grid-container">
+            <div *ngFor="let matchup of aLeagueMatchups">
+                <div *ngIf="matchup.manager_1_sleeper_id && matchup.manager_2_sleeper_id">
+                    <div class="card-content-header">
+                        <img src="/assets/images/double_down_chip.png" alt="Logo" class="top-left-anchor"
+                            *ngIf="matchup.manager_1_pick_status === StatusEnum.DOUBLE"
+                            (click)="onClickOnMadePickChip(matchup.manager_1_sleeper_id)">
+                        <img src="/assets/images/triple_down_chip.png" alt="Logo" class="top-left-anchor"
+                            *ngIf="matchup.manager_1_pick_status === StatusEnum.TRIPLE"
+                            (click)="onClickOnMadePickChip(matchup.manager_1_sleeper_id)">
+                        <img src="/assets/images/pick_chip.png" alt="Logo" class="top-left-anchor"
+                            *ngIf="matchup.manager_1_pick_status === StatusEnum.PICK"
+                            (click)="onClickOnMadePickChip(matchup.manager_1_sleeper_id)">
+
+                        <img src="/assets/images/double_down_chip.png" alt="Logo" class="top-right-anchor"
+                            *ngIf="matchup.manager_2_pick_status === StatusEnum.DOUBLE"
+                            (click)="onClickOnMadePickChip(matchup.manager_2_sleeper_id)">
+                        <img src="/assets/images/triple_down_chip.png" alt="Logo" class="top-right-anchor"
+                            *ngIf="matchup.manager_2_pick_status === StatusEnum.TRIPLE"
+                            (click)="onClickOnMadePickChip(matchup.manager_2_sleeper_id)">
+                        <img src="/assets/images/pick_chip.png" alt="Logo" class="top-right-anchor"
+                            *ngIf="matchup.manager_2_pick_status === StatusEnum.PICK"
+                            (click)="onClickOnMadePickChip(matchup.manager_2_sleeper_id)">
+
+                        <div class="left-content">
+                            <div class="pick-double-triple-button-container" *ngIf="matchup.allow_pick">
+                                <button type="button" class="pick-button"
+                                    (click)="onClickMakePick(matchup.manager_1_sleeper_id)">
+                                    <mat-icon
+                                        style="vertical-align: middle; transform: scale(1.1); width: 40px">check_box</mat-icon>
+                                    <span style="font-size: 15px;"><strong>Pick</strong></span>
+                                </button>
+                                <button type="button" class="double-down-button" *ngIf="hasDoubleDownAvailable"
+                                    (click)="onClickDoubleDown(matchup.manager_1_sleeper_id)">
+                                    <mat-icon style="transform: scale(1.1); flex:none">looks_two</mat-icon>
+                                </button>
+                                <button type="button" class="triple-down-button" *ngIf="hasTripleDownAvailable"
+                                    (click)="onClickTripleDown(matchup.manager_1_sleeper_id)">
+                                    <mat-icon style="transform: scale(1.1); flex:none">looks_3</mat-icon>
+                                </button>
+                            </div>
+                            <div class="pick-score-container" *ngIf="!matchup.allow_pick">
+                                <mat-label style="font-size: 32px;">{{matchup.manager_1_points}}</mat-label>
+                            </div>
+                            <mat-label style="font-size: 18px;">{{matchup.manager_1_team_name}}</mat-label>
+                            <br>
+                            <br>
+                            <img src="{{matchup.manager_1_avatar_url}}" alt="Player Avatar" width=80px height=80px>
+                            <br>
+                            <mat-label>{{matchup.manager_1_real_name}}
+                                ({{matchup.manager_1_sleeper_name}})</mat-label>
+                        </div>
+                        <div class="middle-content">
+                            <mat-label style="font-size: 24px;"> VS </mat-label>
+                        </div>
+                        <div class="right-content">
+                            <div class="pick-double-triple-button-container" *ngIf="matchup.allow_pick">
+                                <button type="button" class="pick-button"
+                                    (click)="onClickMakePick(matchup.manager_2_sleeper_id)">
+                                    <mat-icon
+                                        style="vertical-align: middle; transform: scale(1); width: 40px">check_box</mat-icon>
+                                    <span style="font-size: 15px;"><strong>Pick</strong></span>
+                                </button>
+                                <button type="button" class="double-down-button" *ngIf="hasDoubleDownAvailable"
+                                    (click)="onClickDoubleDown(matchup.manager_2_sleeper_id)">
+                                    <mat-icon style="transform: scale(1); flex:none">looks_two</mat-icon>
+                                </button>
+                                <button type="button" class="triple-down-button" *ngIf="hasTripleDownAvailable"
+                                    (click)="onClickTripleDown(matchup.manager_2_sleeper_id)">
+                                    <mat-icon style="transform: scale(1); flex:none">looks_3</mat-icon>
+                                </button>
+                            </div>
+                            <div class="pick-score-container" *ngIf="!matchup.allow_pick">
+                                <mat-label style="font-size: 32px;">{{matchup.manager_2_points}}</mat-label>
+                            </div>
+                            <mat-label style="font-size: 18px;">{{matchup.manager_2_team_name}}</mat-label>
+                            <br>
+                            <br>
+                            <img src="{{matchup.manager_2_avatar_url}}" alt="Player Avatar" width=80px height=80px>
+                            <br>
+                            <mat-label>{{matchup.manager_2_real_name}}
+                                ({{matchup.manager_2_sleeper_name}})</mat-label>
+                        </div>
+                    </div>
+
+                    <mat-expansion-panel [hideToggle]="true" [expanded]="false" style="background-color: #181818;">
+                        <mat-expansion-panel-header [collapsedHeight]="'35px'" [expandedHeight]="'35px'">
+                            <p style="text-align: center; width: 100%; color: #e7e7e7;">Click here to
+                                show/hide starters</p>
+                        </mat-expansion-panel-header>
+
+                        <div class="card-content-players">
+                            <div class="left-content player-content-left">
+                                <div class="player-content-style-left">
+                                    <div *ngFor="let data of matchup.manager_1_starters">
+                                        <p>
+                                            <span
+                                                style="font-size: 20; margin-right: 5px;"><em>{{data.player.position}}</em></span>
+                                            <span
+                                                style="font-size: 14; margin-right: 15px;">{{data.player.full_name}}</span>
+                                            <span style="font-size: 30;"><b>{{data.playerScore}}</b></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right-content player-content-right">
+                                <div class="player-content-style-right">
+                                    <div *ngFor="let data of matchup.manager_2_starters">
+                                        <p>
+                                            <span
+                                                style="font-size: 30; margin-right: 15px;"><b>{{data.playerScore}}</b></span>
+                                            <span
+                                                style="font-size: 14; margin-right: 5px;">{{data.player.full_name}}</span>
+                                            <span style="font-size: 20;"><em>{{data.player.position}}</em></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+                </div>
+                <div *ngIf="!matchup.manager_1_sleeper_id || !matchup.manager_2_sleeper_id">
+                    <p style="color: red;">Missing Sleeper ID! Try refreshing page</p>
+                </div>
+            </div>
+        </div>
+
+        <h1>B League</h1>
+        <div class="pickems-grid-container">
+            <div *ngFor="let matchup of bLeagueMatchups">
+                <div *ngIf="matchup.manager_1_sleeper_id && matchup.manager_2_sleeper_id">
+                    <div class="card-content-header">
+                        <img src="/assets/images/double_down_chip.png" alt="Logo" class="top-left-anchor"
+                            *ngIf="matchup.manager_1_pick_status === StatusEnum.DOUBLE"
+                            (click)="onClickOnMadePickChip(matchup.manager_1_sleeper_id)">
+                        <img src="/assets/images/triple_down_chip.png" alt="Logo" class="top-left-anchor"
+                            *ngIf="matchup.manager_1_pick_status === StatusEnum.TRIPLE"
+                            (click)="onClickOnMadePickChip(matchup.manager_1_sleeper_id)">
+                        <img src="/assets/images/pick_chip.png" alt="Logo" class="top-left-anchor"
+                            *ngIf="matchup.manager_1_pick_status === StatusEnum.PICK"
+                            (click)="onClickOnMadePickChip(matchup.manager_1_sleeper_id)">
+
+                        <img src="/assets/images/double_down_chip.png" alt="Logo" class="top-right-anchor"
+                            *ngIf="matchup.manager_2_pick_status === StatusEnum.DOUBLE"
+                            (click)="onClickOnMadePickChip(matchup.manager_2_sleeper_id)">
+                        <img src="/assets/images/triple_down_chip.png" alt="Logo" class="top-right-anchor"
+                            *ngIf="matchup.manager_2_pick_status === StatusEnum.TRIPLE"
+                            (click)="onClickOnMadePickChip(matchup.manager_2_sleeper_id)">
+                        <img src="/assets/images/pick_chip.png" alt="Logo" class="top-right-anchor"
+                            *ngIf="matchup.manager_2_pick_status === StatusEnum.PICK"
+                            (click)="onClickOnMadePickChip(matchup.manager_2_sleeper_id)">
+
+                        <div class="left-content">
+                            <div class="pick-double-triple-button-container" *ngIf="matchup.allow_pick">
+                                <button type="button" class="pick-button"
+                                    (click)="onClickMakePick(matchup.manager_1_sleeper_id)">
+                                    <mat-icon
+                                        style="vertical-align: middle; transform: scale(1.1); width: 40px">check_box</mat-icon>
+                                    <span style="font-size: 15px;"><strong>Pick</strong></span>
+                                </button>
+                                <button type="button" class="double-down-button" *ngIf="hasDoubleDownAvailable"
+                                    (click)="onClickDoubleDown(matchup.manager_1_sleeper_id)">
+                                    <mat-icon style="transform: scale(1.1); flex:none">looks_two</mat-icon>
+                                </button>
+                                <button type="button" class="triple-down-button" *ngIf="hasTripleDownAvailable"
+                                    (click)="onClickTripleDown(matchup.manager_1_sleeper_id)">
+                                    <mat-icon style="transform: scale(1.1); flex:none">looks_3</mat-icon>
+                                </button>
+                            </div>
+                            <div class="pick-score-container" *ngIf="!matchup.allow_pick">
+                                <mat-label style="font-size: 32px;">{{matchup.manager_1_points}}</mat-label>
+                            </div>
+                            <mat-label style="font-size: 18px;">{{matchup.manager_1_team_name}}</mat-label>
+                            <br>
+                            <br>
+                            <img src="{{matchup.manager_1_avatar_url}}" alt="Player Avatar" width=80px height=80px>
+                            <br>
+                            <mat-label>{{matchup.manager_1_real_name}}
+                                ({{matchup.manager_1_sleeper_name}})</mat-label>
+                        </div>
+                        <div class="middle-content">
+                            <mat-label style="font-size: 24px;"> VS </mat-label>
+                        </div>
+                        <div class="right-content">
+                            <div class="pick-double-triple-button-container" *ngIf="matchup.allow_pick">
+                                <button type="button" class="pick-button"
+                                    (click)="onClickMakePick(matchup.manager_2_sleeper_id)">
+                                    <mat-icon
+                                        style="vertical-align: middle; transform: scale(1); width: 40px">check_box</mat-icon>
+                                    <span style="font-size: 15px;"><strong>Pick</strong></span>
+                                </button>
+                                <button type="button" class="double-down-button" *ngIf="hasDoubleDownAvailable"
+                                    (click)="onClickDoubleDown(matchup.manager_2_sleeper_id)">
+                                    <mat-icon style="transform: scale(1); flex:none">looks_two</mat-icon>
+                                </button>
+                                <button type="button" class="triple-down-button" *ngIf="hasTripleDownAvailable"
+                                    (click)="onClickTripleDown(matchup.manager_2_sleeper_id)">
+                                    <mat-icon style="transform: scale(1); flex:none">looks_3</mat-icon>
+                                </button>
+                            </div>
+                            <div class="pick-score-container" *ngIf="!matchup.allow_pick">
+                                <mat-label style="font-size: 32px;">{{matchup.manager_2_points}}</mat-label>
+                            </div>
+                            <mat-label style="font-size: 18px;">{{matchup.manager_2_team_name}}</mat-label>
+                            <br>
+                            <br>
+                            <img src="{{matchup.manager_2_avatar_url}}" alt="Player Avatar" width=80px height=80px>
+                            <br>
+                            <mat-label>{{matchup.manager_2_real_name}}
+                                ({{matchup.manager_2_sleeper_name}})</mat-label>
+                        </div>
+                    </div>
+
+                    <mat-expansion-panel [hideToggle]="true" [expanded]="false" style="background-color: #181818;">
+                        <mat-expansion-panel-header [collapsedHeight]="'35px'" [expandedHeight]="'35px'">
+                            <p style="text-align: center; width: 100%; color: #e7e7e7;">Click here to
+                                show/hide starters</p>
+                        </mat-expansion-panel-header>
+
+                        <div class="card-content-players">
+                            <div class="left-content player-content-left">
+                                <div class="player-content-style-left">
+                                    <div *ngFor="let data of matchup.manager_1_starters">
+                                        <p>
+                                            <span
+                                                style="font-size: 20; margin-right: 5px;"><em>{{data.player.position}}</em></span>
+                                            <span
+                                                style="font-size: 14; margin-right: 15px;">{{data.player.full_name}}</span>
+                                            <span style="font-size: 30;"><b>{{data.playerScore}}</b></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right-content player-content-right">
+                                <div class="player-content-style-right">
+                                    <div *ngFor="let data of matchup.manager_2_starters">
+                                        <p>
+                                            <span
+                                                style="font-size: 30; margin-right: 15px;"><b>{{data.playerScore}}</b></span>
+                                            <span
+                                                style="font-size: 14; margin-right: 5px;">{{data.player.full_name}}</span>
+                                            <span style="font-size: 20;"><em>{{data.player.position}}</em></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+                </div>
+                <div *ngIf="!matchup.manager_1_sleeper_id || !matchup.manager_2_sleeper_id">
+                    <p style="color: red;">Missing Sleeper ID! Try refreshing page</p>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</ng-container>

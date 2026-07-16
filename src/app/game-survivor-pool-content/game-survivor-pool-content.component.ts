@@ -14,11 +14,13 @@ import { MatListModule } from "@angular/material/list";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
+import { PickemsSurvivorWarningInfoBoxComponent } from "../pickems-survivor-warning-info-box/pickems-survivor-warning-info-box.component";
+import { DisplayMode } from '../pickems-survivor-warning-info-box/pickems-survivor-warning-info-box.component';
 
 @Component({
   selector: 'game-survivor-pool-content',
   standalone: true,
-  imports: [MatTableModule, CommonModule, MatSelect, MatOptionModule, MatFormFieldModule, PickemsSurvivorTimerComponent, MatExpansionModule, MatListModule, MatTooltipModule, MatCardModule, MatIconModule],
+  imports: [MatTableModule, CommonModule, MatSelect, MatOptionModule, MatFormFieldModule, PickemsSurvivorTimerComponent, MatExpansionModule, MatListModule, MatTooltipModule, MatCardModule, MatIconModule, PickemsSurvivorWarningInfoBoxComponent],
   templateUrl: './game-survivor-pool-content.component.html',
   styleUrl: './game-survivor-pool-content.component.css'
 })
@@ -42,6 +44,9 @@ export class GameSurvivorPoolContentComponent {
   @Output('demoTestTimer') demoTestTimer = new EventEmitter<void>();
 
   @ViewChild(PickemsSurvivorTimerComponent) timerComponent!: PickemsSurvivorTimerComponent;
+  @ViewChild(MatSelect) gmSelectorComponent!: MatSelect;
+
+  public DisplayModeEnum = DisplayMode;
 
   // dependencies
   private toastr = inject(ToastrService);
@@ -51,8 +56,6 @@ export class GameSurvivorPoolContentComponent {
   displayedColumns: string[] = []; // built programmatically 
   readonly column_username = 'playerUsername';
   readonly column_week_prefix = 'week';
-
-  selectedGmChoiceValue: any = null; // bound to mat-select 
 
   // flags
   isTablePrepared: boolean = false;
@@ -69,19 +72,15 @@ export class GameSurvivorPoolContentComponent {
   }
 
   ngAfterViewInit() {
-    this.resetTimer();
+    this.reloadServerTime.emit();
   }
 
   // handlers
 
   protected handleSubmitChoiceClick() {
-    if (this.selectedGmChoiceValue && this.currentUser && this.gameState) {
+    if (this.gmSelectorComponent && this.gmSelectorComponent.value && this.currentUser && this.gameState) {
       this.submitGmSurvivorChoice();
     }
-  }
-
-  protected onGmSelectionChange(event: MatSelectChange) {
-    this.selectedGmChoiceValue = event.value;
   }
 
   // api
@@ -89,7 +88,7 @@ export class GameSurvivorPoolContentComponent {
   private submitGmSurvivorChoice() {
     if (this.isLoading) return;
 
-    const selectedUser = this.selectedGmChoiceValue;
+    const selectedUser = this.gmSelectorComponent.value;
 
     this.isLoading = true;
     this.survivorPickemsApi.getServerTime().subscribe(time => {
@@ -103,6 +102,7 @@ export class GameSurvivorPoolContentComponent {
             this.reloadTableData();
             this.successToast('Saved Successfully', `Your Survivor Pool choice of ${selectedUser.name} for week ${this.gameState.week} has been saved!`);
             this.didUserSuccessfullySubmit = true;
+            this.resetGmSelector();
             this.isLoading = false;
           },
           error: (err) => {
@@ -117,13 +117,15 @@ export class GameSurvivorPoolContentComponent {
     });
   }
 
+  private resetGmSelector() {
+    this.gmSelectorComponent.value = null;
+  }
+
   private reloadTableData() {
     if (this.reloadData) {
       this.reloadData.emit();
     }
   }
-
-  // util methods
 
   private prepTable() {
     this.generateDisplayedColumnsForNWeeks(this.getNumTableWeeksToDisplay());
@@ -222,7 +224,7 @@ export class GameSurvivorPoolContentComponent {
   }
 
   protected shouldDisableUiInput() {
-    return this.passedDeadlineDisableUi || this.userEliminated || this.userMissedStart;
+    return this.passedDeadlineDisableUi || !this.getIsCurrentUserAlive();
   }
 
   protected isSurvivorPoolFinished() {
@@ -256,8 +258,13 @@ export class GameSurvivorPoolContentComponent {
 
   protected getShouldShowWarningToMakePick() {
     // if player is not eliminated, and they do NOT have an entry for this week, and it is not after the deadline, and they did not just click the submit button successfully without reloading the page
-    const eliminated = this.userEliminated || this.userMissedStart;
-    return !eliminated && !this.passedDeadlineDisableUi && this.userNeedsToMakePickThisWeek && !this.didUserSuccessfullySubmit;
+    const alive = this.getIsCurrentUserAlive();
+    return alive && !this.passedDeadlineDisableUi && this.userNeedsToMakePickThisWeek && !this.didUserSuccessfullySubmit;
+  }
+
+  // User is not eliminated and user did not miss the week 1 submission deadline
+  protected getIsCurrentUserAlive() {
+    return !this.userEliminated && !this.userMissedStart;
   }
 
   // DEMO-ONLY RELATED METHODS

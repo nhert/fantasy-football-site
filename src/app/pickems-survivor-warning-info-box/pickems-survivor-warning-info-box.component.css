@@ -1,0 +1,42 @@
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.warning {
+    color: orangered;
+    border-left: 5px solid orangered;
+    margin-top: 10px;
+    background-color: #ebe4d9;
+    padding: 0px;
+    width: 350px;
+    height: 45px;
+}
+
+.info {
+    color: rgb(32, 108, 223);
+    border-left: 5px solid rgb(32, 108, 223);
+    margin-top: 10px;
+    background-color: #ebe4d9;
+    padding: 0px;
+    width: 350px;
+    height: 45px;
+}
+
+.lock {
+    color: orangered;
+    border-left: 5px solid orangered;
+    margin-top: 10px;
+    background-color: #ebe4d9;
+    padding: 0px;
+    width: 350px;
+    height: 45px;
+
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}

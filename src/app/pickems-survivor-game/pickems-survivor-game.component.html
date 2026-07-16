@@ -1,5 +1,8 @@
 <div class="game-container">
     <ng-container *ngIf="currentUser">
+        <simple-spinner [loading]="!isGameStateLoaded" [hideRefreshTip]="true"
+            [title]="'Loading game data ...'"></simple-spinner>
+
         <!-- user loaded the game state in preseason -->
         <div *ngIf="isGameStateLoaded && gamePhase==0">
             <h1>Fantasy season hasn't started yet! First game begins on {{firstGameDate}}</h1>
@@ -15,26 +18,33 @@
             <mat-tab-group class="game-tab-group" animationDuration="200ms" dynamicHeight>
                 <mat-tab label="Survivor">
                     <ng-template matTabContent>
-                        <game-survivor-pool-content [dataSource]="dataSource" [currentUser]="currentUser"
+                        <game-survivor-pool-content [dataSource]="dataSourceSurvivor" [currentUser]="currentUser"
                             [gameState]="gameState" [made_choices_sleeper_ids]="made_choices_sleeper_ids"
                             [gameUsers]="gameUsers" [userEliminated]="currentSurvivorUserEliminated"
                             [userMissedStart]="currentSurvivorUserMissedStart"
                             [userNeedsToMakePickThisWeek]="currentSurvivorUserNeedsPickForThisWeek"
-                            (reloadData)="reloadEntries()" (reloadServerTime)="reloadServerTime()" [demoMode]="demoMode"
-                            (demoNextWeek)="demo_NextWeek()" (demoReset)="demo_Reset()"
+                            (reloadData)="reloadSurvivorEntries()" (reloadServerTime)="reloadServerTime()"
+                            [demoMode]="demoMode" (demoNextWeek)="demo_NextWeek()" (demoReset)="demo_Reset()"
                             (demoTestTimer)="demo_TestTimer()"></game-survivor-pool-content>
                     </ng-template>
                 </mat-tab>
 
                 <mat-tab label="Pick'ems">
                     <ng-template matTabContent>
-                        <game-pickems-content [currentUser]="currentUser"></game-pickems-content>
+                        <game-pickems-content [currentUser]="currentUser" [pickemsEntries]="pickemsEntries"
+                            [weeklyMatchups]="pickemsMatchups" [gameState]="gameState" [gameUsers]="gameUsers"
+                            [initialProfileValue]="pickemsCurrentProfileSelectorValue"
+                            [initialWeekValue]="pickemsCurrentWeekSelectorValue"
+                            (updatePickemsSelectorValues)="updatePickemsCurrentSelectorValues($event)"
+                            (reloadPickemsMatchupsForWeek)="reloadPickemsEntriesForWeek(pickemsCurrentWeekSelectorValue)"></game-pickems-content>
                     </ng-template>
                 </mat-tab>
 
                 <mat-tab label="Standings">
                     <ng-template matTabContent>
-                        <game-pickems-standings-content [currentUser]="currentUser"></game-pickems-standings-content>
+                        <game-pickems-standings-content [currentUser]="currentUser"
+                            [dataSource]="dataSourcePickemsScores"
+                            (reloadPickemsScores)="reloadPickemsScores()"></game-pickems-standings-content>
                     </ng-template>
                 </mat-tab>
             </mat-tab-group>

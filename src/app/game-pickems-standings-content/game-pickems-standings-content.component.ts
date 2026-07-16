@@ -1,41 +1,37 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { GameUser } from '../_Models/survivor.pickems.models';
-
-// export interface PeriodicElement {
-//   week1: string;
-//   week2: string;
-//   week3: string;
-//   week4: string;
-//   week5: string;
-//   week6: string;
-//   week7: string;
-//   week8: string;
-//   week9: string;
-//   week10: string;
-//   week11: string;
-//   week12: string;
-//   week13: string;
-//   week14: string;
-// }
-
-// const ELEMENT_DATA: PeriodicElement[] = [
-//   { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-//   { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-//   { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-// ];
-
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { GameUser, PickemsScore } from '../_Models/survivor.pickems.models';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule, MatIconButton } from "@angular/material/button";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'game-pickems-standings-content',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatTableModule, MatIconModule, MatButtonModule, MatIconButton],
   templateUrl: './game-pickems-standings-content.component.html',
   styleUrl: './game-pickems-standings-content.component.css'
 })
 export class GamePickemsStandingsContentComponent {
   @Input('currentUser') currentUser: GameUser;
+  @Input('dataSource') dataSource: MatTableDataSource<PickemsScore>; // data source for the survivor pool table
+  @Output('reloadPickemsScores') reloadPickemsScores = new EventEmitter<void>();
 
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
+  displayedColumns: string[] = ['username', 'score'];
 
+  // dependencies
+  private toastr = inject(ToastrService);
+
+  get scoresAvailable() {
+    return this.dataSource && this.dataSource.data && this.dataSource.data.length > 0;
+  }
+
+  handleRefresh() {
+    this.reloadPickemsScores?.emit();
+    this.toastr.info('Pick\'ems scores have been refreshed', '', {
+      timeOut: 2000,
+      progressBar: false
+    });
+  }
 }

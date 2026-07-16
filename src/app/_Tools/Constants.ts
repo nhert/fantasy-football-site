@@ -24,7 +24,7 @@ export class Constants {
 		errorPath: '/callback',
 	}
 	static PICKEMS_SURVIVOR_SKIP_AUTH: boolean = true; // FALSE IN PRODUCTION MODE. skip auth0 login
-	static PICKEMS_SURVIVOR_IN_LOCAL_TESTING_MODE: boolean = false; // FALSE IN PRODUCTION MODE. set to false for (nginx) deployment.
+	static PICKEMS_SURVIVOR_IN_LOCAL_TESTING_MODE: boolean = true; // FALSE IN PRODUCTION MODE. set to false for (nginx) deployment.
 
 	// HARDCODED URLS
 	static PICKEMS_URL = "https://leagueside.app/"; // deprecated ;)
