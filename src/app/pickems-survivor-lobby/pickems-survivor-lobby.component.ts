@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
-import { map, startWith } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
 import { SurvivorPickemsApiService } from '../_API/survivor-pickems-api.service';
 import { firstValueFrom, Observable, of, Subscription } from 'rxjs';
@@ -11,13 +11,13 @@ import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModu
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { PickemsSurvivorGameComponent } from "../pickems-survivor-game/pickems-survivor-game.component";
 import { GameUser } from '../_Models/survivor.pickems.models';
-import { PickemsSurvivorCalendarComponent } from "../pickems-survivor-calendar/pickems-survivor-calendar.component";
 import { Constants } from '../_Tools/Constants';
+import { MatCheckboxModule } from "@angular/material/checkbox";
 
 @Component({
   selector: 'app-pickems-survivor-lobby',
   standalone: true,
-  imports: [CommonModule, SimpleSpinnerComponent, MatIcon, FormsModule, ReactiveFormsModule, MatToolbarModule, PickemsSurvivorGameComponent],
+  imports: [CommonModule, SimpleSpinnerComponent, MatIcon, FormsModule, ReactiveFormsModule, MatToolbarModule, PickemsSurvivorGameComponent, MatCheckboxModule],
   templateUrl: './pickems-survivor-lobby.component.html',
   styleUrl: './pickems-survivor-lobby.component.css'
 })

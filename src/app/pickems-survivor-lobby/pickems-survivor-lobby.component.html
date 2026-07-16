@@ -40,7 +40,7 @@
                             style="width: 200px; height: 40px; font-size: 16px; margin-bottom: 10px;" />
 
                         <!-- Validation Error Messages -->
-                        @if (username?.invalid && (username?.dirty || username?.touched)) {
+                        @if ((username?.invalid) || !termsCheck.checked) {
                         <div class="error-container">
                             @if (username?.hasError('required')) {
                             <p class="error-text">Nickname is required.</p>
@@ -57,16 +57,23 @@
                             @if (username?.hasError('uniqueUsername')) {
                             <p class="error-text">Nickname has already been taken.</p>
                             }
+                            @if (!termsCheck.checked){
+                            <p class="error-text">Must accept the Pick'ems and Survivor Pool terms.</p>
+                            }
                         </div>
                         }
                     </div>
 
-                    <!-- 
-                <p>checkbox for submit here</p>
-                -->
+                    <mat-checkbox #termsCheck style="margin: 25px;">
+                        <span style="color: var(--text-color); font-size: 10px; text-align: left;">I understand that if
+                            I submit any
+                            entries into the
+                            Pick'ems or Survivor Pool, I must pay the Commissioner an entry fee for each game I
+                            play.</span>
+                    </mat-checkbox>
 
                     <!-- Disable button if the form fails validation -->
-                    <button type="submit" [disabled]="userForm.invalid">Submit</button>
+                    <button type="submit" [disabled]="userForm.invalid || !termsCheck.checked">Submit</button>
                 </form>
 
             </div>

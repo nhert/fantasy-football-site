@@ -27,6 +27,7 @@ CRITICAL
 
 MAJOR
 - Instead of only checking existence in the Users DB table, create new DB table that tracks "enlistment" in Survivor / Pickems
+- timer logic for pickems and disabling inputs
 
 PICKEMS
 - handle underdog scoring
