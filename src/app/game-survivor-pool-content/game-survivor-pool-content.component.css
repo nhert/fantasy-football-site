@@ -7,6 +7,8 @@
 
 .responsive-table {
     width: 100%;
+    background-color: var(--accent-color);
+    border-collapse: collapse;
 }
 
 .demo-action-row {
@@ -17,12 +19,9 @@
     padding: 16px;
 }
 
-/* @media (min-width: 1000px) {
-    .responsive-table {
-        
-    }
-} */
-
+/* 
+Spaghetti monster
+ */
 @media (max-width: 1000px) {
     .responsive-table-container {
         max-width: 550px;
@@ -43,7 +42,7 @@
             flex-direction: column !important;
             align-items: stretch !important;
             margin-bottom: 20px;
-            background: #ffffff;
+            background: var(--accent-color);
             border: 1px solid #000000;
             border-radius: 8px;
             padding: 12px 16px;
@@ -66,6 +65,7 @@
             &:first-child {
                 font-size: 24px;
                 margin-bottom: 20px;
+                color: var(--text-color);
             }
 
             &:last-child {
@@ -76,15 +76,9 @@
             &::before {
                 content: attr(data-label);
                 font-weight: 700;
-                color: #000000;
+
                 text-align: left;
                 flex: 1;
-            }
-
-            /* Ensure the value text aligns nicely to the right side */
-            span,
-            & {
-                color: #000000;
             }
         }
     }
@@ -96,17 +90,19 @@
 }
 
 .mat-mdc-cell.won {
-    background-color: #2e9914;
+    /* background-color: #2e9914; */
+    background-color: #009E73;
     color: #141414;
 }
 
 .mat-mdc-cell.loss {
-    background-color: #b81029;
+    /* background-color: #b81029; */
+    background-color: #AE002D;
     color: #141414;
 }
 
 .mat-mdc-cell.missed {
-    background-color: #929292;
+    background-color: #7c7c7c;
     color: #141414;
     font-size: 12px;
 }
@@ -157,4 +153,20 @@
     color: rgb(212, 16, 16);
     font-size: 22px;
     margin-top: 25px;
+}
+
+.survivor-table-cell {
+    color: var(--text-color);
+    border-bottom: 1px solid var(--divider-color);
+    border-left: none;
+    border-right: none;
+    font-size: 20px;
+}
+
+.survivor-table-player-name-cell {
+    color: var(--text-color);
+    border-bottom: 1px solid var(--divider-color);
+    border-left: none;
+    border-right: none;
+    font-size: 14px;
 }

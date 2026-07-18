@@ -33,7 +33,21 @@ export class PickemsSurvivorTimerComponent {
 
   public DisplayModeEnum = DisplayMode;
 
-  public startTimer(timerLengthSeconds: number) {
+  // Call this and the timer will start counting down using whatever the current "gameState.server_current_datetime_utc_iso" time is.
+  public refreshTimer() {
+    if (this.gameState) {
+      let curServerTime = this.gameState.server_current_datetime_utc_iso;
+      let cutoffTime = this.gameState.current_cutoff_datetime_utc_iso;
+
+      // get remaining seconds
+      const remainingSeconds = this.getUTCSecondsDiff(curServerTime, cutoffTime);
+      console.log(`Timer being initialized with curServerTime=${curServerTime} and cutoffTime=${cutoffTime}`);
+
+      this.startTimer(remainingSeconds);
+    }
+  }
+
+  private startTimer(timerLengthSeconds: number) {
     this.isExpired = false;
     console.log(`startTimer called with ${timerLengthSeconds} seconds remaining`);
 
@@ -99,6 +113,12 @@ export class PickemsSurvivorTimerComponent {
       return this.gameState.current_cutoff_datetime_utc_iso;
     }
     return "";
+  }
+
+  private getUTCSecondsDiff(isoString1: string, isoString2: string): number {
+    const date1 = new Date(isoString1).getTime();
+    const date2 = new Date(isoString2).getTime();
+    return (date2 - date1) / 1000;
   }
 
   get getLockMessage() {

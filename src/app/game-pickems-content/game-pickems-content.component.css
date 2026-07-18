@@ -11,8 +11,8 @@
 .pickems-grid-container {
     display: grid;
     /* grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); */
-    grid-template-columns: repeat(auto-fit, 500px);
-    gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 500px));
+    gap: 40px;
     padding: 16px;
     width: 100%;
     box-sizing: border-box;
@@ -50,19 +50,13 @@
 }
 
 .pick-button {
-    background-color: #b6b6b6;
+    background-color: #dbdbdb;
     width: 90px;
     height: 40px;
-
     display: flex;
-    /* Keeps the button inline but enables flex properties */
     align-items: center;
-    /* Centers the icon and text vertically */
     justify-content: center;
-    /* Centers the icon and text horizontally */
     gap: 5px;
-    /* Controls the spacing between the icon and text */
-
 }
 
 .double-down-button {
@@ -89,7 +83,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    background-color: #303030;
+    background-color: var(--accent-color-2);
     border-radius: 20px 20px 0 0;
     position: relative;
 }
@@ -110,6 +104,7 @@
     left: 0;
     width: 60px;
     height: 60px;
+    transform: translate(-25%, -25%);
 }
 
 .top-right-anchor {
@@ -119,6 +114,7 @@
     right: 0;
     width: 60px;
     height: 60px;
+    transform: translate(25%, -25%);
 }
 
 .left-content,
@@ -132,12 +128,37 @@
     flex: 0
 }
 
+.middle-vs-text {
+    font-size: 24px;
+    color: var(--text-color);
+}
+
+.player-name-content {
+    container-type: inline-size;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.player-score-text {
+    font-size: 32px;
+    color: var(--text-color);
+}
+
+.player-name-text {
+    font-size: 8cqw;
+    color: var(--text-color);
+}
+
+.player-reals-text {
+    color: var(--text-color);
+}
+
 .player-content-left {
-    margin-right: 20px;
+    margin-right: 15px;
 }
 
 .player-content-right {
-    margin-left: 20px;
+    margin-left: 15px;
 }
 
 .player-content-style-left {
@@ -146,4 +167,24 @@
 
 .player-content-style-right {
     text-align: left;
+}
+
+.player-content-text-score {
+    font-size: 8cqw;
+}
+
+.player-content-text-name {
+    font-size: 6cqw;
+}
+
+.player-content-text-position {
+    font-size: 6cqw;
+}
+
+.margin-r-5 {
+    margin-right: 5px;
+}
+
+.margin-r-15 {
+    margin-right: 10px;
 }

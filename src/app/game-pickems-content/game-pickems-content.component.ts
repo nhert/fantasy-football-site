@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, inject, Input, Output, ViewChild } from '@angular/core';
 import { GameState, GameUser, PickemsDbRow, PickemsMatchup, PickemsScore } from '../_Models/survivor.pickems.models';
 import { PickemsSurvivorTimerComponent } from "../pickems-survivor-timer/pickems-survivor-timer.component";
 import { MatInputModule } from "@angular/material/input";
@@ -43,6 +43,9 @@ export class GamePickemsContentComponent {
   @Input('initialWeekValue') initialWeekValue: number;
   @Output('updatePickemsSelectorValues') updatePickemsSelectorValues = new EventEmitter<any>();
 
+  @Output('reloadServerTime') reloadServerTime = new EventEmitter<void>(); // Call reload method on parent component to reload table data and refresh.
+  @ViewChild(PickemsSurvivorTimerComponent) timerComponent!: PickemsSurvivorTimerComponent;
+
   selectedWeek: number; // double bound to selector current value
   selectedProfile: any; // double bound to selector current value
 
@@ -62,6 +65,23 @@ export class GamePickemsContentComponent {
   ngOnInit(): void {
     this.initializePickems();
     this.isPickemsLoaded = true;
+  }
+
+  ngAfterViewInit() {
+    this.reloadServerTime.emit();
+  }
+
+  // Automatically catches up when user re-focuses or wakes up the tab
+  @HostListener('document:visibilitychange', [])
+  onVisibilityChange() {
+    if (document.visibilityState === 'visible') {
+      // For critical contests, re-fetch server state entirely upon wake
+      this.reloadServerTime.emit();
+    }
+  }
+
+  resetTimer() {
+    this.timerComponent?.refreshTimer();
   }
 
   initializePickems() {

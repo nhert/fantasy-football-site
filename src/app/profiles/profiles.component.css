@@ -1,6 +1,7 @@
 .profiles-container {
     text-align: center;
     width: 750px;
+    margin-bottom: 50px;
 }
 
 ::ng-deep .cdk-overlay-container,

@@ -8,5 +8,17 @@
 
 .score-table {
     width: 100%;
-    max-width: 800px;
+    max-width: 600px;
+}
+
+.score-table-style {
+    background-color: var(--accent-color);
+    border-collapse: collapse;
+}
+
+.score-table-cell {
+    color: var(--text-color);
+    border-bottom: 1px solid var(--text-color);
+    border-left: none;
+    border-right: none;
 }

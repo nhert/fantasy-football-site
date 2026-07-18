@@ -1,7 +1,7 @@
 <ng-container *ngIf="isTablePrepared">
 
     <ng-container *ngIf="demoMode">
-        <mat-expansion-panel style="width: 350px; background-color:chocolate;">
+        <mat-expansion-panel style="width: 350px; background-color:chocolate; margin-bottom: 10px;">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     Demo Actions
@@ -29,53 +29,69 @@
 
     <!-- The survivor pool is still ongoing, so show the week, timer, and inputs. -->
     <ng-container *ngIf="!isSurvivorPoolFinished()">
-        <pickems-survivor-timer [gameState]="gameState" [currentUserEliminated]="userEliminated || userMissedStart"
-            (disableUiComponents)="handleDisableUiComponents()"></pickems-survivor-timer>
+        <div class="flex-centered">
+            <mat-card style="background-color: var(--accent-color); width: 600px;">
+                <mat-card-content>
+                    <pickems-survivor-timer [gameState]="gameState"
+                        [currentUserEliminated]="userEliminated || userMissedStart"
+                        (disableUiComponents)="handleDisableUiComponents()"></pickems-survivor-timer>
 
-        <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Warning"
-            [shouldDisplay]="getShouldShowWarningToMakePick()"
-            [message]="'You have not submitted a pick yet this week.'"></app-pickems-survivor-warning-info-box>
+                    <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Warning"
+                        [shouldDisplay]="getShouldShowWarningToMakePick()"
+                        [message]="'You have not submitted a pick yet this week.'"></app-pickems-survivor-warning-info-box>
 
-        <div class="survivor-inputs" *ngIf="getIsCurrentUserAlive()">
-            <mat-form-field style="padding-top: 20px;">
-                <mat-label>Choose a GM</mat-label>
-                <mat-select #gmSelectorComponent [compareWith]="compareUsers" [disabled]="shouldDisableUiInput()">
-                    <mat-optgroup label='A League' style="font-size: 12px;">
-                        <mat-option *ngFor="let user of getAlphabetizedUsersForALeague()" [value]="user"
-                            [disabled]="isSleeperIdInListOfSurvivorChoices(user.sleeperId_current)">
-                            {{ user.name }}
-                        </mat-option>
-                    </mat-optgroup>
-                    <mat-optgroup label='B League' style="font-size: 12px;">
-                        <mat-option *ngFor="let user of getAlphabetizedUsersForBLeague()" [value]="user"
-                            [disabled]="isSleeperIdInListOfSurvivorChoices(user.sleeperId_current)">
-                            {{ user.name }}
-                        </mat-option>
-                    </mat-optgroup>
-                </mat-select>
-            </mat-form-field>
-            <button type="button" mat-raised-button (click)="handleSubmitChoiceClick()"
-                [disabled]="shouldDisableUiInput()">Submit
-                Choice</button>
-        </div>
+                    <div class="survivor-inputs" *ngIf="getIsCurrentUserAlive()">
+                        <mat-form-field style="padding-top: 20px;">
+                            <mat-label>Choose a GM</mat-label>
+                            <mat-select #gmSelectorComponent [compareWith]="compareUsers"
+                                [disabled]="shouldDisableUiInput()">
+                                <mat-optgroup label='A League' style="font-size: 12px;">
+                                    <mat-option *ngFor="let user of getAlphabetizedUsersForALeague()" [value]="user"
+                                        [disabled]="isSleeperIdInListOfSurvivorChoices(user.sleeperId_current)">
+                                        {{ user.name }}
+                                    </mat-option>
+                                </mat-optgroup>
+                                <mat-optgroup label='B League' style="font-size: 12px;">
+                                    <mat-option *ngFor="let user of getAlphabetizedUsersForBLeague()" [value]="user"
+                                        [disabled]="isSleeperIdInListOfSurvivorChoices(user.sleeperId_current)">
+                                        {{ user.name }}
+                                    </mat-option>
+                                </mat-optgroup>
+                            </mat-select>
+                        </mat-form-field>
+                        <button type="button" mat-raised-button (click)="handleSubmitChoiceClick()"
+                            [disabled]="shouldDisableUiInput()">Submit
+                            Choice</button>
+                    </div>
 
-        <div *ngIf="userEliminated" class="elimination-text">
-            <span><strong>YOU ARE ELIMINATED!</strong></span>
-        </div>
+                    <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Generic"
+                        [shouldDisplay]="userEliminated"
+                        [message]="'YOU ARE ELIMINATED!'"></app-pickems-survivor-warning-info-box>
 
-        <div *ngIf="userMissedStart" class="elimination-text">
-            <span><strong>MISSED WEEK 1 SUBMISSION!</strong></span>
+                    <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Generic"
+                        [shouldDisplay]="userMissedStart"
+                        [message]="'MISSED WEEK 1 SUBMISSION!'"></app-pickems-survivor-warning-info-box>
+                </mat-card-content>
+            </mat-card>
         </div>
     </ng-container>
 
     <!-- The survivor pool is concluded, so show the outcome and winners -->
     <ng-container *ngIf="isSurvivorPoolFinished()">
-        <span style="font-size: 36px;">Survivor Pool Finished!</span>
-        <br><br>
-        <span style="font-size: 18px;">{{getSurvivorPoolOutcome()}}</span>
-        <br><br><br>
-        <span style="font-size: 30px; color:gold">Congratulations to
-            {{getListOfSurvivorPoolWinningUsernames()}}!</span>
+        <div class="flex-centered">
+            <mat-card style="background-color: var(--accent-color); width: 600px;">
+                <mat-card-content>
+                    <span style="font-size: 36px; color: var(--text-color);">Survivor Pool Finished!</span>
+                    <br><br>
+                    <span style="font-size: 18px; color: var(--text-color);">{{getSurvivorPoolOutcome()}}</span>
+                    <br><br><br>
+                    <mat-icon style="transform: scale(2); color:#dbbc0a">star_border</mat-icon>
+                    <br><br>
+                    <span style="font-size: 30px; color:#dbbc0a">Congratulations to
+                        {{getListOfSurvivorPoolWinningUsernames()}}!</span>
+                </mat-card-content>
+            </mat-card>
+        </div>
     </ng-container>
 
     <div style="display: flex; justify-content: center;">
@@ -84,148 +100,163 @@
             <mat-table [dataSource]="dataSource" class="mat-elevation-z8 responsive-table">
 
                 <ng-container matColumnDef="playerUsername">
-                    <mat-header-cell *matHeaderCellDef> Player </mat-header-cell>
-                    <mat-cell *matCellDef="let element" [attr.data-label]="'Player'">
+                    <mat-header-cell *matHeaderCellDef class="survivor-table-cell"> Player </mat-header-cell>
+                    <mat-cell *matCellDef="let element" [attr.data-label]="'Player'"
+                        class="survivor-table-player-name-cell">
                         <span>{{element.playerUsername}}</span>
                     </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="week1">
-                    <mat-header-cell *matHeaderCellDef> Week 1 </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef class="survivor-table-cell"> Week 1 </mat-header-cell>
                     <mat-cell *matCellDef="let element" [attr.data-label]="'Week 1'"
                         [class.won]="element.week1.outcome === 'WIN' || element.week1.outcome === 'TIE'"
                         [class.loss]="element.week1.outcome === 'LOSS'"
-                        [class.missed]="element.week1.outcome === 'MISSED'">
+                        [class.missed]="element.week1.outcome === 'MISSED'"
+                        [class.unknown]="element.week1.outcome === 'UNKNOWN'">
                         {{element.week1.choice_gm_name}}
                     </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="week2">
-                    <mat-header-cell *matHeaderCellDef> Week 2 </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef class="survivor-table-cell"> Week 2 </mat-header-cell>
                     <mat-cell *matCellDef="let element" [attr.data-label]="'Week 2'"
                         [class.won]="element.week2.outcome === 'WIN' || element.week2.outcome === 'TIE'"
                         [class.loss]="element.week2.outcome === 'LOSS'"
-                        [class.missed]="element.week2.outcome === 'MISSED'">
+                        [class.missed]="element.week2.outcome === 'MISSED'"
+                        [class.unknown]="element.week2.outcome === 'UNKNOWN'">
                         {{element.week2.choice_gm_name}}
                     </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="week3">
-                    <mat-header-cell *matHeaderCellDef> Week 3 </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef class="survivor-table-cell"> Week 3 </mat-header-cell>
                     <mat-cell *matCellDef="let element" [attr.data-label]="'Week 3'"
                         [class.won]="element.week3.outcome === 'WIN' || element.week3.outcome === 'TIE'"
                         [class.loss]="element.week3.outcome === 'LOSS'"
-                        [class.missed]="element.week3.outcome === 'MISSED'">
+                        [class.missed]="element.week3.outcome === 'MISSED'"
+                        [class.unknown]="element.week3.outcome === 'UNKNOWN'">
                         {{element.week3.choice_gm_name}}
                     </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="week4">
-                    <mat-header-cell *matHeaderCellDef> Week 4 </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef class="survivor-table-cell"> Week 4 </mat-header-cell>
                     <mat-cell *matCellDef="let element" [attr.data-label]="'Week 4'"
                         [class.won]="element.week4.outcome === 'WIN' || element.week4.outcome === 'TIE'"
                         [class.loss]="element.week4.outcome === 'LOSS'"
-                        [class.missed]="element.week4.outcome === 'MISSED'">
+                        [class.missed]="element.week4.outcome === 'MISSED'"
+                        [class.unknown]="element.week4.outcome === 'UNKNOWN'">
                         {{element.week4.choice_gm_name}}
                     </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="week5">
-                    <mat-header-cell *matHeaderCellDef> Week 5 </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef class="survivor-table-cell"> Week 5 </mat-header-cell>
                     <mat-cell *matCellDef="let element" [attr.data-label]="'Week 5'"
                         [class.won]="element.week5.outcome === 'WIN' || element.week5.outcome === 'TIE'"
                         [class.loss]="element.week5.outcome === 'LOSS'"
-                        [class.missed]="element.week5.outcome === 'MISSED'">
+                        [class.missed]="element.week5.outcome === 'MISSED'"
+                        [class.unknown]="element.week5.outcome === 'UNKNOWN'">
                         {{element.week5.choice_gm_name}}
                     </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="week6">
-                    <mat-header-cell *matHeaderCellDef> Week 6 </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef class="survivor-table-cell"> Week 6 </mat-header-cell>
                     <mat-cell *matCellDef="let element" [attr.data-label]="'Week 6'"
                         [class.won]="element.week6.outcome === 'WIN' || element.week6.outcome === 'TIE'"
                         [class.loss]="element.week6.outcome === 'LOSS'"
-                        [class.missed]="element.week6.outcome === 'MISSED'">
+                        [class.missed]="element.week6.outcome === 'MISSED'"
+                        [class.unknown]="element.week6.outcome === 'UNKNOWN'">
                         {{element.week6.choice_gm_name}}
                     </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="week7">
-                    <mat-header-cell *matHeaderCellDef> Week 7 </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef class="survivor-table-cell"> Week 7 </mat-header-cell>
                     <mat-cell *matCellDef="let element" [attr.data-label]="'Week 7'"
                         [class.won]="element.week7.outcome === 'WIN' || element.week7.outcome === 'TIE'"
                         [class.loss]="element.week7.outcome === 'LOSS'"
-                        [class.missed]="element.week7.outcome === 'MISSED'">
+                        [class.missed]="element.week7.outcome === 'MISSED'"
+                        [class.unknown]="element.week7.outcome === 'UNKNOWN'">
                         {{element.week7.choice_gm_name}}
                     </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="week8">
-                    <mat-header-cell *matHeaderCellDef> Week 8 </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef class="survivor-table-cell"> Week 8 </mat-header-cell>
                     <mat-cell *matCellDef="let element" [attr.data-label]="'Week 8'"
                         [class.won]="element.week8.outcome === 'WIN' || element.week8.outcome === 'TIE'"
                         [class.loss]="element.week8.outcome === 'LOSS'"
-                        [class.missed]="element.week8.outcome === 'MISSED'">
+                        [class.missed]="element.week8.outcome === 'MISSED'"
+                        [class.unknown]="element.week8.outcome === 'UNKNOWN'">
                         {{element.week8.choice_gm_name}}
                     </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="week9">
-                    <mat-header-cell *matHeaderCellDef> Week 9 </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef class="survivor-table-cell"> Week 9 </mat-header-cell>
                     <mat-cell *matCellDef="let element" [attr.data-label]="'Week 9'"
                         [class.won]="element.week9.outcome === 'WIN' || element.week9.outcome === 'TIE'"
                         [class.loss]="element.week9.outcome === 'LOSS'"
-                        [class.missed]="element.week9.outcome === 'MISSED'">
+                        [class.missed]="element.week9.outcome === 'MISSED'"
+                        [class.unknown]="element.week9.outcome === 'UNKNOWN'">
                         {{element.week9.choice_gm_name}}
                     </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="week10">
-                    <mat-header-cell *matHeaderCellDef> Week 10 </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef class="survivor-table-cell"> Week 10 </mat-header-cell>
                     <mat-cell *matCellDef="let element" [attr.data-label]="'Week 10'"
                         [class.won]="element.week10.outcome === 'WIN' || element.week10.outcome === 'TIE'"
                         [class.loss]="element.week10.outcome === 'LOSS'"
-                        [class.missed]="element.week10.outcome === 'MISSED'">
+                        [class.missed]="element.week10.outcome === 'MISSED'"
+                        [class.unknown]="element.week10.outcome === 'UNKNOWN'">
                         {{element.week10.choice_gm_name}}
                     </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="week11">
-                    <mat-header-cell *matHeaderCellDef> Week 11 </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef class="survivor-table-cell"> Week 11 </mat-header-cell>
                     <mat-cell *matCellDef="let element" [attr.data-label]="'Week 11'"
                         [class.won]="element.week11.outcome === 'WIN' || element.week11.outcome === 'TIE'"
                         [class.loss]="element.week11.outcome === 'LOSS'"
-                        [class.missed]="element.week11.outcome === 'MISSED'">
+                        [class.missed]="element.week11.outcome === 'MISSED'"
+                        [class.unknown]="element.week11.outcome === 'UNKNOWN'">
                         {{element.week11.choice_gm_name}}
                     </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="week12">
-                    <mat-header-cell *matHeaderCellDef> Week 12 </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef class="survivor-table-cell"> Week 12 </mat-header-cell>
                     <mat-cell *matCellDef="let element" [attr.data-label]="'Week 12'"
                         [class.won]="element.week12.outcome === 'WIN' || element.week12.outcome === 'TIE'"
                         [class.loss]="element.week12.outcome === 'LOSS'"
-                        [class.missed]="element.week12.outcome === 'MISSED'">
+                        [class.missed]="element.week12.outcome === 'MISSED'"
+                        [class.unknown]="element.week12.outcome === 'UNKNOWN'">
                         {{element.week12.choice_gm_name}}
                     </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="week13">
-                    <mat-header-cell *matHeaderCellDef> Week 13 </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef class="survivor-table-cell"> Week 13 </mat-header-cell>
                     <mat-cell *matCellDef="let element" [attr.data-label]="'Week 13'"
                         [class.won]="element.week13.outcome === 'WIN' || element.week13.outcome === 'TIE'"
                         [class.loss]="element.week13.outcome === 'LOSS'"
-                        [class.missed]="element.week13.outcome === 'MISSED'">
+                        [class.missed]="element.week13.outcome === 'MISSED'"
+                        [class.unknown]="element.week13.outcome === 'UNKNOWN'">
                         {{element.week13.choice_gm_name}}
                     </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="week14">
-                    <mat-header-cell *matHeaderCellDef> Week 14 </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef class="survivor-table-cell"> Week 14 </mat-header-cell>
                     <mat-cell *matCellDef="let element" [attr.data-label]="'Week 14'"
                         [class.won]="element.week14.outcome === 'WIN' || element.week14.outcome === 'TIE'"
                         [class.loss]="element.week14.outcome === 'LOSS'"
-                        [class.missed]="element.week14.outcome === 'MISSED'">
+                        [class.missed]="element.week14.outcome === 'MISSED'"
+                        [class.unknown]="element.week14.outcome === 'UNKNOWN'">
                         {{element.week14.choice_gm_name}}
                     </mat-cell>
                 </ng-container>

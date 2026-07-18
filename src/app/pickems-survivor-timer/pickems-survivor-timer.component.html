@@ -1,7 +1,7 @@
 <div>
-    <span style="font-size: 36px; margin-bottom: 40;">NFL Week {{getCurrentWeek()}}</span>
+    <span style="font-size: 36px; margin-bottom: 40; color: var(--text-color);">NFL Week {{getCurrentWeek()}}</span>
 
-    <p style="font-size: 16px; margin-bottom: 20px;">Picks Must be Submitted by: {{
+    <p style="font-size: 16px; margin-bottom: 20px; color: var(--text-color);">Picks Must be Submitted by: {{
         getCurrentDeadline()| date: 'medium' }}</p>
 </div>
 <div class="countdown-container" *ngIf="!currentUserEliminated">

@@ -239,7 +239,8 @@ export class PickemsSurvivorGameComponent {
   public reloadServerTime() {
     this.survivorPickemsApi.getServerTime().subscribe(time => {
       this.gameState.server_current_datetime_utc_iso = time.server_time;
-      this.survivorPoolContent.resetTimer();
+      this.survivorPoolContent?.resetTimer();
+      this.pickemsContent?.resetTimer();
     });
   }
 
@@ -591,6 +592,7 @@ export class PickemsSurvivorGameComponent {
 
       this.initializeGame();
       this.survivorPoolContent?.resetTimer();
+      this.pickemsContent?.resetTimer();
     });
   }
 
@@ -608,6 +610,7 @@ export class PickemsSurvivorGameComponent {
     let serverTime = this.demo_getCurrentTimeBasedOnSchedule(curWeek, 1000 * 20);
 
     this.gameState.server_current_datetime_utc_iso = serverTime;
-    this.survivorPoolContent.resetTimer();
+    this.survivorPoolContent?.resetTimer();
+    this.pickemsContent?.resetTimer();
   }
 }

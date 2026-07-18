@@ -1,6 +1,5 @@
 .game-container {
     width: 100%;
-    background-color: #424242;
 }
 
 .game-tab-group {
@@ -8,8 +7,6 @@
     background-color: #2e2e2e;
     border-radius: 0;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    min-height: 975px;
 
     /* Angular Material Tab Design Tokens */
     --mdc-tab-indicator-active-indicator-color: #dbdbdb;
@@ -30,9 +27,8 @@
     --mat-tab-header-inactive-ripple-color: rgba(255, 255, 255, 0.05);
 }
 
-/* Optional: Add a dark background wrapper for the active body area */
 .game-tab-group ::ng-deep .mat-mdc-tab-body-content {
-    background-color: #424242;
+    background-color: var(--bg-color);
     color: #e2e8f0;
     padding: 24px;
     height: 100%;

@@ -24,13 +24,20 @@ FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaS
 
 CRITICAL
 - the allow/deny for nginx config /api/ is forbidden. Is this because SSR isnt being used?
+- test cron job + calling update scores
 
 MAJOR
 - Instead of only checking existence in the Users DB table, create new DB table that tracks "enlistment" in Survivor / Pickems
 - timer logic for pickems and disabling inputs
+- refactor how the timer logic works
+    - right now, calling getServerTime and refreshing is passed between game component and content components with @Input @Output
+    - refresh timer gets called twice, once for survivor once for pickems (are there actually 2 timers going at once?)
+    - move the call for getServerTime to be native to the timer component and do not handle any of this in game/content
+    - Content components can simply call a "refresh" to make the timer retrieve
 
 PICKEMS
 - handle underdog scoring
+- disable all inputs when loading from week/profile
 - handle when users miss picks
 
 MINOR
@@ -40,3 +47,4 @@ MINOR
 - improve how the survivor pickems timer displays (make it a panel with box shadowing?)
 - fix how ResetTimer works in Survivor Content. Gets called repeatedly whenever tab is changed and will have the wrong new server time since ngOnInit gets called in the content classes. 
     (basically might need a small refactor to how timer component works - maybe i should just have the getServerTime API directly in there)
+- scaling of the pickems page on mobile

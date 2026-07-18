@@ -30,3 +30,13 @@
         </mat-card>
     </div>
 </ng-container>
+
+<ng-container *ngIf="displayModeGeneric">
+    <div class="container" *ngIf="shouldDisplay">
+        <mat-card class="generic mat-elevation-z0">
+            <mat-card-content style="padding: 0;">
+                <strong>{{message}}</strong>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</ng-container>

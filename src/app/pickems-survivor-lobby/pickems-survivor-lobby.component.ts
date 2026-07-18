@@ -72,7 +72,7 @@ export class PickemsSurvivorLobbyComponent {
       username: ['', [
         Validators.required,
         Validators.minLength(3),
-        Validators.maxLength(18),
+        Validators.maxLength(14),
         Validators.pattern('^[a-zA-Z0-9]+$'), // Only letters and numbers
         this.uniqueUsernameValidator()
       ]]

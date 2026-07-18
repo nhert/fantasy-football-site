@@ -34,7 +34,7 @@
                         <game-pickems-content [currentUser]="currentUser" [pickemsEntries]="pickemsEntries"
                             [weeklyMatchups]="pickemsMatchups" [gameState]="gameState" [gameUsers]="gameUsers"
                             [initialProfileValue]="pickemsCurrentProfileSelectorValue"
-                            [initialWeekValue]="pickemsCurrentWeekSelectorValue"
+                            [initialWeekValue]="pickemsCurrentWeekSelectorValue" (reloadServerTime)="reloadServerTime()"
                             (updatePickemsSelectorValues)="updatePickemsCurrentSelectorValues($event)"
                             (reloadPickemsMatchupsForWeek)="reloadPickemsEntriesForWeek(pickemsCurrentWeekSelectorValue)"></game-pickems-content>
                     </ng-template>

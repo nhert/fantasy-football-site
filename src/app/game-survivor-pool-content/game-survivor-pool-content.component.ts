@@ -75,6 +75,19 @@ export class GameSurvivorPoolContentComponent {
     this.reloadServerTime.emit();
   }
 
+  // Automatically catches up when user re-focuses or wakes up the tab
+  @HostListener('document:visibilitychange', [])
+  onVisibilityChange() {
+    if (document.visibilityState === 'visible') {
+      // For critical contests, re-fetch server state entirely upon wake
+      this.reloadServerTime.emit();
+    }
+  }
+
+  resetTimer() {
+    this.timerComponent?.refreshTimer();
+  }
+
   // handlers
 
   protected handleSubmitChoiceClick() {
@@ -181,41 +194,6 @@ export class GameSurvivorPoolContentComponent {
       timeOut: 5000,
       progressBar: true
     });
-  }
-
-  // Automatically catches up when user re-focuses or wakes up the tab
-  @HostListener('document:visibilitychange', [])
-  onVisibilityChange() {
-    if (document.visibilityState === 'visible') {
-      // For critical contests, re-fetch server state entirely upon wake
-      this.reloadServerTime.emit();
-    }
-  }
-
-  resetTimer() {
-    if (this.gameState) {
-      let curServerTime = this.gameState.server_current_datetime_utc_iso;
-      let cutoffTime = this.gameState.current_cutoff_datetime_utc_iso;
-
-      // get remaining seconds
-      const remainingSeconds = this.getUTCSecondsDiff(curServerTime, cutoffTime);
-      console.log(`Timer being initialized with curServerTime=${curServerTime} and cutoffTime=${cutoffTime}`);
-      //console.log("Setting the survivor pool timer to " + remainingSeconds + " seconds");
-
-      if (remainingSeconds > 0) {
-        this.passedDeadlineDisableUi = false;
-      } else {
-        this.passedDeadlineDisableUi = true;
-      }
-
-      this.timerComponent?.startTimer(remainingSeconds);
-    }
-  }
-
-  getUTCSecondsDiff(isoString1: string, isoString2: string): number {
-    const date1 = new Date(isoString1).getTime();
-    const date2 = new Date(isoString2).getTime();
-    return (date2 - date1) / 1000;
   }
 
   //called by timer to disable ui controls the moment timer elapses

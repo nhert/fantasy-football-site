@@ -6,7 +6,8 @@ import { CommonModule } from '@angular/common';
 export enum DisplayMode {
   Warning,
   Info,
-  SubmissionLock
+  SubmissionLock,
+  Generic
 }
 
 @Component({
@@ -28,5 +29,8 @@ export class PickemsSurvivorWarningInfoBoxComponent {
   }
   get displayModeSubmissionLock() {
     return this.displayMode == DisplayMode.SubmissionLock;
+  }
+  get displayModeGeneric() {
+    return this.displayMode == DisplayMode.Generic;
   }
 }

@@ -49,7 +49,7 @@
                             <p class="error-text">Nickname must be at least 3 characters long.</p>
                             }
                             @if (username?.hasError('maxlength')) {
-                            <p class="error-text">Nickname must be less than 18 characters long.</p>
+                            <p class="error-text">Nickname must be 14 or less characters long.</p>
                             }
                             @if (username?.hasError('pattern')) {
                             <p class="error-text">Nickname can only contain letters and numbers.</p>
@@ -68,8 +68,7 @@
                         <span style="color: var(--text-color); font-size: 10px; text-align: left;">I understand that if
                             I submit any
                             entries into the
-                            Pick'ems or Survivor Pool, I must pay the Commissioner an entry fee for each game I
-                            play.</span>
+                            Pick'ems or Survivor Pool, I must pay the Commissioner an entry fee for each.</span>
                     </mat-checkbox>
 
                     <!-- Disable button if the form fails validation -->

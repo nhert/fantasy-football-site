@@ -1,20 +1,22 @@
-<div style="display: flex; width: 100%; align-items:end; justify-content: end;">
+<div style="display: flex; width: 100%; align-items:center; justify-content: center; color: var(--text-color);">
     <button mat-icon-button aria-label="Refresh" (click)="handleRefresh()"><mat-icon>refresh</mat-icon></button>
 </div>
 
-<h2 style="color: white;">Pick'ems Standings</h2>
+<h2 style="color: var(--text-color);">Pick'ems Standings</h2>
 <div class="score-container">
     <div class="score-table" *ngIf="scoresAvailable">
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 ">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 score-table-style">
 
             <ng-container matColumnDef="username">
-                <th mat-header-cell *matHeaderCellDef> Profile Name </th>
-                <td mat-cell *matCellDef="let player"> {{player.username}} </td>
+                <th mat-header-cell *matHeaderCellDef class="score-table-cell"><span
+                        style="font-size: 18px;"><strong>Profile Name</strong></span></th>
+                <td mat-cell *matCellDef="let player" class="score-table-cell"> {{player.username}} </td>
             </ng-container>
 
             <ng-container matColumnDef="score">
-                <th mat-header-cell *matHeaderCellDef> Score </th>
-                <td mat-cell *matCellDef="let player"> {{player.score}} </td>
+                <th mat-header-cell *matHeaderCellDef class="score-table-cell"><span
+                        style="font-size: 18px;"><strong>Score</strong></span></th>
+                <td mat-cell *matCellDef="let player" class="score-table-cell"> {{player.score}} </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
