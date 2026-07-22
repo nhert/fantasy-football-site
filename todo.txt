@@ -21,14 +21,11 @@ FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaS
 12: 000001AD45D775FA 
 
 
-
 CRITICAL
 - the allow/deny for nginx config /api/ is forbidden. Is this because SSR isnt being used?
 - test cron job + calling update scores
 
 MAJOR
-- Instead of only checking existence in the Users DB table, create new DB table that tracks "enlistment" in Survivor / Pickems
-- timer logic for pickems and disabling inputs
 - refactor how the timer logic works
     - right now, calling getServerTime and refreshing is passed between game component and content components with @Input @Output
     - refresh timer gets called twice, once for survivor once for pickems (are there actually 2 timers going at once?)
@@ -36,15 +33,13 @@ MAJOR
     - Content components can simply call a "refresh" to make the timer retrieve
 
 PICKEMS
-- handle underdog scoring
-- disable all inputs when loading from week/profile
-- handle when users miss picks
+- disable all pick inputs when loading from week/profile
 
 MINOR
 - HELP section for s/p that explains the schedule, how to play, scoring, when things process, when entries lock/unlock etc
 - improve the visuals of the survivor pool finished screen. Dont just use text
 - make a calendar that shows the schedule
-- improve how the survivor pickems timer displays (make it a panel with box shadowing?)
-- fix how ResetTimer works in Survivor Content. Gets called repeatedly whenever tab is changed and will have the wrong new server time since ngOnInit gets called in the content classes. 
+- fix how ResetTimer works. Gets called repeatedly whenever tab is changed and will have the wrong new server time since ngOnInit gets called in the content classes. 
     (basically might need a small refactor to how timer component works - maybe i should just have the getServerTime API directly in there)
-- scaling of the pickems page on mobile
+- refactor how this.selectedWeek is used for verification - instead of relying on current week selector value need to check value of the current loaded matchups week
+- player username change

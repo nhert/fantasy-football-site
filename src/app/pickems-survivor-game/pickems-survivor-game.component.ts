@@ -8,7 +8,7 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { GameSurvivorPoolContentComponent } from "../game-survivor-pool-content/game-survivor-pool-content.component";
 import { GamePickemsContentComponent, PickemsPickStatus } from "../game-pickems-content/game-pickems-content.component";
 import { GamePickemsStandingsContentComponent } from "../game-pickems-standings-content/game-pickems-standings-content.component";
-import { GameSchedule, GameState, GameUser, PickemsDbRow, PickemsMatchup, PickemsMatchupCache, PickemsScore, SurvivorDbRow, SurvivorEntries } from '../_Models/survivor.pickems.models';
+import { GameSchedule, GameState, GameUser, PickemsDbRow, PickemsMatchup, PickemsMatchupCache, PickemsScore, SurvivorDbRow, SurvivorEntries, UnderdogStatus } from '../_Models/survivor.pickems.models';
 import { MatTableDataSource } from '@angular/material/table';
 import { firstValueFrom, forkJoin } from 'rxjs';
 import { Constants } from '../_Tools/Constants';
@@ -56,6 +56,7 @@ export class PickemsSurvivorGameComponent {
   public pickemsCurrentProfileSelectorValue: any;
   public pickemsCurrentWeekSelectorValue: number;
   public pickemsScores: PickemsScore[];
+  public pickemsUnderdogWinTotals: any[];
   public dataSourcePickemsScores: MatTableDataSource<PickemsScore>;
   public pickemsMatchups: PickemsMatchup[];
   public pickemsMatchupsCache: PickemsMatchupCache;
@@ -164,19 +165,23 @@ export class PickemsSurvivorGameComponent {
       //console.log(this.gameState.server_current_datetime_iso + " -> " + new Date(this.gameState.server_current_datetime_iso));
       //console.log(this.gameState.current_cutoff_datetime_iso + " -> " + new Date(this.gameState.current_cutoff_datetime_iso));
 
-      this.initializeGame();
+      this.getGameUsers();
     }
   }
 
-  initializeGame() {
+  getGameUsers() {
     this.survivorPickemsApi.getAllUsers().subscribe(users => {
       users.forEach(user => {
         this.gameUsers.push(user);
       });
 
-      this.setPickemsCurrentSelectorValuesToDefault();
-      this.reloadAllEntries();
+      this.initializeGame();
     });
+  }
+
+  initializeGame() {
+    this.setPickemsCurrentSelectorValuesToDefault();
+    this.reloadAllEntries();
   }
 
   protected async reloadAllEntries() {
@@ -214,17 +219,37 @@ export class PickemsSurvivorGameComponent {
 
   public reloadPickemsEntriesForWeek(week: number) {
     console.log(`running reloadPickemsEntriesForWeek with week ${week}`);
-    const forkJoin$ = forkJoin([this.survivorPickemsApi.getAllPickemsEntriesForWeek(week), this.sleeperApi.getPickemsMatchupsForWeek(week, this.pickemsMatchupsCache)]);
+    let forkJoin$;
 
-    forkJoin$.subscribe(([entries, matchups]) => {
-      this.convertToPickemsDbElement(entries);
-      this.setPickemsMatchups(matchups);
+    if (week == 1 || week > this.gameState.week) {
+      forkJoin$ = forkJoin([this.survivorPickemsApi.getAllPickemsEntriesForWeek(week), this.sleeperApi.getPickemsMatchupsForWeek(week, this.pickemsMatchupsCache)]);
 
-      console.log("reloading Matchups DONE");
-      console.log(this.pickemsMatchups);
-    });
+      forkJoin$.subscribe(([entries, matchups]) => {
+        this.convertToPickemsDbElement(entries);
+        this.setPickemsMatchups(matchups, week);
+        this.pickemsContent?.pickemsLoadMarkComplete();
+
+        console.log("reloading Matchups DONE. Skipped Underdog statuses because it is week 1.");
+      });
+    } else {
+      forkJoin$ = forkJoin([this.survivorPickemsApi.getAllPickemsEntriesForWeek(week), this.sleeperApi.getPickemsMatchupsForWeek(week, this.pickemsMatchupsCache), this.survivorPickemsApi.getPlayerWinTotalsForWeek(week)]);
+
+      forkJoin$.subscribe(([entries, matchups, winTotalsForWeek]) => {
+        this.pickemsUnderdogWinTotals = winTotalsForWeek;
+        this.convertToPickemsDbElement(entries);
+        this.setPickemsMatchups(matchups, week);
+        this.pickemsContent?.pickemsLoadMarkComplete();
+
+        console.log("reloading Matchups DONE");
+      });
+    }
 
     return forkJoin$;
+  }
+
+  public updatePickemsSelectorValuesAndReloadEntries(payload: any) {
+    this.updatePickemsCurrentSelectorValues(payload);
+    this.reloadPickemsEntriesForWeek(this.pickemsCurrentWeekSelectorValue);
   }
 
   public reloadPickemsScores() {
@@ -293,29 +318,25 @@ export class PickemsSurvivorGameComponent {
         outcome: entry.outcome,
         score: entry.score,
         is_double_down: entry.is_double_down,
-        is_triple_down: entry.is_triple_down
+        is_triple_down: entry.is_triple_down,
+        is_auto_pick: entry.is_auto_pick
       });
     });
   }
 
-  public refreshPickemsMatchupsWithNewProfile() {
-    // TODO: IMPLEMENT AND BIND TO PICKEMS CONTENT FOR PROFILE CHANGE
-  }
-
-  protected setPickemsMatchups(matchups: any) {
-    // TODO: SET THE MATCHUPS
+  protected setPickemsMatchups(matchups: any, week: number) {
     this.pickemsMatchups = [];
     // aLeague is an array where each element is a length 2 array containing players in that matchup
     if (matchups && matchups.aLeague && matchups.bLeague) {
-      this.createPickemsEntriesElements(matchups.aLeague, Constants.A_LEAGUE_NAME);
-      this.createPickemsEntriesElements(matchups.bLeague, Constants.B_LEAGUE_NAME);
+      this.createPickemsEntriesElements(matchups.aLeague, Constants.A_LEAGUE_NAME, week);
+      this.createPickemsEntriesElements(matchups.bLeague, Constants.B_LEAGUE_NAME, week);
       this.setPickemsMatchupsCache(matchups.cache);
     } else {
       console.warn("Could not find pickems matchups");
     }
   }
 
-  private createPickemsEntriesElements(matchups, league_type) {
+  private createPickemsEntriesElements(matchups, league_type, week: number) {
     const currentUserPickemsEntries = this.pickemsEntries.filter(entry => entry.owner == this.currentUser.email);
     const currentSelectedProfileEntries = this.pickemsEntries.filter(entry => entry.owner == this.pickemsCurrentProfileSelectorValue.user_email);
 
@@ -326,6 +347,7 @@ export class PickemsSurvivorGameComponent {
       this.pickemsMatchups.push({
         league_type: league_type,
         allow_pick: this.getCurrentUserAllowedToMakePickemsPick(player1.userId, player2.userId, currentUserPickemsEntries),
+        pickems_score: this.getPickemsScore(week, player1.userId, player2.userId, currentSelectedProfileEntries),
 
         manager_1_sleeper_id: player1.userId,
         manager_1_real_name: player1.managerName,
@@ -335,6 +357,8 @@ export class PickemsSurvivorGameComponent {
         manager_1_starters: player1.startingPlayers,
         manager_1_points: player1.points,
         manager_1_pick_status: this.getCurrentPickemsProfilePickStatus(player1.userId, currentSelectedProfileEntries),
+        manager_1_underdog_status: this.getManagerUnderdogStatus(week, player1.userId, player2.userId),
+        manager_1_record_at_week: this.getManagerRecordForWeek(week, player1.userId),
 
         manager_2_sleeper_id: player2.userId,
         manager_2_real_name: player2.managerName,
@@ -343,7 +367,9 @@ export class PickemsSurvivorGameComponent {
         manager_2_avatar_url: player2.avatarUrl,
         manager_2_starters: player2.startingPlayers,
         manager_2_points: player2.points,
-        manager_2_pick_status: this.getCurrentPickemsProfilePickStatus(player2.userId, currentSelectedProfileEntries)
+        manager_2_pick_status: this.getCurrentPickemsProfilePickStatus(player2.userId, currentSelectedProfileEntries),
+        manager_2_underdog_status: this.getManagerUnderdogStatus(week, player2.userId, player1.userId),
+        manager_2_record_at_week: this.getManagerRecordForWeek(week, player2.userId),
       });
     }
   }
@@ -368,12 +394,59 @@ export class PickemsSurvivorGameComponent {
     return true;
   }
 
+  private getPickemsScore(week, player1Id, player2Id, currentSelectedProfileEntries): number {
+    if (!currentSelectedProfileEntries) {
+      return 0;
+    }
+
+    const scoreEntry = currentSelectedProfileEntries.find(entry => entry.choice_sleeper_id == player1Id || entry.choice_sleeper_id == player2Id);
+    if (!scoreEntry) {
+      return 0;
+    }
+
+    return scoreEntry.score;
+  }
+
+  private getManagerRecordForWeek(week, managerId: string) {
+    if (week == 1) {
+      return "0-0-0";
+    } else if (week > this.gameState.week) {
+      return "?-?-?";
+    }
+    // otherwise, calculate
+    const wins = this.pickemsUnderdogWinTotals.find(obj => obj.sleeper_id == managerId).wins;
+    const losses = this.pickemsUnderdogWinTotals.find(obj => obj.sleeper_id == managerId).losses;
+    const ties = this.pickemsUnderdogWinTotals.find(obj => obj.sleeper_id == managerId).ties;
+    return wins + "-" + losses + "-" + ties;
+  }
+
+  private getManagerUnderdogStatus(week: number, managerId: string, comparisonManagerId: string): UnderdogStatus {
+    // If we are viewing week 1, or a week in the future, underdog status cannot be determined.
+    if (week == 1 || week > this.gameState.week) {
+      return UnderdogStatus.UNKNOWN;
+    }
+    const choice_win_total = this.pickemsUnderdogWinTotals.find(obj => obj.sleeper_id == managerId).wins;
+    const opp_win_total = this.pickemsUnderdogWinTotals.find(obj => obj.sleeper_id == comparisonManagerId).wins;
+
+    //console.log(`${choice_win_total} vs ${opp_win_total}`);
+
+    if (+choice_win_total < +opp_win_total) {
+      return UnderdogStatus.UNDERDOG;
+    } else if (+choice_win_total > +opp_win_total) {
+      return UnderdogStatus.FAVOURITE;
+    } else {
+      return UnderdogStatus.EVEN;
+    }
+  }
+
   // given the current selected pickems profile, determine if the profile has made this pick or placed a double/triple
   // return enum which is used by the UI for display purposes
   private getCurrentPickemsProfilePickStatus(playerId: string, currentSelectedProfileEntries: PickemsDbRow[]): PickemsPickStatus {
     const pick = currentSelectedProfileEntries.find(entry => entry.choice_sleeper_id == playerId);
     if (pick) {
-      if (pick.is_double_down) {
+      if (pick.is_auto_pick) {
+        return PickemsPickStatus.AUTO;
+      } else if (pick.is_double_down) {
         return PickemsPickStatus.DOUBLE;
       } else if (pick.is_triple_down) {
         return PickemsPickStatus.TRIPLE;
@@ -538,7 +611,7 @@ export class PickemsSurvivorGameComponent {
     this.pickemsCurrentWeekSelectorValue = this.gameState.week;
   }
 
-  protected updatePickemsCurrentSelectorValues(payload: any) {
+  private updatePickemsCurrentSelectorValues(payload: any) {
     this.pickemsCurrentProfileSelectorValue = payload.profile;
     this.pickemsCurrentWeekSelectorValue = payload.week;
   }
@@ -565,7 +638,8 @@ export class PickemsSurvivorGameComponent {
     let serverTime = this.demo_getCurrentTimeBasedOnSchedule(curWeek, 3600000);
     let scheduleEntry = this.getCurrentSchedule(serverTime);
 
-    this.survivorPoolContent.didUserSuccessfullySubmit = false;
+    if (this.survivorPoolContent)
+      this.survivorPoolContent.didUserSuccessfullySubmit = false;
 
     if (this.gameState.week != 14) { // rotate to next week if not last week
       curWeek++;
@@ -593,6 +667,9 @@ export class PickemsSurvivorGameComponent {
       this.initializeGame();
       this.survivorPoolContent?.resetTimer();
       this.pickemsContent?.resetTimer();
+      if (this.pickemsContent) {
+        this.pickemsContent.selectedWeek = curWeek;
+      }
     });
   }
 

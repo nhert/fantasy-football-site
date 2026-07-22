@@ -11,14 +11,6 @@
     border-collapse: collapse;
 }
 
-.demo-action-row {
-    flex-direction: column !important;
-    align-items: stretch !important;
-    /* Forces buttons to full width */
-    gap: 8px;
-    padding: 16px;
-}
-
 /* 
 Spaghetti monster
  */
@@ -160,7 +152,7 @@ Spaghetti monster
     border-bottom: 1px solid var(--divider-color);
     border-left: none;
     border-right: none;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .survivor-table-player-name-cell {

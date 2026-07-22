@@ -1,5 +1,5 @@
 import { Component, EventEmitter, HostListener, inject, Input, Output, ViewChild } from '@angular/core';
-import { GameState, GameUser, PickemsDbRow, PickemsMatchup, PickemsScore } from '../_Models/survivor.pickems.models';
+import { GameState, GameUser, PickemsDbRow, PickemsMatchup, PickemsScore, UnderdogStatus } from '../_Models/survivor.pickems.models';
 import { PickemsSurvivorTimerComponent } from "../pickems-survivor-timer/pickems-survivor-timer.component";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelect, MatSelectChange, MatSelectModule } from "@angular/material/select";
@@ -8,25 +8,26 @@ import { MatIconModule } from "@angular/material/icon";
 import { CommonModule } from '@angular/common';
 import { MatExpansionModule } from "@angular/material/expansion";
 import { Constants } from '../_Tools/Constants';
-import { MatButton, MatButtonModule, MatIconButton } from "@angular/material/button";
+import { MatButtonModule } from "@angular/material/button";
 import { SurvivorPickemsApiService } from '../_API/survivor-pickems-api.service';
 import { ToastrService } from 'ngx-toastr';
 import { DisplayMode, PickemsSurvivorWarningInfoBoxComponent } from "../pickems-survivor-warning-info-box/pickems-survivor-warning-info-box.component";
+import { PickemsMatchupGridComponent } from "../pickems-matchup-grid/pickems-matchup-grid.component";
 
-const NUM_MATCHUPS_PER_WEEK: number = 13; // total number of matchups per week
 const MAX_WEEKS: number = 14;
 
 export enum PickemsPickStatus {
   NONE,
   PICK,
   DOUBLE,
-  TRIPLE
+  TRIPLE,
+  AUTO
 }
 
 @Component({
   selector: 'game-pickems-content',
   standalone: true,
-  imports: [PickemsSurvivorTimerComponent, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, CommonModule, MatExpansionModule, MatIconModule, MatButtonModule, PickemsSurvivorWarningInfoBoxComponent],
+  imports: [PickemsSurvivorTimerComponent, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, CommonModule, MatExpansionModule, MatIconModule, MatButtonModule, PickemsSurvivorWarningInfoBoxComponent, PickemsMatchupGridComponent],
   templateUrl: './game-pickems-content.component.html',
   styleUrl: './game-pickems-content.component.css'
 })
@@ -41,20 +42,27 @@ export class GamePickemsContentComponent {
   // On init, set the starting values of the selectors to these values
   @Input('initialProfileValue') initialProfileValue: any;
   @Input('initialWeekValue') initialWeekValue: number;
-  @Output('updatePickemsSelectorValues') updatePickemsSelectorValues = new EventEmitter<any>();
 
   @Output('reloadServerTime') reloadServerTime = new EventEmitter<void>(); // Call reload method on parent component to reload table data and refresh.
   @ViewChild(PickemsSurvivorTimerComponent) timerComponent!: PickemsSurvivorTimerComponent;
+
+  @Input('demoMode') demoMode: boolean = false;
+  @Output('demoNextWeek') demoNextWeek = new EventEmitter<void>();
+  @Output('demoReset') demoReset = new EventEmitter<void>();
+  @Output('demoTestTimer') demoTestTimer = new EventEmitter<void>();
 
   selectedWeek: number; // double bound to selector current value
   selectedProfile: any; // double bound to selector current value
 
   isPickemsLoaded: boolean = false;
   isPickemsGridPrepared: boolean = false;
-  isLoading: boolean = false;
+  isPickLoading: boolean = false; // when user makes a pick, removes a pick, etc this blocks double submits
+  isPickemsEntriesLoading: boolean = false; // when user changes the values in profile/week selector, this determines whether the pickems reload is complete.
+  passedDeadlineDisableUi: boolean = false;
 
   public StatusEnum = PickemsPickStatus;
   public DisplayModeEnum = DisplayMode;
+  public UnderdogEnum = UnderdogStatus;
 
   private toastr = inject(ToastrService);
 
@@ -93,11 +101,12 @@ export class GamePickemsContentComponent {
   }
 
   handleDisableUiComponents() {
-    // TODO: timer expired so stop allowing edits
+    this.passedDeadlineDisableUi = true;
   }
 
   get shouldShowWarningToMakePick() {
-    return this.isCurrentUserSelectedInProfileDropdown()
+    return !this.passedDeadlineDisableUi
+      && this.isCurrentUserSelectedInProfileDropdown()
       && this.weeklyMatchups.filter(matchup => matchup.manager_1_pick_status == PickemsPickStatus.NONE && matchup.manager_2_pick_status == PickemsPickStatus.NONE).length > 0
       && this.selectedWeek == this.gameState.week;
   }
@@ -113,20 +122,23 @@ export class GamePickemsContentComponent {
   get hasTripleDownAvailable() {
     return this.weeklyMatchups.filter(matchup => matchup.manager_1_pick_status == PickemsPickStatus.TRIPLE || matchup.manager_2_pick_status == PickemsPickStatus.TRIPLE).length == 0;
   }
-
-  onClickMakePick(sleeper_id) {
-    console.log("pick made " + sleeper_id);
-    this.trySubmitPickemsPick(sleeper_id);
+  get isCurrentWeekAndPassedDeadline() {
+    return this.selectedWeek == this.gameState.week && this.passedDeadlineDisableUi;
+  }
+  get isShowPickemsScores() {
+    return this.selectedWeek <= this.gameState.last_processed_week;
   }
 
-  private trySubmitPickemsPick(choice_sleeper_id) {
-    if (this.isLoading) return;
+  protected trySubmitPickemsPick(choice_sleeper_id: string) {
+    if (this.isPickLoading) return;
     if (!choice_sleeper_id) return;
 
     const choice_gm_name: string = Constants.USERS.find(user => user.sleeperId_current == choice_sleeper_id)?.name;
     if (!choice_gm_name) return;
 
-    this.isLoading = true;
+    if (this.isCurrentWeekAndPassedDeadline) return;
+
+    this.isPickLoading = true;
     this.survivorPickemsApi.getServerTime().subscribe(time => {
       // recheck server time at submission to be sure we aren't past the deadline
       const curServerTimeUTC = time.server_time;
@@ -137,38 +149,38 @@ export class GamePickemsContentComponent {
           next: () => {
             this.reloadUIAfterMakePick(choice_sleeper_id, false, false);
             this.successToast('Saved Successfully', `Your Pickems choice of ${choice_gm_name} for week ${this.selectedWeek} has been saved!`);
-            this.isLoading = false;
+            this.isPickLoading = false;
           },
           error: (err) => {
             this.errorToast('Error While Saving', err.message);
-            this.isLoading = false;
+            this.isPickLoading = false;
           }
         });
       } else {
         this.errorToast("Error While Saving", "The submission deadline has already passed!");
-        this.isLoading = false;
+        this.isPickLoading = false;
       }
     });
   }
 
-  onClickDoubleDown(sleeper_id) {
-    console.log("double down made " + sleeper_id);
-    this.trySubmitPickemsBonusPick(sleeper_id, true, false);
+  protected trySubmitPickemsDoublePick(choice_sleeper_id: string) {
+    this.trySubmitPickemsBonusPick(choice_sleeper_id, true, false);
   }
 
-  onClickTripleDown(sleeper_id) {
-    console.log("triple down made " + sleeper_id);
-    this.trySubmitPickemsBonusPick(sleeper_id, false, true);
+  protected trySubmitPickemsTriplePick(choice_sleeper_id: string) {
+    this.trySubmitPickemsBonusPick(choice_sleeper_id, false, true);
   }
 
   private trySubmitPickemsBonusPick(choice_sleeper_id, isDouble, isTriple) {
-    if (this.isLoading) return;
+    if (this.isPickLoading) return;
     if (!choice_sleeper_id) return;
 
     const choice_gm_name: string = Constants.USERS.find(user => user.sleeperId_current == choice_sleeper_id)?.name;
     if (!choice_gm_name) return;
 
-    this.isLoading = true;
+    if (this.isCurrentWeekAndPassedDeadline) return;
+
+    this.isPickLoading = true;
     this.survivorPickemsApi.getServerTime().subscribe(time => {
       // recheck server time at submission to be sure we aren't past the deadline
       const curServerTimeUTC = time.server_time;
@@ -183,36 +195,30 @@ export class GamePickemsContentComponent {
             } else if (isTriple) {
               this.successToast('Saved Successfully', `Your Pickems triple down on ${choice_gm_name} for week ${this.selectedWeek} has been saved!`);
             }
-            this.isLoading = false;
+            this.isPickLoading = false;
           },
           error: (err) => {
             this.errorToast('Error While Saving', err.message);
-            this.isLoading = false;
+            this.isPickLoading = false;
           }
         });
       } else {
         this.errorToast("Error While Saving", "The submission deadline has already passed!");
-        this.isLoading = false;
+        this.isPickLoading = false;
       }
     });
   }
 
-  // remove the entry and refresh
-  onClickOnMadePickChip(sleeperId) {
-    if (this.isCurrentUserSelectedInProfileDropdown() && this.selectedWeek >= this.gameState.week) {
-      //console.log("remove: " + sleeperId);
-      this.tryRemovePickemsPick(sleeperId);
-    }
-  }
-
-  private tryRemovePickemsPick(choice_sleeper_id) {
-    if (this.isLoading) return;
+  protected tryRemovePickemsPick(choice_sleeper_id: string) {
+    if (this.isPickLoading) return;
     if (!choice_sleeper_id) return;
+
+    if (!this.isCurrentUserSelectedInProfileDropdown() || this.selectedWeek < this.gameState.week || this.isCurrentWeekAndPassedDeadline) return;
 
     const choice_gm_name: string = Constants.USERS.find(user => user.sleeperId_current == choice_sleeper_id)?.name;
     if (!choice_gm_name) return;
 
-    this.isLoading = true;
+    this.isPickLoading = true;
     this.survivorPickemsApi.getServerTime().subscribe(time => {
       // recheck server time at submission to be sure we aren't past the deadline
       const curServerTimeUTC = time.server_time;
@@ -223,16 +229,16 @@ export class GamePickemsContentComponent {
           next: () => {
             this.reloadUIAfterRemovePick(choice_sleeper_id);
             this.successToast('Saved Successfully', `Your Pickems choice of ${choice_gm_name} for week ${this.selectedWeek} has been removed!`);
-            this.isLoading = false;
+            this.isPickLoading = false;
           },
           error: (err) => {
             this.errorToast('Error While Saving', err.message);
-            this.isLoading = false;
+            this.isPickLoading = false;
           }
         });
       } else {
         this.errorToast("Error While Saving", "The submission deadline has already passed!");
-        this.isLoading = false;
+        this.isPickLoading = false;
       }
     });
   }
@@ -290,23 +296,28 @@ export class GamePickemsContentComponent {
 
   // reloads entries
   onWeekSelectionChange(event: MatSelectChange) {
-    this.updateParentComponentWithCurrentSelectorValues();
-    this.reloadPickemsMatchupsForWeek.emit();
+    this.updateParentComponentWithCurrentSelectorValuesAndReload();
   }
 
   // does not reload page
   onProfileSelectionChange(event: MatSelectChange) {
-    this.updateParentComponentWithCurrentSelectorValues();
-    this.reloadPickemsMatchupsForWeek.emit();
+    this.updateParentComponentWithCurrentSelectorValuesAndReload();
   }
 
-  private updateParentComponentWithCurrentSelectorValues() {
+  // allows the UI to be displayed once loading is complete
+  public pickemsLoadMarkComplete() {
+    this.isPickemsEntriesLoading = false;
+  }
+
+  private updateParentComponentWithCurrentSelectorValuesAndReload() {
+    this.isPickemsEntriesLoading = true;
+
     const currentValuesPayload = {
       profile: this.selectedProfile,
       week: this.selectedWeek
     }
     // Tell the parent component what our current selector values are. Switching between tabs recalls ngOnInit and wipes out selector values so need to remember them on parent.
-    this.updatePickemsSelectorValues.emit(currentValuesPayload);
+    this.reloadPickemsMatchupsForWeek.emit(currentValuesPayload);
   }
 
   protected successToast(title: string, message: string) {

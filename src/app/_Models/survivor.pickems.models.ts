@@ -67,12 +67,21 @@ export interface PickemsDbRow {
     outcome: string,
     score: number,
     is_double_down: boolean,
-    is_triple_down: boolean
+    is_triple_down: boolean,
+    is_auto_pick: boolean
+}
+
+export enum UnderdogStatus {
+    UNDERDOG,
+    FAVOURITE,
+    EVEN,
+    UNKNOWN
 }
 
 export interface PickemsMatchup {
     league_type: string,
     allow_pick: boolean,
+    pickems_score: number,
 
     manager_1_sleeper_id: string,
     manager_1_real_name: string,
@@ -82,6 +91,8 @@ export interface PickemsMatchup {
     manager_1_starters: any[],
     manager_1_points: number,
     manager_1_pick_status: PickemsPickStatus,
+    manager_1_underdog_status: UnderdogStatus,
+    manager_1_record_at_week: string,
 
     manager_2_sleeper_id: string,
     manager_2_real_name: string,
@@ -91,6 +102,8 @@ export interface PickemsMatchup {
     manager_2_starters: any[],
     manager_2_points: number,
     manager_2_pick_status: PickemsPickStatus,
+    manager_2_underdog_status: UnderdogStatus,
+    manager_2_record_at_week: string
 
     // underdog related fields
 }

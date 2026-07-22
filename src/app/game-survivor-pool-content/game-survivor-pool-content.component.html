@@ -13,14 +13,14 @@
 
             <div mat-subheader>Hover mouse over button to see what it does</div>
             <mat-action-row class="demo-action-row">
-                <button mat-raised-button color="primary"
+                <button mat-raised-button style="background-color: white; color: black;"
                     matTooltip="Click to move the current NFL week forward and process win/loss for each survivor entry"
                     (click)="demoNextWeek.emit()">Move
                     to Next Week</button>
-                <button mat-raised-button color="primary"
+                <button mat-raised-button style="background-color: white; color: black;"
                     matTooltip="Click to reset the Survivor Pool to it's starting values"
                     (click)="demoReset.emit()">Reset</button>
-                <button mat-raised-button color="primary"
+                <button mat-raised-button style="background-color: white; color: black;"
                     matTooltip="Click to set the current time to 20s before the timer expires"
                     (click)="demoTestTimer.emit()">Test Timer Expiry</button>
             </mat-action-row>
@@ -60,8 +60,7 @@
                             </mat-select>
                         </mat-form-field>
                         <button type="button" mat-raised-button (click)="handleSubmitChoiceClick()"
-                            [disabled]="shouldDisableUiInput()">Submit
-                            Choice</button>
+                            [disabled]="shouldDisableUiInput()">Submit</button>
                     </div>
 
                     <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Generic"

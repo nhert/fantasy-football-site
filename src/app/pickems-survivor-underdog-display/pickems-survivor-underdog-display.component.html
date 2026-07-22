@@ -1,0 +1,29 @@
+<div class="flex-centered">
+    <mat-card class="card-style">
+        <mat-card-content>
+            <div *ngIf="underdogStatus == UnderdogEnum.FAVOURITE">
+                <img src="/assets/images/pickems-matchup-favourite-2.png" alt="Favourite" width="50" height="50">
+                <br>
+                <span style="font-size: 12px;">Favourite ({{record}})</span>
+            </div>
+
+            <div *ngIf="underdogStatus == UnderdogEnum.UNDERDOG">
+                <img src="/assets/images/pickems-matchup-underdog.png" alt="Underdog" width="50" height="50">
+                <br>
+                <span style="font-size: 12px;">Underdog ({{record}})</span>
+            </div>
+
+            <div *ngIf="underdogStatus == UnderdogEnum.EVEN || underdogStatus == UnderdogEnum.UNKNOWN">
+                <img src="/assets/images/pickems-matchup-even-3.png" alt="Even" width="50" height="50">
+                <br>
+                <span style="font-size: 12px;">Even ({{record}})</span>
+            </div>
+
+            <!-- <div *ngIf="underdogStatus == UnderdogEnum.UNKNOWN">
+    <div style="height: 40px;"></div>
+    <br>
+    <span>N</span>
+</div> -->
+        </mat-card-content>
+    </mat-card>
+</div>

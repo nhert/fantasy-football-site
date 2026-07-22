@@ -1,7 +1,7 @@
 <ng-container *ngIf="displayModeWarning">
     <div class="container" *ngIf="shouldDisplay">
         <mat-card class="warning mat-elevation-z0">
-            <mat-card-content style="padding: 0;">
+            <mat-card-content style="padding: 0; padding-left: 25px; padding-right: 25px;">
                 <mat-icon inline="true" style="margin-right: 3px;">warning</mat-icon>
                 <strong>Warning:</strong> {{message}}
             </mat-card-content>
@@ -12,7 +12,7 @@
 <ng-container *ngIf="displayModeInfo">
     <div class="container" *ngIf="shouldDisplay">
         <mat-card class="info mat-elevation-z0">
-            <mat-card-content style="padding: 0;">
+            <mat-card-content style="padding: 0; padding-left: 25px; padding-right: 25px;">
                 <mat-icon inline="true" style="margin-right: 3px;">info</mat-icon>
                 <strong>Info:</strong> {{message}}
             </mat-card-content>
@@ -23,7 +23,7 @@
 <ng-container *ngIf="displayModeSubmissionLock">
     <div class="container" *ngIf="shouldDisplay">
         <mat-card class="lock mat-elevation-z0">
-            <mat-card-content style="padding: 0;">
+            <mat-card-content style="padding: 0; padding-left: 25px; padding-right: 25px;">
                 <mat-icon inline="true" style="margin-right: 3px;">lock</mat-icon>
                 {{message}}
             </mat-card-content>
@@ -34,7 +34,7 @@
 <ng-container *ngIf="displayModeGeneric">
     <div class="container" *ngIf="shouldDisplay">
         <mat-card class="generic mat-elevation-z0">
-            <mat-card-content style="padding: 0;">
+            <mat-card-content style="padding: 0; padding-left: 25px; padding-right: 25px;">
                 <strong>{{message}}</strong>
             </mat-card-content>
         </mat-card>

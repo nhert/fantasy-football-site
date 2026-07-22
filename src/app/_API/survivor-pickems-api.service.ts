@@ -111,6 +111,11 @@ export class SurvivorPickemsApiService {
         }
         return this.http.post(this.pickemsApiUrl + "/make_bonus_pick/" + userEmail + "/" + week, userChoiceJson);
     }
+
+    // so that we can determine the underdog status for display in the UI. 
+    getPlayerWinTotalsForWeek(week: number): Observable<any> {
+        return this.http.get(this.pickemsApiUrl + "/underdogs/" + week);
+    }
 }
 
 

@@ -185,3 +185,11 @@ body {
 .bolder-text {
   font-weight: bolder;
 }
+
+.demo-action-row {
+  flex-direction: column !important;
+  align-items: stretch !important;
+  /* Forces buttons to full width */
+  gap: 8px;
+  padding: 16px;
+}
