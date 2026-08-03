@@ -13,7 +13,7 @@ export class Constants {
 	static AUTH0_DOMAIN = "dev-bk2yk7ww7yqyitvv.us.auth0.com";
 	static AUTH0_CLIENT_ID = "iDWar2e5ka8RXvdJTQT60w5DytBEyz9J";
 	//static AUTH0_CALLBACK = "https://b3fl.com/";
-	static AUTH0_CALLBACK = "http://localhost:4200/pickems-survivor-lobby";
+	static AUTH0_CALLBACK = "http://localhost:4200/play";
 	// auth0 expects this exact structure in app-routing.module.ts
 	static AUTH0_CONFIG = {
 		domain: Constants.AUTH0_DOMAIN,

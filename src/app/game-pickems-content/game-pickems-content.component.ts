@@ -37,6 +37,7 @@ export class GamePickemsContentComponent {
   @Input('currentUser') currentUser: GameUser;
   @Input('gameState') gameState: GameState;
   @Input('gameUsers') gameUsers: any[];
+  @Input('activeEmails') activeEmails: string[];
   @Output('reloadPickemsMatchupsForWeek') reloadPickemsMatchupsForWeek = new EventEmitter<any>();
 
   // On init, set the starting values of the selectors to these values
@@ -116,6 +117,9 @@ export class GamePickemsContentComponent {
   get bLeagueMatchups() {
     return this.weeklyMatchups.filter(matchup => matchup.league_type == Constants.B_LEAGUE_NAME);
   }
+  get activePickemsGameUsers() {
+    return this.gameUsers.filter(user => this.activeEmails.includes(user.user_email));
+  }
   get hasDoubleDownAvailable() {
     return this.weeklyMatchups.filter(matchup => matchup.manager_1_pick_status == PickemsPickStatus.DOUBLE || matchup.manager_2_pick_status == PickemsPickStatus.DOUBLE).length == 0;
   }
@@ -148,7 +152,7 @@ export class GamePickemsContentComponent {
         this.survivorPickemsApi.makePickemsEntryForUser(this.currentUser.email, this.selectedWeek, choice_sleeper_id, choice_gm_name).subscribe({
           next: () => {
             this.reloadUIAfterMakePick(choice_sleeper_id, false, false);
-            this.successToast('Saved Successfully', `Your Pickems choice of ${choice_gm_name} for week ${this.selectedWeek} has been saved!`);
+            this.successToast('Saved Successfully', `You picked ${choice_gm_name} for week ${this.selectedWeek}!`);
             this.isPickLoading = false;
           },
           error: (err) => {
@@ -157,7 +161,7 @@ export class GamePickemsContentComponent {
           }
         });
       } else {
-        this.errorToast("Error While Saving", "The submission deadline has already passed!");
+        this.errorToast("Error While Saving", "The submission deadline has passed!");
         this.isPickLoading = false;
       }
     });
@@ -191,9 +195,9 @@ export class GamePickemsContentComponent {
           next: () => {
             this.reloadUIAfterMakePick(choice_sleeper_id, isDouble, isTriple);
             if (isDouble) {
-              this.successToast('Saved Successfully', `Your Pickems double down on ${choice_gm_name} for week ${this.selectedWeek} has been saved!`);
+              this.successToast('Saved Successfully', `You doubled down on ${choice_gm_name} for week ${this.selectedWeek}!`);
             } else if (isTriple) {
-              this.successToast('Saved Successfully', `Your Pickems triple down on ${choice_gm_name} for week ${this.selectedWeek} has been saved!`);
+              this.successToast('Saved Successfully', `You tripled down on ${choice_gm_name} for week ${this.selectedWeek}!`);
             }
             this.isPickLoading = false;
           },
@@ -203,7 +207,7 @@ export class GamePickemsContentComponent {
           }
         });
       } else {
-        this.errorToast("Error While Saving", "The submission deadline has already passed!");
+        this.errorToast("Error While Saving", "The submission deadline has passed!");
         this.isPickLoading = false;
       }
     });
@@ -228,7 +232,7 @@ export class GamePickemsContentComponent {
         this.survivorPickemsApi.deletePickemsEntryForUser(this.currentUser.email, this.selectedWeek, choice_sleeper_id).subscribe({
           next: () => {
             this.reloadUIAfterRemovePick(choice_sleeper_id);
-            this.successToast('Saved Successfully', `Your Pickems choice of ${choice_gm_name} for week ${this.selectedWeek} has been removed!`);
+            this.successToast('Pick Removed Successfully', `You removed the selection of ${choice_gm_name} for week ${this.selectedWeek}!`);
             this.isPickLoading = false;
           },
           error: (err) => {
@@ -237,7 +241,7 @@ export class GamePickemsContentComponent {
           }
         });
       } else {
-        this.errorToast("Error While Saving", "The submission deadline has already passed!");
+        this.errorToast("Error While Saving", "The submission deadline has passed!");
         this.isPickLoading = false;
       }
     });

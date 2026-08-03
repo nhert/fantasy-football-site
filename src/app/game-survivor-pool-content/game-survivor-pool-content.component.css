@@ -11,6 +11,13 @@
     border-collapse: collapse;
 }
 
+.highlight-cell {
+    background-color: #c78b8b;
+    /* Soft red tint */
+    font-weight: bold;
+    color: #cc0000;
+}
+
 /* 
 Spaghetti monster
  */

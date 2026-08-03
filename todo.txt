@@ -1,45 +1,20 @@
-- investigate: 
-
-<--- Last few GCs --->
-
-[21320:000001AD0DD99000]  2586689 ms: Mark-Compact 4094.0 (4098.3) -> 4093.0 (4098.3) MB, pooled: 0 MB, 149.93 / 0.00 ms  (average mu = 0.106, current mu = 0.016) allocation failure; scavenge might not succeed
-
-FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
------ Native stack trace -----
-
- 1: 00007FF6E5F00CCF node::OnFatalError+1343
- 2: 00007FF6E6B4F697 v8::Function::NewInstance+423
- 3: 00007FF6E69500C7 v8::base::AddressSpaceReservation::AddressSpaceReservation+322071
- 4: 00007FF6E6953DD4 v8::base::AddressSpaceReservation::AddressSpaceReservation+337700
- 5: 00007FF6E6962D2C v8::internal::StrongRootAllocatorBase::deallocate_impl+16604
- 6: 00007FF6E696256B v8::internal::StrongRootAllocatorBase::deallocate_impl+14619
- 7: 00007FF6E7DEE86D v8::base::UnsignedDivisionByConstant<unsigned __int64>+2794685
- 8: 00007FF6E694DB90 v8::base::AddressSpaceReservation::AddressSpaceReservation+312544
- 9: 00007FF6E69683DA X509_STORE_set_cleanup+5098
-10: 00007FF6E6974876 uv_timer_set_repeat+20694
-11: 00007FF6E65465B7 v8::String::Value::~Value+144199
-12: 000001AD45D775FA 
-
 
 CRITICAL
 - the allow/deny for nginx config /api/ is forbidden. Is this because SSR isnt being used?
 - test cron job + calling update scores
 
-MAJOR
+TIMER
 - refactor how the timer logic works
     - right now, calling getServerTime and refreshing is passed between game component and content components with @Input @Output
     - refresh timer gets called twice, once for survivor once for pickems (are there actually 2 timers going at once?)
     - move the call for getServerTime to be native to the timer component and do not handle any of this in game/content
     - Content components can simply call a "refresh" to make the timer retrieve
-
-PICKEMS
-- disable all pick inputs when loading from week/profile
-
-MINOR
-- HELP section for s/p that explains the schedule, how to play, scoring, when things process, when entries lock/unlock etc
-- improve the visuals of the survivor pool finished screen. Dont just use text
-- make a calendar that shows the schedule
 - fix how ResetTimer works. Gets called repeatedly whenever tab is changed and will have the wrong new server time since ngOnInit gets called in the content classes. 
     (basically might need a small refactor to how timer component works - maybe i should just have the getServerTime API directly in there)
 - refactor how this.selectedWeek is used for verification - instead of relying on current week selector value need to check value of the current loaded matchups week
-- player username change
+
+MINOR
+- Improve the help dialog and add more colors / bolding / images (dont trust these idiots)
+- improve the visuals of the survivor pool finished screen. Dont just use text
+- make a calendar that shows the schedule
+- setup google client ids for SSO https://auth0.com/docs/authenticate/identity-providers/social-identity-providers/google

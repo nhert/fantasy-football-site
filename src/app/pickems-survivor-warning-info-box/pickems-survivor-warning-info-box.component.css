@@ -1,5 +1,5 @@
 .container {
-    max-width: 100%;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,7 +13,10 @@
     margin-top: 10px;
     background-color: #ebe4d9;
     padding: 0px;
-    height: 45px;
+    min-height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .info {
@@ -22,7 +25,10 @@
     margin-top: 10px;
     background-color: #ebe4d9;
     padding: 0px;
-    height: 45px;
+    min-height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .generic {
@@ -31,7 +37,7 @@
     margin-top: 10px;
     background-color: #ebe4d9;
     padding: 0px;
-    height: 45px;
+    min-height: 45px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -43,8 +49,8 @@
     margin-top: 10px;
     background-color: #ebe4d9;
     padding: 0px;
-    height: 45px;
-
+    min-height: 45px;
+    display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;

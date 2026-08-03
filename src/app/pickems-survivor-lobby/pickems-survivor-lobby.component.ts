@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { Component, ElementRef, inject, Input, Renderer2, ViewChild } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { map } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
@@ -13,6 +13,7 @@ import { PickemsSurvivorGameComponent } from "../pickems-survivor-game/pickems-s
 import { GameUser } from '../_Models/survivor.pickems.models';
 import { Constants } from '../_Tools/Constants';
 import { MatCheckboxModule } from "@angular/material/checkbox";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-pickems-survivor-lobby',
@@ -24,8 +25,13 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 export class PickemsSurvivorLobbyComponent {
   @Input('demoMode') demoMode: boolean = false;
 
+  // Capture the native HTML dialog element reference
+  @ViewChild('helpModal') helpElement!: ElementRef<HTMLDialogElement>;
+  @ViewChild('usernameChangeModal') usernameChangeElement!: ElementRef<HTMLDialogElement>;
+
   private auth = inject(AuthService);
   private doc = inject(DOCUMENT);
+  private toastr = inject(ToastrService);
 
   userForm: FormGroup;
 
@@ -65,7 +71,6 @@ export class PickemsSurvivorLobbyComponent {
   */
   code$ = this.user$.pipe(map((user) => JSON.stringify(user, null, 2)));
 
-  test: string[] = ['test'];
   constructor(private survivorPickemsApi: SurvivorPickemsApiService, private fb: FormBuilder) {
     this.userForm = this.fb.group({
       // Field defaults to empty string with 3 validation rules
@@ -123,8 +128,7 @@ export class PickemsSurvivorLobbyComponent {
       next: (res) => {
         this.isGameServerHealthChecked = true;
         this.isGameServerAvailable = true;
-        console.log(res.message)
-        this.checkForGameUserAccount();
+        this.prepareForNicknameCreation();
       },
       error: (err) => {
         this.isGameServerHealthChecked = true;
@@ -132,6 +136,13 @@ export class PickemsSurvivorLobbyComponent {
         console.error("The Pickems & Survivor Pool Game Server is currently unavailable. Check with B3FL Tech Support.");
         console.error(err.message) // Displays error from service/interceptor
       }
+    });
+  }
+
+  private prepareForNicknameCreation() {
+    this.survivorPickemsApi.getExistingUsernames().subscribe(usernames => {
+      this.existingUsernames = usernames;
+      this.checkForGameUserAccount();
     });
   }
 
@@ -146,7 +157,8 @@ export class PickemsSurvivorLobbyComponent {
           this.isGameUserChecked = true;
         } else {
           console.log("A game profile must be created for this user");
-          this.prepareForNicknameCreation();
+          this.isGameUserChecked = true;
+          this.isGameUserNeedsCreation = true;
         }
       },
       error: (err) => {
@@ -154,14 +166,6 @@ export class PickemsSurvivorLobbyComponent {
         console.error("The Pickems & Survivor Pool Game Server is currently unavailable. Check with B3FL Tech Support.");
         console.error(err.message) // Displays error from service/interceptor
       }
-    });
-  }
-
-  private prepareForNicknameCreation() {
-    this.survivorPickemsApi.getExistingUsernames().subscribe(usernames => {
-      this.existingUsernames = usernames;
-      this.isGameUserChecked = true;
-      this.isGameUserNeedsCreation = true;
     });
   }
 
@@ -193,7 +197,26 @@ export class PickemsSurvivorLobbyComponent {
       },
       error: (err) => {
         this.isGameUserNeedsCreation = true;
-        console.error("The Pickems & Survivor Pool Game Server could not create an account for this user. Please try again.");
+        this.errorToast("", "The Pickems & Survivor Pool Game Server could not create an account for this user. Please try again.");
+        console.error(err.message) // Displays error from service/interceptor
+      }
+    });
+  }
+
+  protected changeAccountUsername(): void {
+    console.log(`acct name update [${this.username.value}]`);
+    const user = {
+      email: this.currentUser.email,
+      username: this.username.value
+    }
+    this.currentUser.username = this.username.value;
+    this.survivorPickemsApi.updateUsername(this.currentUser.email, user).subscribe({
+      next: () => {
+        this.closeUsernameChangeModal();
+        this.successToast("", "Username updated successfully. Please refresh page");
+      },
+      error: (err) => {
+        this.errorToast("", "The Pickems & Survivor Pool Game Server could not create an account for this user. Please try again.");
         console.error(err.message) // Displays error from service/interceptor
       }
     });
@@ -215,5 +238,37 @@ export class PickemsSurvivorLobbyComponent {
     } else {
       return this.auth$;
     }
+  }
+
+  protected successToast(title: string, message: string) {
+    this.toastr.success(message, title, {
+      timeOut: 8000,
+      progressBar: true
+    });
+  }
+
+  protected errorToast(title: string, message: string) {
+    this.toastr.error(message, title, {
+      timeOut: 8000,
+      progressBar: true
+    });
+  }
+
+  // Open the modal backdrop over all other page contents
+  openHelpModal(): void {
+    this.helpElement.nativeElement.showModal();
+  }
+
+  // Close the modal box
+  closeHelpModal(): void {
+    this.helpElement.nativeElement.close();
+  }
+
+  openUsernameChangeModal(): void {
+    this.usernameChangeElement.nativeElement.showModal();
+  }
+
+  closeUsernameChangeModal(): void {
+    this.usernameChangeElement.nativeElement.close();
   }
 }

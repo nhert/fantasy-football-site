@@ -19,6 +19,7 @@ export enum DisplayMode {
 export class PickemsSurvivorWarningInfoBoxComponent {
   @Input('displayMode') displayMode: DisplayMode = DisplayMode.Warning;
   @Input('shouldDisplay') shouldDisplay: boolean = false;
+  @Input('maxWidth') maxWidth: string = "";
   @Input('message') message: string = "";
 
   get displayModeWarning() {

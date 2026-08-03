@@ -58,6 +58,10 @@ export class SurvivorPickemsApiService {
         return this.http.post(this.usersApiUrl + "/add", userJson);
     }
 
+    updateUsername(userEmail: string, userJson) {
+        return this.http.post(this.usersApiUrl + "/update/" + userEmail, userJson);
+    }
+
     getAllUsers(): Observable<any> {
         return this.http.get(this.usersApiUrl + "/all");
     }

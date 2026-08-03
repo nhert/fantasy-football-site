@@ -1,7 +1,24 @@
+:host {
+    display: block;
+    /* Allows the component to honor width settings */
+    width: 100%;
+    /* Forces it to stretch to the parent grid bounds */
+}
+
 .landing {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     text-align: center;
     width: 100%;
     margin: 0 auto;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
+}
+
+.images-container {
+    display: grid;
+    /* grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); */
+    grid-template-columns: repeat(auto-fit, 300px);
+    gap: 20px;
+    padding: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: center;
 }

@@ -1,3 +1,5 @@
+/* FONTS AND COLOURS */
+
 /* Default Light Mode Variables */
 :root {
   --b3fl-blue: #1247d8;
@@ -33,6 +35,18 @@
   background-color: var(--accent-color);
 }
 
+body,
+input[type="text"],
+button {
+  color: #333;
+  font-family: 'Trebuchet MS', 'Roboto', Helvetica, Arial, sans-serif;
+}
+
+* {
+  font-family: 'Trebuchet MS', 'Roboto', Helvetica, Arial, sans-serif;
+}
+
+/* THE REST */
 a {
   color: #0066cc;
   /* Good for light backgrounds */
@@ -41,7 +55,6 @@ a {
 
 h1 {
   color: var(--b3fl-blue);
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   font-size: 250%;
 }
 
@@ -83,13 +96,6 @@ body {
   margin: 2em;
 }
 
-body,
-input[type="text"],
-button {
-  color: #333;
-  font-family: Cambria, Georgia, serif;
-}
-
 button {
   background-color: #eee;
   border: none;
@@ -111,11 +117,6 @@ button:disabled {
   cursor: auto;
 }
 
-/* everywhere else */
-* {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 html,
 body {
   height: 100%;
@@ -123,7 +124,6 @@ body {
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .center-div {

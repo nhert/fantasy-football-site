@@ -2,14 +2,26 @@
     <ng-container *ngIf="checkAuth() | async">
         <nav class="account-bar">
             <div class="account-bar-left">
-                <img [src]="currentUser.picture" alt="Profile" style="width: 40px; height: 40px;" />
-                <span style="font-size: 12px;">{{ currentUser.email }}</span>
+                <div class="account-details-div">
+                    <img [src]="currentUser.picture" alt="Profile" style="width: 25px; height: 25px;" />
+                    <span style="font-size: 12px;">{{ currentUser.email }}</span>
+                </div>
             </div>
 
             <div class="account-bar-right">
-                <button class="logout-button" type="button" mat-button (click)="handleLogout()">
+                <button class="account-bar-button" type="button" mat-button (click)="openHelpModal()">
+                    <mat-icon style="vertical-align: middle; transform: scale(0.7); width: 25px">help</mat-icon>
+                    <span class="account-bar-button-text">Help</span>
+                </button>
+                <button *ngIf="!isGameUserNeedsCreation" class="account-bar-button" type="button" mat-button
+                    (click)="openUsernameChangeModal()">
+                    <mat-icon
+                        style="vertical-align: middle; transform: scale(0.7); width: 30px">account_circle</mat-icon>
+                    <span class="account-bar-button-text">Edit Name</span>
+                </button>
+                <button class="account-bar-button" type="button" mat-button (click)="handleLogout()">
                     <mat-icon style="vertical-align: middle; transform: scale(0.7); width: 25px">logout</mat-icon>
-                    <span class="logout-button-text">Logout</span>
+                    <span class="account-bar-button-text">Logout</span>
                 </button>
             </div>
         </nav>
@@ -29,8 +41,9 @@
                 [title]="'Checking if there is a game profile for this user ...'"></simple-spinner>
 
             <div *ngIf="isGameUserChecked && isGameUserNeedsCreation && isGameServerAvailable" class="create-nickname">
-                <h3>Please choose a nickname for yourself, then a game profile will be created for you.</h3>
-                <h5>Your e-mail is not associated with an existing profile for Pick'ems & Survivor Pool this season. If
+                <h3>Choose a Nickname</h3>
+                <h5>Your e-mail is not associated with an existing game profile for Pick'ems & Survivor Pool this
+                    season. If
                     you're seeing this and you have already been playing, try a different
                     e-mail. Otherwise, contact B3FL Tech Support.</h5>
 
@@ -65,14 +78,15 @@
                     </div>
 
                     <mat-checkbox #termsCheck style="margin: 25px;">
-                        <span style="color: var(--text-color); font-size: 10px; text-align: left;">I understand that if
+                        <span style="color: var(--text-color); font-size: 10px; text-align: left;">I understand that
+                            Pick'ems and Survivor Pool each have their own entrance fee. If
                             I submit any
-                            entries into the
-                            Pick'ems or Survivor Pool, I must pay the Commissioner an entry fee for each.</span>
+                            entries into a game, I will settle my tab with the B3FL Commissioner.</span>
                     </mat-checkbox>
 
                     <!-- Disable button if the form fails validation -->
-                    <button type="submit" [disabled]="userForm.invalid || !termsCheck.checked">Submit</button>
+                    <button type="submit" [disabled]="userForm.invalid || !termsCheck.checked"
+                        class="username-change-button">Submit</button>
                 </form>
 
             </div>
@@ -85,3 +99,167 @@
         </div>
     </ng-container>
 </div>
+
+<dialog #helpModal class="help-box">
+    <div class="help-content">
+        <h2>How to Play Pick'ems & Survivor Pool</h2>
+        <div style="height: 20px;"></div>
+
+        <div class="help-actions">
+            <button type="button" (click)="closeHelpModal()" class="help-close-button">Close</button>
+        </div>
+        <div style="height: 20px;"></div>
+
+        <div class="help-scroll-area">
+            <h3>Schedule and Deadlines</h3>
+            <ul>
+                <li>The timer will count down to the first game that is played that NFL Week</li>
+                <li>Most weeks the deadline will be at the start of the Thursday game</li>
+                <li>For 2026, <span style="color: red;"><strong>Week 1 and Week 12 (Thanksgiving) have their first game
+                            on a Wednesday</strong></span>,
+                    so pay attention!</li>
+                <li>The results for the week will be processed at 2am Wednesday EST (Tuesday
+                    Night -
+                    Wednesday Morning) so that enough time is allowed for stat corrections</li>
+                <li>After the week's results are processed, the next week will become available</li>
+                <li>Pick'ems can be submitted for the current week and any future weeks</li>
+                <li>Survivor Pool unlocks when the week rotates forward at 2am EST, and locks at that weeks deadline.
+                    You
+                    may not make future submissions.</li>
+            </ul>
+
+            <div style="height: 20px;"></div>
+            <h3>Pick'ems</h3>
+            <div style="height: 20px;"></div>
+
+            <h4>How to Play</h4>
+            <ul>
+                <li>In order to register as a player in Pick'ems, all you need to do is make at least 1 pick</li>
+                <li>You may join after NFL Week 1, but you will receive 0 points for the weeks before you registered
+                </li>
+                <li>Each week, pick who will win every B3FL matchup</li>
+                <li>To remove a pick simply click on the "Pick" poker chip and you may make a different selection before
+                    the deadline</li>
+                <li>You can either <strong>Pick</strong> a GM, <span style="color: #16b94d;"><strong>Double
+                            Down</strong></span> and receive double the score,
+                    or
+                    <span style="color: #e27227;"><strong>Triple Down</strong></span> and receive triple the score
+                </li>
+                <li>Each player has only 1 Double Down and 1 Triple Down per week</li>
+                <li>Double and Triple Downs are completely optional and do not need to be used each week</li>
+                <li>If a player has more fantasy wins than their opponent, they are considered the Favourite and their
+                    opponent is considered the Underdog</li>
+                <li>If both players have the same number of wins, it is considered an Even matchup</li>
+                <li>Choosing an Underdog grants bonus points, picking a Favourite or Even matchup grants normal points
+                </li>
+                <li>Submitting for future weeks is allowed, but Underdog status cannot be displayed past the current NFL
+                    week. You will still be given Underdog bonus points for correct picks once that week is processed.
+                </li>
+            </ul>
+
+            <h4>How to Win</h4>
+            <ul>
+                <li>At the end of the season, the player with the most points wins the Pick'ems prize!</li>
+            </ul>
+
+            <h4>Scoring</h4>
+            <ul>
+                <li><strong>2 Points</strong> granted for correctly picking a
+                    <strong>Favourite</strong> or
+                    <strong>Even</strong> matchup
+                </li>
+                <li><strong>3 Points</strong> granted for correctly picking an
+                    <strong>Underdog</strong>
+                <li><span style="color: #16b94d;"><strong>2x Points</strong></span> granted for correctly picking with a
+                    Double Down</li>
+                <li><span style="color: #e27227;"><strong>3x Points</strong></span> granted for correctly picking with a
+                    Triple Down</li>
+                <li><span style="color: #AE002D;"><strong>-2 Point Penalty</strong></span> applied for missing on a
+                    Double Down</li>
+                <li><span style="color: #AE002D;"><strong>-3 Point Penalty</strong></span> applied for missing on a
+                    Triple Down</li>
+                <li>If a matchup is a Tie, it's considered a push and 0 points will be rewarded and no penalties will be
+                    assigned</li>
+            </ul>
+
+            <h4>Missed Deadline</h4>
+            <ul>
+                <li>In Pick'ems, if you miss the submission deadline and you are registered (made at least 1 pick in the
+                    past), you will be auto-assigned picks for matchups you did not pick</li>
+                <li>Auto-assigned picks are the same for every player</li>
+                <li>You will be auto-assigned the Underdog in every matchup and will receive NO bonus points for correct
+                    picks (2 points)</li>
+                <li>If a matchup is Even, the auto-assigned player will be chosen randomly</li>
+            </ul>
+
+            <div style="height: 20px;"></div>
+            <h3>Survivor Pool</h3>
+            <div style="height: 20px;"></div>
+
+            <h4>How to Play</h4>
+            <ul>
+                <li>In order to register as a player in Survivor Pool, you must make a submission by the Week 1 deadline
+                    (first game of Week 1)</li>
+                <li>You may NOT join Survivor Pool after the Week 1 deadline</li>
+                <li>Each week, select one GM to win that week. You may only choose each GM once per season</li>
+                <li>If they win or tie, you survive. If they lose, you are <span
+                        style="color: red;"><strong>ELIMINATED</strong></span></li>
+            </ul>
+
+            <h4>How to Win</h4>
+            <ul>
+                <li>The player who survives the longest wins the Survivor Pool prize!</li>
+                <li>If multiple players are eliminated in the same week leaving no remaining survivors, all players from
+                    that week will tie for the prize</li>
+                <li>If players tie for the prize, they can elect to split the prize or add it onto next years prize pool
+                </li>
+            </ul>
+
+            <h4>Missed Deadline</h4>
+            <ul>
+                <li>In Survivor Pool, if you miss the submission deadline you are <span
+                        style="color: red;"><strong>ELIMINATED</strong></span></li>
+            </ul>
+        </div>
+    </div>
+</dialog>
+
+<dialog #usernameChangeModal class="username-change-box">
+    <div class="username-change-content">
+        <h2>Username Change</h2>
+
+        <form [formGroup]="userForm" (ngSubmit)="changeAccountUsername()">
+            <div class="form-group">
+                <input type="text" id="username" formControlName="username" placeholder="Enter nickname"
+                    style="width: 200px; height: 40px; font-size: 16px; margin-bottom: 10px;" />
+
+                <!-- Validation Error Messages -->
+                @if ((username?.invalid)) {
+                <div class="error-container">
+                    @if (username?.hasError('required')) {
+                    <p class="error-text">Nickname is required.</p>
+                    }
+                    @if (username?.hasError('minlength')) {
+                    <p class="error-text">Nickname must be at least 3 characters long.</p>
+                    }
+                    @if (username?.hasError('maxlength')) {
+                    <p class="error-text">Nickname must be 14 or less characters long.</p>
+                    }
+                    @if (username?.hasError('pattern')) {
+                    <p class="error-text">Nickname can only contain letters and numbers.</p>
+                    }
+                    @if (username?.hasError('uniqueUsername')) {
+                    <p class="error-text">Nickname has already been taken.</p>
+                    }
+                </div>
+                }
+            </div>
+
+            <div style="height: 20px;"></div>
+
+            <!-- Disable button if the form fails validation -->
+            <button type="submit" [disabled]="userForm.invalid" class="username-change-button">Submit</button>
+            <button type="button" (click)="closeUsernameChangeModal()" class="username-change-button">Cancel</button>
+        </form>
+    </div>
+</dialog>

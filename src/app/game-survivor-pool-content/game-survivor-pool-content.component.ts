@@ -124,7 +124,7 @@ export class GameSurvivorPoolContentComponent {
           }
         });
       } else {
-        this.errorToast("Error While Saving", "The submission deadline has already passed!");
+        this.errorToast("Error While Saving", "The submission deadline has passed!");
         this.isLoading = false;
       }
     });
@@ -184,14 +184,14 @@ export class GameSurvivorPoolContentComponent {
 
   protected successToast(title: string, message: string) {
     this.toastr.success(message, title, {
-      timeOut: 5000,
+      timeOut: 8000,
       progressBar: true
     });
   }
 
   protected errorToast(title: string, message: string) {
     this.toastr.error(message, title, {
-      timeOut: 5000,
+      timeOut: 8000,
       progressBar: true
     });
   }

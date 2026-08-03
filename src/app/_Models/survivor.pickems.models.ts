@@ -32,6 +32,7 @@ export interface GameUser {
 export interface SurvivorEntries {
     playerUsername: string;
     playerEmail: string;
+    winCount: number;
     week1: SurvivorDbRow;
     week2: SurvivorDbRow;
     week3: SurvivorDbRow;

@@ -3,18 +3,17 @@
         <simple-spinner [loading]="!isGameStateLoaded" [hideRefreshTip]="true"
             [title]="'Loading game data ...'"></simple-spinner>
 
-        <!-- user loaded the game state in preseason -->
-        <div *ngIf="isGameStateLoaded && gamePhase==0">
-            <h1>Fantasy season hasn't started yet! First game begins on {{firstGameDate}}</h1>
-        </div>
-
-        <!-- user loaded the game state in postseason -->
-        <div *ngIf="isGameStateLoaded && gamePhase==2">
-            <h1>Fantasy regular season has finished. See you next year!</h1>
+        <div style="margin-left: 20px; margin-right: 20px;">
+            <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Info"
+                [shouldDisplay]="isGameStateLoaded && gamePhase==0"
+                [message]="`Fantasy season hasn\'t started yet! Pick'ems & Survivor Pool will begin at ${this.gamesUnlockDate}`"></app-pickems-survivor-warning-info-box>
         </div>
 
         <!-- user loaded the game state in-season -->
-        <div *ngIf="isGameStateLoaded && gamePhase==1">
+        <div *ngIf="isGameStateLoaded && (gamePhase==1 || gamePhase==2)">
+            <div *ngIf="gamePhase==2">
+                <h2>Fantasy regular season has finished. Thanks for playing!</h2>
+            </div>
             <mat-tab-group class="game-tab-group" animationDuration="200ms" dynamicHeight>
                 <mat-tab label="Survivor">
                     <ng-template matTabContent>
@@ -33,6 +32,7 @@
                     <ng-template matTabContent>
                         <game-pickems-content [currentUser]="currentUser" [pickemsEntries]="pickemsEntries"
                             [weeklyMatchups]="pickemsMatchups" [gameState]="gameState" [gameUsers]="gameUsers"
+                            [activeEmails]="activePickemsEmails"
                             [initialProfileValue]="pickemsCurrentProfileSelectorValue"
                             [initialWeekValue]="pickemsCurrentWeekSelectorValue" (reloadServerTime)="reloadServerTime()"
                             (reloadPickemsMatchupsForWeek)="updatePickemsSelectorValuesAndReloadEntries($event)"

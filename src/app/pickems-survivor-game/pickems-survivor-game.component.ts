@@ -10,9 +10,10 @@ import { GamePickemsContentComponent, PickemsPickStatus } from "../game-pickems-
 import { GamePickemsStandingsContentComponent } from "../game-pickems-standings-content/game-pickems-standings-content.component";
 import { GameSchedule, GameState, GameUser, PickemsDbRow, PickemsMatchup, PickemsMatchupCache, PickemsScore, SurvivorDbRow, SurvivorEntries, UnderdogStatus } from '../_Models/survivor.pickems.models';
 import { MatTableDataSource } from '@angular/material/table';
-import { firstValueFrom, forkJoin } from 'rxjs';
+import { firstValueFrom, forkJoin, Observable } from 'rxjs';
 import { Constants } from '../_Tools/Constants';
 import { SimpleSpinnerComponent } from "../simple-spinner/simple-spinner.component";
+import { DisplayMode, PickemsSurvivorWarningInfoBoxComponent } from "../pickems-survivor-warning-info-box/pickems-survivor-warning-info-box.component";
 
 enum GameStatePhase {
   PreSeason, InSeason, PostSeason
@@ -21,7 +22,7 @@ enum GameStatePhase {
 @Component({
   selector: 'pickems-survivor-game',
   standalone: true,
-  imports: [CommonModule, MatToolbarModule, MatIconModule, MatTabsModule, GameSurvivorPoolContentComponent, GamePickemsContentComponent, GamePickemsStandingsContentComponent, SimpleSpinnerComponent],
+  imports: [CommonModule, MatToolbarModule, MatIconModule, MatTabsModule, GameSurvivorPoolContentComponent, GamePickemsContentComponent, GamePickemsStandingsContentComponent, SimpleSpinnerComponent, PickemsSurvivorWarningInfoBoxComponent],
   templateUrl: './pickems-survivor-game.component.html',
   styleUrl: './pickems-survivor-game.component.css'
 })
@@ -41,7 +42,8 @@ export class PickemsSurvivorGameComponent {
   public gamePhase: GameStatePhase; // Preseason / Reg Season / Post Season
   public gameSchedule: GameSchedule[];
   public gameUsers: any[] = [];
-  public firstGameDate: Date; // utility variable. in pre-season displays first game of the season.
+  public activePickemsEmails: string[] = [];
+  public gamesUnlockDate: Date; // utility variable. in pre-season displays first game of the season.
 
   // survivor pool vars
   public made_choices_sleeper_ids: string[] = [];
@@ -63,6 +65,8 @@ export class PickemsSurvivorGameComponent {
 
   // loading booleans
   isGameStateLoaded: boolean = false;
+
+  DisplayModeEnum = DisplayMode;
 
   constructor(private survivorPickemsApi: SurvivorPickemsApiService, private sleeperApi: SleeperApiService) { }
 
@@ -120,7 +124,9 @@ export class PickemsSurvivorGameComponent {
     let server_time_utc_iso = time.server_time;
 
     if (this.demoMode) {
+      // nflStateWeek = 0;
       nflStateWeek = survivorPickemsState.last_processed_week >= 14 ? 14 : survivorPickemsState.last_processed_week + 1;
+      // nflStateWeek = 15;
       server_time_utc_iso = this.demo_getCurrentTimeBasedOnSchedule(nflStateWeek, 3600000);
     }
     /*
@@ -133,17 +139,20 @@ export class PickemsSurvivorGameComponent {
     if (nflStateWeek <= 0) {
       console.log("Pickems/Survivor Pool page has been loaded pre-season");
       this.gamePhase = GameStatePhase.PreSeason;
-      this.firstGameDate = new Date(scheduleEntries[0].cutoff_datetime);
+      this.gamesUnlockDate = new Date(scheduleEntries[0].start_datetime);
       this.isGameStateLoaded = true;
     }
-    // Its the post-season
-    else if (nflStateWeek > PickemsSurvivorGameComponent.FANTASY_WEEKS_REGULAR_SEASON) {
-      console.log("Pickems/Survivor Pool page has been loaded post-season");
-      this.gamePhase = GameStatePhase.PostSeason;
-      this.isGameStateLoaded = true;
-    }
+
     // Its the fantasy regular season 
     else {
+      // Its the post-season
+      if (nflStateWeek > PickemsSurvivorGameComponent.FANTASY_WEEKS_REGULAR_SEASON) {
+        console.log("Pickems/Survivor Pool page has been loaded post-season");
+        this.gamePhase = GameStatePhase.PostSeason;
+      } else {
+        this.gamePhase = GameStatePhase.InSeason;
+      }
+
       const scheduleEntry = this.getCurrentSchedule(server_time_utc_iso);
 
       // initialize the gamestate variable
@@ -159,7 +168,6 @@ export class PickemsSurvivorGameComponent {
         survivor_pool_winning_owners: survivorPickemsState.survivor_pool_winning_owners,
         survivor_pool_winning_week: survivorPickemsState.survivor_pool_winning_week
       }
-      this.gamePhase = GameStatePhase.InSeason;
 
       //console.log("state set");
       //console.log(this.gameState.server_current_datetime_iso + " -> " + new Date(this.gameState.server_current_datetime_iso));
@@ -171,9 +179,21 @@ export class PickemsSurvivorGameComponent {
 
   getGameUsers() {
     this.survivorPickemsApi.getAllUsers().subscribe(users => {
-      users.forEach(user => {
+      const gameUsers = users.gameUsers;
+      const activePickemsUsers = users.activeUsers;
+
+      gameUsers.forEach(user => {
         this.gameUsers.push(user);
       });
+
+      activePickemsUsers.forEach(user => {
+        this.activePickemsEmails.push(user.user_email);
+      });
+
+      // If current user isnt in dropdown, add them so they can make entries if they havent yet.
+      if (!this.activePickemsEmails.includes(this.currentUser.email)) {
+        this.activePickemsEmails.push(this.currentUser.email);
+      }
 
       this.initializeGame();
     });
@@ -217,7 +237,7 @@ export class PickemsSurvivorGameComponent {
     return entries$;
   }
 
-  public reloadPickemsEntriesForWeek(week: number) {
+  public reloadPickemsEntriesForWeek(week: number): Observable<any> {
     console.log(`running reloadPickemsEntriesForWeek with week ${week}`);
     let forkJoin$;
 
@@ -509,9 +529,17 @@ export class PickemsSurvivorGameComponent {
     let tempEntriesArray: SurvivorEntries[] = [];
     // convert the map into the SurvivorEntries data type
     survivorRowsGroupedByUser.forEach((rows: SurvivorDbRow[], key: string) => {
+      let survivorRecordByWeek: SurvivorDbRow[] = [];
+      for (var i = 1; i <= 14; i++) {
+        survivorRecordByWeek.push(this.getSurvivorDbRowRecordWithWeek(rows, i));
+      }
+
+      let winCount: number = survivorRecordByWeek.filter(record => record.outcome == "WIN").length;
+
       let newRow: SurvivorEntries = {
         playerEmail: key,
         playerUsername: this.getGameUserFromEmail(key).username,
+        winCount: winCount,
         week1: this.getSurvivorDbRowRecordWithWeek(rows, 1),
         week2: this.getSurvivorDbRowRecordWithWeek(rows, 2),
         week3: this.getSurvivorDbRowRecordWithWeek(rows, 3),
@@ -546,7 +574,9 @@ export class PickemsSurvivorGameComponent {
     } else { // no entries for current user
       sortedArray = tempArray;
     }
-    sortedArray.sort((a, b) => a.playerUsername.localeCompare(b.playerUsername));
+    sortedArray.sort((a, b) => {
+      return b.winCount - a.winCount || a.playerUsername.localeCompare(b.playerUsername);
+    });
     this.survivorEntries = this.survivorEntries.concat(sortedArray);
   }
 
@@ -619,6 +649,7 @@ export class PickemsSurvivorGameComponent {
   // DEMO-ONLY RELATED METHODS
 
   private demo_getCurrentTimeBasedOnSchedule(week, offset) {
+    if (week > 14) week = 14;
     // get the cutoff time based on input week, then get a current time X mins before the cutoff
     const sched = this.gameSchedule.find(s => s.week == week);
 

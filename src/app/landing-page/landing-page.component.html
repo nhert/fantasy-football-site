@@ -3,30 +3,32 @@
   <img src="/assets/images/bull and text logo.png" alt="B3FL logo" width="220" height="220">
   <br>
   <p><i>Otherwise known as: The Big F**king Fantasy Football League.</i></p>
-  <p>Find some quick links below, or click on a trophy to be taken to that league's Sleeper page.</p>
-  <br>
-  <h4><a [routerLink]="['/live-scores']" routerLinkActive="router-link-active"><em>Live Scores</em></a></h4>
-  <h4><a [routerLink]="['/gm-list']" routerLinkActive="router-link-active"><em>List of Managers</em></a></h4>
-  <h4><a [routerLink]="['/matchup-history']" routerLinkActive="router-link-active"><em>Matchup History</em></a></h4>
-  <h4><a [routerLink]="['/records']" routerLinkActive="router-link-active"><em>Records</em></a></h4>
-  <h4><a [routerLink]="['/profiles']" routerLinkActive="router-link-active"><em>Profiles</em></a></h4>
-  <!-- <h4><a [routerLink]="['/calendar']" routerLinkActive="router-link-active"><em>Calendar</em></a></h4> -->
-  <h4><a [routerLink]="['/manifesto']" routerLinkActive="router-link-active"><em>Read the B3FL Manifesto</em></a></h4>
-
+  <p><i>Click on the images or links below to quickly navigate</i></p>
   <br>
 
-  <figure>
-    <a href="{{getUrlChampLeague()}}" target="_blank" rel="noopener noreferrer"><img src="/assets/images/A_League.png"
-        alt="" width="300" height="300"></a>
-    <figcaption>EST. 2010</figcaption>
-  </figure>
+  <div class="images-container">
+    <div>
+      <h4><a href="{{getUrlChampLeague()}}" target="_blank" rel="noopener noreferrer"><em>A League Sleeper Page (Desktop
+            Only)</em></a></h4>
+      <a href="{{getUrlChampLeague()}}" target="_blank" rel="noopener noreferrer"><img src="/assets/images/A_League.png"
+          alt="" width="300" height="300"></a>
+      <p>EST. 2010</p>
+    </div>
 
-  <br>
+    <div>
+      <h4><a href="{{getUrlOtherLeague()}}" target="_blank" rel="noopener noreferrer"><em>B League Sleeper Page (Desktop
+            Only)</em></a></h4>
+      <a href="{{getUrlOtherLeague()}}" target="_blank" rel="noopener noreferrer"><img src="/assets/images/B_League.png"
+          alt="" width="300" height="300"></a>
+      <p>EST. 2021</p>
+    </div>
 
-  <figure>
-    <a href="{{getUrlOtherLeague()}}" target="_blank" rel="noopener noreferrer"><img src="/assets/images/B_League.png"
-        alt="" width="300" height="300"></a>
-    <figcaption>EST. 2021</figcaption>
-  </figure>
-
+    <div>
+      <h4><a [routerLink]="['/play']" routerLinkActive="router-link-active"><em>Play Pick'ems &
+            Survivor Pool</em></a></h4>
+      <a [routerLink]="['/play']" routerLinkActive="router-link-active"><img src="/assets/images/pickems-survivor.png"
+          alt="" width="300" height="300"></a>
+      <p>EST. 2023</p>
+    </div>
+  </div>
 </div>
