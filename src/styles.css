@@ -5,6 +5,7 @@
   --b3fl-blue: #1247d8;
   --bg-color: #f5f5f5;
   --text-color: #242424;
+  --text-color-2: #505050;
   --accent-color: #cccccc;
   --accent-color-2: #8f8e8e;
   --divider-color: #8f8e8e;
@@ -14,8 +15,10 @@
 :root.dark-mode {
   --bg-color: #424242;
   --text-color: #eeeeee;
+  --text-color-2: #9e9e9e;
   --accent-color: #282d32;
-  --accent-color-2: #292929;
+  /* --accent-color-2: #222222; */
+  --accent-color-2: #1d2227;
   --divider-color: #424242;
 }
 

@@ -9,15 +9,15 @@
             </div>
 
             <div class="account-bar-right">
-                <button class="account-bar-button" type="button" mat-button (click)="openHelpModal()">
-                    <mat-icon style="vertical-align: middle; transform: scale(0.7); width: 25px">help</mat-icon>
-                    <span class="account-bar-button-text">Help</span>
-                </button>
-                <button *ngIf="!isGameUserNeedsCreation" class="account-bar-button" type="button" mat-button
-                    (click)="openUsernameChangeModal()">
+                <button *ngIf="isGameUserChecked && !isGameUserNeedsCreation && isGameReady" class="account-bar-button"
+                    type="button" mat-button (click)="openUsernameChangeModal()">
                     <mat-icon
                         style="vertical-align: middle; transform: scale(0.7); width: 30px">account_circle</mat-icon>
                     <span class="account-bar-button-text">Edit Name</span>
+                </button>
+                <button class="account-bar-button" type="button" mat-button (click)="openHelpModal()">
+                    <mat-icon style="vertical-align: middle; transform: scale(0.7); width: 25px">help</mat-icon>
+                    <span class="account-bar-button-text">Help</span>
                 </button>
                 <button class="account-bar-button" type="button" mat-button (click)="handleLogout()">
                     <mat-icon style="vertical-align: middle; transform: scale(0.7); width: 25px">logout</mat-icon>
@@ -94,8 +94,6 @@
             <div *ngIf="isGameReady" class="pickems-survivor-container">
                 <pickems-survivor-game [currentUser]="currentUser" [demoMode]="demoMode"></pickems-survivor-game>
             </div>
-
-            <!-- <pickems-survivor-calendar></pickems-survivor-calendar> -->
         </div>
     </ng-container>
 </div>
@@ -115,28 +113,34 @@
             <ul>
                 <li>The timer will count down to the first game that is played that NFL Week</li>
                 <li>Most weeks the deadline will be at the start of the Thursday game</li>
-                <li>For 2026, <span style="color: red;"><strong>Week 1 and Week 12 (Thanksgiving) have their first game
+                <li><span style="color: red;"><strong>For 2026, Week 1 and Week 12 (American Thanksgiving) have their
+                            first game
                             on a Wednesday</strong></span>,
                     so pay attention!</li>
-                <li>The results for the week will be processed at 2am Wednesday EST (Tuesday
-                    Night -
-                    Wednesday Morning) so that enough time is allowed for stat corrections</li>
-                <li>After the week's results are processed, the next week will become available</li>
-                <li>Pick'ems can be submitted for the current week and any future weeks</li>
-                <li>Survivor Pool unlocks when the week rotates forward at 2am EST, and locks at that weeks deadline.
+                <li>The results for the week will be processed at 11:50pm (Eastern) Tuesday so that enough time is
+                    allowed for
+                    stat corrections</li>
+                <li>After the week's results are processed, the next week will unlock at Midnight Eastern</li>
+                <li>Pick'ems can be submitted for the current NFL week and any future weeks</li>
+                <li>Survivor Pool unlocks when the week rotates forward at Midnight Eastern (Tues night -> Wed morning)
+                    and locks at that weeks deadline.
                     You
-                    may not make future submissions.</li>
+                    may not make future submissions for Survivor.</li>
             </ul>
 
             <div style="height: 20px;"></div>
             <h3>Pick'ems</h3>
             <div style="height: 20px;"></div>
 
-            <h4>How to Play</h4>
+            <h4>Registration</h4>
             <ul>
                 <li>In order to register as a player in Pick'ems, all you need to do is make at least 1 pick</li>
                 <li>You may join after NFL Week 1, but you will receive 0 points for the weeks before you registered
                 </li>
+            </ul>
+
+            <h4>How to Play</h4>
+            <ul>
                 <li>Each week, pick who will win every B3FL matchup</li>
                 <li>To remove a pick simply click on the "Pick" poker chip and you may make a different selection before
                     the deadline</li>
@@ -174,9 +178,9 @@
                     Double Down</li>
                 <li><span style="color: #e27227;"><strong>3x Points</strong></span> granted for correctly picking with a
                     Triple Down</li>
-                <li><span style="color: #AE002D;"><strong>-2 Point Penalty</strong></span> applied for missing on a
+                <li><span style="color: #AE002D;"><strong>-2 Point Penalty</strong></span> for picking an incorrect
                     Double Down</li>
-                <li><span style="color: #AE002D;"><strong>-3 Point Penalty</strong></span> applied for missing on a
+                <li><span style="color: #AE002D;"><strong>-3 Point Penalty</strong></span> for picking an incorrect
                     Triple Down</li>
                 <li>If a matchup is a Tie, it's considered a push and 0 points will be rewarded and no penalties will be
                     assigned</li>
@@ -196,11 +200,15 @@
             <h3>Survivor Pool</h3>
             <div style="height: 20px;"></div>
 
-            <h4>How to Play</h4>
+            <h4>Registration</h4>
             <ul>
                 <li>In order to register as a player in Survivor Pool, you must make a submission by the Week 1 deadline
                     (first game of Week 1)</li>
                 <li>You may NOT join Survivor Pool after the Week 1 deadline</li>
+            </ul>
+
+            <h4>How to Play</h4>
+            <ul>
                 <li>Each week, select one GM to win that week. You may only choose each GM once per season</li>
                 <li>If they win or tie, you survive. If they lose, you are <span
                         style="color: red;"><strong>ELIMINATED</strong></span></li>

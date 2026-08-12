@@ -5,11 +5,12 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule, MatIconButton } from "@angular/material/button";
 import { ToastrService } from 'ngx-toastr';
+import { MatExpansionPanel, MatExpansionModule } from "@angular/material/expansion";
 
 @Component({
   selector: 'game-pickems-standings-content',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatIconModule, MatButtonModule, MatIconButton],
+  imports: [CommonModule, MatTableModule, MatIconModule, MatButtonModule, MatIconButton, MatExpansionPanel, MatExpansionModule],
   templateUrl: './game-pickems-standings-content.component.html',
   styleUrl: './game-pickems-standings-content.component.css'
 })

@@ -8,7 +8,6 @@
 
 .score-table {
     width: 100%;
-    max-width: 600px;
 }
 
 .score-table-style {
@@ -21,4 +20,8 @@
     border-bottom: 1px solid var(--text-color);
     border-left: none;
     border-right: none;
+}
+
+.pickems-scores-panel {
+    background-color: var(--accent-color);
 }

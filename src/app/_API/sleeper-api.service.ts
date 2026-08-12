@@ -423,6 +423,18 @@ export class SleeperApiService {
 		var numALeagueMatchups = Math.floor(aLeagueMatchupData.length / 2);
 		var numBLeagueMatchups = Math.floor(bLeagueMatchupData.length / 2);
 
+		if (aLeagueMatchupData.length == 0 || bLeagueMatchupData.length == 0) {
+			return {
+				dataAvailable: false,
+				nflData: {
+					year: nflState.league_season,
+					week: currentNflWeek
+				}
+			}
+		}
+
+		console.log(aLeagueMatchupData);
+
 		if (cacheData) {
 			console.log("getLiveScores() Refreshing with cached data");
 			aLeagueRosterMap = cacheData.aLeagueRosterMap;
@@ -534,6 +546,7 @@ export class SleeperApiService {
 		//console.log(bLeagueMatchups);
 
 		return {
+			dataAvailable: true,
 			aLeague: aLeagueMatchups,
 			bLeague: bLeagueMatchups,
 			nflData: {

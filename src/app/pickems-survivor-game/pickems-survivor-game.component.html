@@ -6,7 +6,7 @@
         <div style="margin-left: 20px; margin-right: 20px;">
             <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Info"
                 [shouldDisplay]="isGameStateLoaded && gamePhase==0"
-                [message]="`Fantasy season hasn\'t started yet! Pick'ems & Survivor Pool will begin at ${this.gamesUnlockDate}`"></app-pickems-survivor-warning-info-box>
+                [message]="`Fantasy season hasn\'t started yet! Pick'ems & Survivor Pool will unlock at ${this.gamesUnlockDate}`"></app-pickems-survivor-warning-info-box>
         </div>
 
         <!-- user loaded the game state in-season -->
@@ -36,16 +36,16 @@
                             [initialProfileValue]="pickemsCurrentProfileSelectorValue"
                             [initialWeekValue]="pickemsCurrentWeekSelectorValue" (reloadServerTime)="reloadServerTime()"
                             (reloadPickemsMatchupsForWeek)="updatePickemsSelectorValuesAndReloadEntries($event)"
-                            [demoMode]="demoMode" (demoNextWeek)="demo_NextWeek()" (demoReset)="demo_Reset()"
+                            (reloadPickemsScores)="reloadPickemsScores()"
+                            [dataSourcePickemsScores]="dataSourcePickemsScores" [demoMode]="demoMode"
+                            (demoNextWeek)="demo_NextWeek()" (demoReset)="demo_Reset()"
                             (demoTestTimer)="demo_TestTimer()"></game-pickems-content>
                     </ng-template>
                 </mat-tab>
 
-                <mat-tab label="Standings">
+                <mat-tab label="Schedule">
                     <ng-template matTabContent>
-                        <game-pickems-standings-content [currentUser]="currentUser"
-                            [dataSource]="dataSourcePickemsScores"
-                            (reloadPickemsScores)="reloadPickemsScores()"></game-pickems-standings-content>
+                        <pickems-survivor-calendar [gameSchedule]="gameSchedule"></pickems-survivor-calendar>
                     </ng-template>
                 </mat-tab>
             </mat-tab-group>

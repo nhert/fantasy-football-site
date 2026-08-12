@@ -14,12 +14,16 @@ server {
   }
  
   location /api/ {
-        # Allow local loopback addresses
-        allow 127.0.0.1;
-        allow ::1;
+        # - the following allow/deny is for SSR
+        # - Allow local loopback addresses
+        # allow 127.0.0.1;
+        # allow ::1;
+        # - Deny everyone else
+        # deny all;
 
-        # Deny everyone else
-        deny all;
+        if ($http_referer !~* "^https?://(www\.)?b3fl.com") {
+            return 403;
+        }
 
         proxy_pass http://localhost:5000; # Points to the Express PORT for the DB. This is the Node.js Express server that exists at pickems-survivor-db
         proxy_http_version 1.1;

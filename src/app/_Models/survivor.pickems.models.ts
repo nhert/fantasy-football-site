@@ -2,12 +2,17 @@
 
 import { PickemsPickStatus } from "../game-pickems-content/game-pickems-content.component";
 
+
+
 export interface GameState {
     season: number,
     week: number,
     server_current_datetime_utc_iso: string,
     current_start_datetime_utc_iso: string,
+    current_start_local_date_display: Date, // takes the UTC ISO string, and wraps it in a Date object which translates to local users timezone. For display
     current_cutoff_datetime_utc_iso: string,
+    current_cutoff_local_date_display: Date, // takes the UTC ISO string, and wraps it in a Date object which translates to local users timezone. For display
+
     // Game logic fields
     last_processed_week: number,
     survivor_pool_outcome: string,

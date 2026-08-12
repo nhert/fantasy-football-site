@@ -43,7 +43,8 @@ export class LiveScoresComponent {
     this.refreshing = true;
     this.sleeperApi.getLiveScores(this.cachedData).then(data => {
       this.refreshing = false;
-      this.updateScoreValuesOnly(data.aLeague, data.bLeague);
+      if (data.dataAvailable)
+        this.updateScoreValuesOnly(data.aLeague, data.bLeague);
     });
   }
 
@@ -86,13 +87,14 @@ export class LiveScoresComponent {
     // spinner on
     this.sleeperApi.getLiveScores(null).then(data => {
       this.loading = false;
-      this.aLeagueMatchups = data.aLeague;
-      this.bLeagueMatchups = data.bLeague;
       this.nflData = data.nflData;
-      this.cachedData = data.cache;
 
-      if (this.nflData.week == 0) {
+      if (this.nflData.week == 0 || !data.dataAvailable) {
         this.isPreseason = true;
+      } else {
+        this.aLeagueMatchups = data.aLeague;
+        this.bLeagueMatchups = data.bLeague;
+        this.cachedData = data.cache;
       }
     });
   }

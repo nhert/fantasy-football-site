@@ -1,4 +1,29 @@
-<div class="calendar-container">
-    <mat-calendar [dateClass]="dateClass()" [(selected)]="selectedDate">
-    </mat-calendar>
+<div class="schedule-container">
+    <h2>Pick'ems & Survivor Pool Schedule</h2>
+    <span style="color: var(--text-color);"><i>Schedule below is based on the Eastern timezone</i></span>
+    <div style="height: 5px;"></div>
+    <span style="color: var(--text-color);"><i>Click on a highlighted day to see the schedule time translated into your
+            local timezone</i></span>
+
+    <div style="height: 15px;"></div>
+
+    <div class="flex-centered">
+        <div class="calendar-container">
+            <mat-calendar [dateClass]="dateClass()" [(selected)]="selectedDate"
+                (selectedChange)="onDateSelectChanged()">
+            </mat-calendar>
+        </div>
+    </div>
+
+    <div style="height: 15px;"></div>
+
+    <div *ngIf="specialDateSelected">
+        <span style="font-size: 20px; text-decoration: underline;" [innerHTML]="selectedDateWeek"></span>
+        <div style="height: 20px;"></div>
+        <span style="font-size: 18px; margin-right: 20px;"><strong>SCHEDULE TIME</strong></span>
+        <span [innerHTML]="selectedDateDisplayTextEastern"></span>
+        <div style="height: 5px;"></div>
+        <span style="font-size: 18px; margin-right: 20px;"><strong>YOUR LOCAL TIME</strong></span>
+        <span [innerHTML]="selectedDateDisplayTextLocal"></span>
+    </div>
 </div>

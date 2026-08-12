@@ -48,8 +48,8 @@
 .account-bar-button {
     height: 35px;
     width: 95px;
-    vertical-align: middle;
     align-items: center;
+    justify-content: center;
     display: inline-flex;
 }
 

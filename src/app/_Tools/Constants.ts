@@ -6,8 +6,10 @@ import nflPlayersJson from '../../assets/nflPlayers/nfl_players.json'
 export class Constants {
 
 	// Set to the most current Sleeper League ID. This will update when commish starts a new season.
-	static A_LEAGUE_SLEEPER_ID = "1257104499407863808";
-	static B_LEAGUE_SLEEPER_ID = "1257479897941553152";
+	static A_LEAGUE_SLEEPER_ID = "1257104499407863808"; // 2025
+	static B_LEAGUE_SLEEPER_ID = "1257479897941553152"; // 2025
+	//static A_LEAGUE_SLEEPER_ID = "1389348365044576256"; // 2026
+	//static B_LEAGUE_SLEEPER_ID = "1389346418421932032"; // 2026
 
 	// PICKEMS / SURVIVOR POOL RELATED CONSTANTS	
 	static AUTH0_DOMAIN = "dev-bk2yk7ww7yqyitvv.us.auth0.com";
@@ -24,10 +26,10 @@ export class Constants {
 		errorPath: '/callback',
 	}
 	static PICKEMS_SURVIVOR_SKIP_AUTH: boolean = true; // FALSE IN PRODUCTION MODE. skip auth0 login
-	static PICKEMS_SURVIVOR_IN_LOCAL_TESTING_MODE: boolean = false; // FALSE IN PRODUCTION MODE. set to false for (nginx) deployment.
+	static PICKEMS_SURVIVOR_IN_LOCAL_TESTING_MODE: boolean = true; // FALSE IN PRODUCTION MODE. set to false for (nginx) deployment.
 
 	// HARDCODED URLS
-	static PICKEMS_URL = "https://leagueside.app/"; // deprecated ;)
+	static PICKEMS_URL = "https://leagueside.app/"; // deprecated
 	static PISTOL_GUNCOP_URL = "https://www.youtube.com/@bfltwo5555";
 	static PISTOL_GUNCOP_YT_CHANNEL_ID = "UCqd9SN4AnC9RfJDMwzzVsfQ";
 	static JORDAN_SHOW_URL = "https://www.twitch.tv/jordstirling";
@@ -81,7 +83,7 @@ export class Constants {
 			sleeperId_current: "867462835893080064",
 			sleeperIds_old: [],
 			legacyId: "userId-27062481",
-			currentLeague: this.B_LEAGUE_NAME
+			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
 			name: "Caolan",
@@ -95,7 +97,7 @@ export class Constants {
 			sleeperId_current: "867601213447897088",
 			sleeperIds_old: [],
 			legacyId: "userId-91161",
-			currentLeague: this.A_LEAGUE_NAME
+			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
 			name: "Rimon",
@@ -130,7 +132,7 @@ export class Constants {
 			sleeperId_current: "865480383385448448",
 			sleeperIds_old: [],
 			legacyId: "userId-28536059",
-			currentLeague: this.B_LEAGUE_NAME
+			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
 			name: "Jordan S.",
@@ -151,7 +153,7 @@ export class Constants {
 			sleeperId_current: "867272838229454848",
 			sleeperIds_old: [],
 			legacyId: "userId-14712314",
-			currentLeague: this.B_LEAGUE_NAME
+			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
 			name: "Ryan",
@@ -172,7 +174,7 @@ export class Constants {
 			sleeperId_current: "867479730138583040",
 			sleeperIds_old: [],
 			legacyId: "userId-25169661",
-			currentLeague: this.A_LEAGUE_NAME
+			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
 			name: "Mike",
@@ -214,7 +216,7 @@ export class Constants {
 			sleeperId_current: "998276027312889856",
 			sleeperIds_old: ["867970353417363456"],
 			legacyId: "userId-962198",
-			currentLeague: this.A_LEAGUE_NAME
+			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
 			name: "Ty",
@@ -235,14 +237,14 @@ export class Constants {
 			sleeperId_current: "868705613276925952",
 			sleeperIds_old: [],
 			legacyId: "userId-7401235",
-			currentLeague: this.B_LEAGUE_NAME
+			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
 			name: "Jackson",
 			sleeperId_current: "1130918451767369728",
 			sleeperIds_old: [],
 			legacyId: "-",
-			currentLeague: this.A_LEAGUE_NAME
+			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
 			name: "Big Red",

@@ -13,8 +13,11 @@ import { SurvivorPickemsApiService } from '../_API/survivor-pickems-api.service'
 import { ToastrService } from 'ngx-toastr';
 import { DisplayMode, PickemsSurvivorWarningInfoBoxComponent } from "../pickems-survivor-warning-info-box/pickems-survivor-warning-info-box.component";
 import { PickemsMatchupGridComponent } from "../pickems-matchup-grid/pickems-matchup-grid.component";
+import { GamePickemsStandingsContentComponent } from "../game-pickems-standings-content/game-pickems-standings-content.component";
+import { MatTableDataSource } from '@angular/material/table';
 
 const MAX_WEEKS: number = 14;
+const TOTAL_MATCHUP_COUNT = 13;
 
 export enum PickemsPickStatus {
   NONE,
@@ -27,7 +30,7 @@ export enum PickemsPickStatus {
 @Component({
   selector: 'game-pickems-content',
   standalone: true,
-  imports: [PickemsSurvivorTimerComponent, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, CommonModule, MatExpansionModule, MatIconModule, MatButtonModule, PickemsSurvivorWarningInfoBoxComponent, PickemsMatchupGridComponent],
+  imports: [PickemsSurvivorTimerComponent, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, CommonModule, MatExpansionModule, MatIconModule, MatButtonModule, PickemsSurvivorWarningInfoBoxComponent, PickemsMatchupGridComponent, GamePickemsStandingsContentComponent],
   templateUrl: './game-pickems-content.component.html',
   styleUrl: './game-pickems-content.component.css'
 })
@@ -45,6 +48,8 @@ export class GamePickemsContentComponent {
   @Input('initialWeekValue') initialWeekValue: number;
 
   @Output('reloadServerTime') reloadServerTime = new EventEmitter<void>(); // Call reload method on parent component to reload table data and refresh.
+  @Output('reloadPickemsScores') reloadPickemsScores = new EventEmitter<void>();
+  @Input('dataSourcePickemsScores') dataSourcePickemsScores: MatTableDataSource<PickemsScore>; // data source for the survivor pool table
   @ViewChild(PickemsSurvivorTimerComponent) timerComponent!: PickemsSurvivorTimerComponent;
 
   @Input('demoMode') demoMode: boolean = false;
@@ -54,12 +59,14 @@ export class GamePickemsContentComponent {
 
   selectedWeek: number; // double bound to selector current value
   selectedProfile: any; // double bound to selector current value
+  profileSelectorOptions: any[] = [];
 
   isPickemsLoaded: boolean = false;
   isPickemsGridPrepared: boolean = false;
   isPickLoading: boolean = false; // when user makes a pick, removes a pick, etc this blocks double submits
   isPickemsEntriesLoading: boolean = false; // when user changes the values in profile/week selector, this determines whether the pickems reload is complete.
   passedDeadlineDisableUi: boolean = false;
+  userMadePickNoPageRefreshYet: boolean = false;
 
   public StatusEnum = PickemsPickStatus;
   public DisplayModeEnum = DisplayMode;
@@ -89,11 +96,22 @@ export class GamePickemsContentComponent {
     }
   }
 
+  reloadPickemsScoresInParent() {
+    this.reloadPickemsScores.emit();
+  }
+
   resetTimer() {
     this.timerComponent?.refreshTimer();
   }
 
   initializePickems() {
+    this.profileSelectorOptions = this.activePickemsGameUsers;
+    // If current user isnt in dropdown, add them so they can make entries if they havent yet.
+    if (!this.activeEmails.includes(this.currentUser.email)) {
+      this.profileSelectorOptions.push(this.gameUsers.find(u => u.user_email == this.currentUser.email));
+    }
+    this.profileSelectorOptions.sort((a, b) => a.username.localeCompare(b.username));
+
     // On initial page load, set week to the current schedule week.
     this.selectedWeek = this.initialWeekValue;
     this.selectedProfile = this.initialProfileValue;
@@ -108,8 +126,17 @@ export class GamePickemsContentComponent {
   get shouldShowWarningToMakePick() {
     return !this.passedDeadlineDisableUi
       && this.isCurrentUserSelectedInProfileDropdown()
-      && this.weeklyMatchups.filter(matchup => matchup.manager_1_pick_status == PickemsPickStatus.NONE && matchup.manager_2_pick_status == PickemsPickStatus.NONE).length > 0
+      && this.numberOfMissingPicksForCurrentUserCurrentLoadedWeek > 0
       && this.selectedWeek == this.gameState.week;
+  }
+  get shouldShowWarningNotRegistered() {
+    return !this.passedDeadlineDisableUi
+      && this.isCurrentUserSelectedInProfileDropdown()
+      && !this.activeEmails.includes(this.currentUser.email)
+      && (this.numberOfMissingPicksForCurrentUserCurrentLoadedWeek == TOTAL_MATCHUP_COUNT);
+  }
+  get numberOfMissingPicksForCurrentUserCurrentLoadedWeek() {
+    return this.weeklyMatchups.filter(matchup => matchup.manager_1_pick_status == PickemsPickStatus.NONE && matchup.manager_2_pick_status == PickemsPickStatus.NONE).length;
   }
   get aLeagueMatchups() {
     return this.weeklyMatchups.filter(matchup => matchup.league_type == Constants.A_LEAGUE_NAME);

@@ -15,6 +15,10 @@ TIMER
 
 MINOR
 - Improve the help dialog and add more colors / bolding / images (dont trust these idiots)
-- improve the visuals of the survivor pool finished screen. Dont just use text
-- make a calendar that shows the schedule
+- Improve the visuals of the survivor pool finished screen. Dont just use text
 - setup google client ids for SSO https://auth0.com/docs/authenticate/identity-providers/social-identity-providers/google
+- backup all pickems/survivor picks before updating scores
+
+NICE TO HAVE
+- hide eliminated players toggle on the survivor pool 
+- calendar tasks button

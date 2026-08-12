@@ -108,11 +108,21 @@ export class PickemsSurvivorTimerComponent {
     return 0;
   }
 
-  protected getCurrentDeadline() {
-    if (this.gameState) {
-      return this.gameState.current_cutoff_datetime_utc_iso;
+  longDateLocal = new Intl.DateTimeFormat("default", {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    timeZoneName: 'longGeneric'
+  });
+
+  get getCurrentDeadline() {
+    if (this.gameState && this.gameState.week > 0) {
+      return this.longDateLocal.format(this.gameState.current_cutoff_local_date_display);
     }
-    return "";
+    return "Unknown";
   }
 
   private getUTCSecondsDiff(isoString1: string, isoString2: string): number {

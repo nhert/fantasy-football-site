@@ -34,6 +34,10 @@
                     (disableUiComponents)="handleDisableUiComponents()"></pickems-survivor-timer>
 
                 <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Warning"
+                    [shouldDisplay]="shouldShowWarningNotRegistered"
+                    [message]="'You are not registered for Pick\'ems, make at least one pick to register and receive auto-picks if you miss future deadlines'"></app-pickems-survivor-warning-info-box>
+
+                <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Warning"
                     [shouldDisplay]="shouldShowWarningToMakePick"
                     [message]="'You have not submitted all your picks yet this week'"></app-pickems-survivor-warning-info-box>
 
@@ -42,7 +46,7 @@
                         <mat-label>Choose a Profile</mat-label>
                         <mat-select #profileSelector [(value)]="selectedProfile"
                             (selectionChange)="onProfileSelectionChange($event)">
-                            <mat-option *ngFor="let user of activePickemsGameUsers" [value]="user">
+                            <mat-option *ngFor="let user of profileSelectorOptions" [value]="user">
                                 {{ user.username }}
                             </mat-option>
                         </mat-select>
@@ -59,6 +63,11 @@
                 </div>
             </mat-card-content>
         </mat-card>
+    </div>
+
+    <div>
+        <game-pickems-standings-content [currentUser]="currentUser" [dataSource]="dataSourcePickemsScores"
+            (reloadPickemsScores)="reloadPickemsScoresInParent()"></game-pickems-standings-content>
     </div>
 
     <ng-container *ngIf="isPickemsGridPrepared">

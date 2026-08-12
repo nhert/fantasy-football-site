@@ -1,4 +1,55 @@
 /* Ensure the mat-calendar button layout can host a relative layout label */
+.calendar-container {
+    max-width: 600px;
+    max-height: 700px;
+    min-width: 300px;
+    min-height: 400px;
+    width: 100%;
+    height: 100%;
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
+    flex: none;
+}
+
+.schedule-container {
+    color: var(--text-color);
+}
+
+.mat-calendar-body-cell-content {
+    color: var(--text-color) !important;
+}
+
+.mat-calendar-period-button {
+    color: var(--text-color) !important;
+}
+
+.mat-calendar-table-header th {
+    color: var(--text-color-2) !important;
+}
+
+.mat-calendar-body-label {
+    opacity: 0;
+}
+
+.mat-calendar-body-label[colspan="7"] {
+    display: none;
+}
+
+.mat-calendar-period-button {
+    pointer-events: none !important;
+}
+
+.mat-calendar-arrow {
+    display: none !important;
+}
+
+.mat-calendar-body-selected {
+    background-color: #6b6a6a !important;
+    /* Text color of the selected date */
+}
+
+
 .has-label .mat-calendar-body-cell-content {
     position: relative;
     overflow: visible !important;
@@ -9,33 +60,139 @@
 /* Style the base layout for labels */
 .has-label .mat-calendar-body-cell-content::after {
     position: absolute;
-    bottom: -14px;
+    top: 4px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 9px;
+    font-size: clamp(6px, 1.2cqw, 10px);
     font-weight: bold;
     line-height: 1;
     text-transform: uppercase;
 }
 
-/* Define what text strings to render based on the classes returned from TypeScript */
-.label-holiday .mat-calendar-body-cell-content::after {
-    content: 'Holiday';
-    color: #e06666;
-}
-
-.label-meeting .mat-calendar-body-cell-content::after {
-    content: 'Meeting';
-    color: #3c78d8;
+.has-label .mat-calendar-body-cell-content {
+    border: 2px solid var(--text-color);
+    background-color: #174cbe;
+    border-radius: 50%;
 }
 
 .label-deadline .mat-calendar-body-cell-content::after {
-    content: 'Due';
-    color: #cc0000;
+    color: #ff0000;
 }
 
-/* Optional: Highlight the actual calendar day circle background */
-.has-label .mat-calendar-body-cell-content {
-    border: 1px dashed #666;
-    border-radius: 50%;
+.label-start .mat-calendar-body-cell-content::after {
+    color: #dfdfdf;
+}
+
+/* I honestly could not find a better way to do this*/
+/* Define what text strings to render based on the classes returned from TypeScript */
+.label-deadline-wk1 .mat-calendar-body-cell-content::after {
+    content: 'Wk 1 Deadline';
+}
+
+.label-deadline-wk2 .mat-calendar-body-cell-content::after {
+    content: 'Wk 2 Deadline';
+}
+
+.label-deadline-wk3 .mat-calendar-body-cell-content::after {
+    content: 'Wk 3 Deadline';
+}
+
+.label-deadline-wk4 .mat-calendar-body-cell-content::after {
+    content: 'Wk 4 Deadline';
+}
+
+.label-deadline-wk5 .mat-calendar-body-cell-content::after {
+    content: 'Wk 5 Deadline';
+}
+
+.label-deadline-wk6 .mat-calendar-body-cell-content::after {
+    content: 'Wk 6 Deadline';
+}
+
+.label-deadline-wk7 .mat-calendar-body-cell-content::after {
+    content: 'Wk 7 Deadline';
+}
+
+.label-deadline-wk8 .mat-calendar-body-cell-content::after {
+    content: 'Wk 8 Deadline';
+}
+
+.label-deadline-wk9 .mat-calendar-body-cell-content::after {
+    content: 'Wk 9 Deadline';
+}
+
+.label-deadline-wk10 .mat-calendar-body-cell-content::after {
+    content: 'Wk 10 Deadline';
+}
+
+.label-deadline-wk11 .mat-calendar-body-cell-content::after {
+    content: 'Wk 11 Deadline';
+}
+
+.label-deadline-wk12 .mat-calendar-body-cell-content::after {
+    content: 'Wk 12 Deadline';
+}
+
+.label-deadline-wk13 .mat-calendar-body-cell-content::after {
+    content: 'Wk 13 Deadline';
+}
+
+.label-deadline-wk14 .mat-calendar-body-cell-content::after {
+    content: 'Wk 14 Deadline';
+}
+
+.label-start-wk1 .mat-calendar-body-cell-content::after {
+    content: 'Wk 1 Start';
+}
+
+.label-start-wk2 .mat-calendar-body-cell-content::after {
+    content: 'Wk 2 Start';
+}
+
+.label-start-wk3 .mat-calendar-body-cell-content::after {
+    content: 'Wk 3 Start';
+}
+
+.label-start-wk4 .mat-calendar-body-cell-content::after {
+    content: 'Wk 4 Start';
+}
+
+.label-start-wk5 .mat-calendar-body-cell-content::after {
+    content: 'Wk 5 Start';
+}
+
+.label-start-wk6 .mat-calendar-body-cell-content::after {
+    content: 'Wk 6 Start';
+}
+
+.label-start-wk7 .mat-calendar-body-cell-content::after {
+    content: 'Wk 7 Start';
+}
+
+.label-start-wk8 .mat-calendar-body-cell-content::after {
+    content: 'Wk 8 Start';
+}
+
+.label-start-wk9 .mat-calendar-body-cell-content::after {
+    content: 'Wk 9 Start';
+}
+
+.label-start-wk10 .mat-calendar-body-cell-content::after {
+    content: 'Wk 10 Start';
+}
+
+.label-start-wk11 .mat-calendar-body-cell-content::after {
+    content: 'Wk 11 Start';
+}
+
+.label-start-wk12 .mat-calendar-body-cell-content::after {
+    content: 'Wk 12 Start';
+}
+
+.label-start-wk13 .mat-calendar-body-cell-content::after {
+    content: 'Wk 13 Start';
+}
+
+.label-start-wk14 .mat-calendar-body-cell-content::after {
+    content: 'Wk 14 Start';
 }
