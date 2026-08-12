@@ -23,6 +23,10 @@ START THE API BACKEND FOR SURVIVOR / PICKEMS (localhost:5000)
 3. Run ". pullPickemsSurvivorDbData.sh" (this clones/pulls latest github version of the pickem/survivor db to the directory)
 4. Run "sudo pm2 start server.js --name pickems-survivor-db" (api will listen on localhost in the background for reverse proxy from nginx)
 
+UPDATE GAME BACKEND
+1. cd /var/www/b3fl_db/
+2. Run ". pullPickemsSurvivorDbData.sh"
+
 SETUP NGINX FOR ANGULAR FRONTEND
 
 1. SSH into the instance and "sudo su"
@@ -32,3 +36,8 @@ SETUP NGINX FOR ANGULAR FRONTEND
 5. Copy the contents of "default.txt" to /etc/nginx/sites-available/default with "vi /etc/nginx/sites-available/default"
 6. Certbot instructions: https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal&tab=standard
 7. service nginx restart
+
+UPDATE ANGULAR FRONTEND
+1. cd /usr/share/nginx/html/
+2. Run ". pullSiteData.sh"
+3. service nginx restart
