@@ -54,7 +54,7 @@ export class PickemsSurvivorTimerComponent {
     if (timerLengthSeconds <= 0) {
       this.timeRemaining.set(0);
       this.handleContestEnd();
-      console.log(this.isExpired);
+      //console.log(this.isExpired);
       return;
     }
     // Fetch remaining seconds directly calculated by your server.
@@ -80,6 +80,7 @@ export class PickemsSurvivorTimerComponent {
     const elapsedMs = now - this.lastPerformanceTick;
     const elapsedSeconds = Math.round(elapsedMs / 1000);
 
+    //console.log("TICK! " + now);
     if (elapsedSeconds >= 1) {
       //console.log("MADE timing");
       this.lastPerformanceTick = now; // Update anchor time

@@ -26,7 +26,7 @@ import { DisplayMode } from '../pickems-survivor-warning-info-box/pickems-surviv
 })
 export class GameSurvivorPoolContentComponent {
   @Output('reloadData') reloadData = new EventEmitter<void>(); // Call reload method on parent component to reload table data and refresh.
-  @Output('reloadServerTime') reloadServerTime = new EventEmitter<void>(); // Call reload method on parent component to reload table data and refresh.
+  @Output('reloadServerTime') reloadServerTime = new EventEmitter<void>(); // Call reload method on parent component to reload the server time then refresh timer.
 
   @Input('userEliminated') userEliminated: boolean;
   @Input('userMissedStart') userMissedStart: boolean;
@@ -79,7 +79,6 @@ export class GameSurvivorPoolContentComponent {
   @HostListener('document:visibilitychange', [])
   onVisibilityChange() {
     if (document.visibilityState === 'visible') {
-      // For critical contests, re-fetch server state entirely upon wake
       this.reloadServerTime.emit();
     }
   }

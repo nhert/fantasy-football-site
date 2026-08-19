@@ -2,8 +2,6 @@
 
 import { PickemsPickStatus } from "../game-pickems-content/game-pickems-content.component";
 
-
-
 export interface GameState {
     season: number,
     week: number,

@@ -14,11 +14,12 @@ import { GameUser } from '../_Models/survivor.pickems.models';
 import { Constants } from '../_Tools/Constants';
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { ToastrService } from 'ngx-toastr';
+import { PickemsSurvivorImageUploaderComponent } from "../pickems-survivor-image-uploader/pickems-survivor-image-uploader.component";
 
 @Component({
   selector: 'app-pickems-survivor-lobby',
   standalone: true,
-  imports: [CommonModule, SimpleSpinnerComponent, MatIcon, FormsModule, ReactiveFormsModule, MatToolbarModule, PickemsSurvivorGameComponent, MatCheckboxModule],
+  imports: [CommonModule, SimpleSpinnerComponent, MatIcon, FormsModule, ReactiveFormsModule, MatToolbarModule, PickemsSurvivorGameComponent, MatCheckboxModule, PickemsSurvivorImageUploaderComponent],
   templateUrl: './pickems-survivor-lobby.component.html',
   styleUrl: './pickems-survivor-lobby.component.css'
 })
@@ -89,11 +90,11 @@ export class PickemsSurvivorLobbyComponent {
   }
 
   ngOnInit(): void {
-    if (Constants.PICKEMS_SURVIVOR_SKIP_AUTH || this.demoMode) {
-      console.log("Pickems Survivor Lobby started in DEV MODE");
+    if (Constants.PICKEMS_SURVIVOR_SKIP_AUTH) {
+      console.log("Pickems Survivor Lobby started with logins DISABLED");
       this.authenticateInDevMode();
     } else {
-      console.log("Pickems Survivor Lobby started in PRODUCTION MODE");
+      console.log("Pickems Survivor Lobby started with logins ENABLED");
       this.authenticateAuth0();
     }
   }

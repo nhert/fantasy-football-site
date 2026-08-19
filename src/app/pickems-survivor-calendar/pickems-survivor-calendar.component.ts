@@ -2,7 +2,7 @@ import { Component, input, ViewEncapsulation } from '@angular/core';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCalendarCellCssClasses, MatDatepickerModule } from "@angular/material/datepicker";
 import { GameSchedule } from '../_Models/survivor.pickems.models';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 
 @Component({
   selector: 'pickems-survivor-calendar',

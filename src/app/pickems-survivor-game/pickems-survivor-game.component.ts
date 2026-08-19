@@ -133,7 +133,6 @@ export class PickemsSurvivorGameComponent {
       console.log("RESETTING SERVER TIME FOR DEMO MODE");
       // nflStateWeek = 0;
       nflStateWeek = survivorPickemsState.last_processed_week >= 14 ? 14 : survivorPickemsState.last_processed_week + 1;
-      // nflStateWeek = 15;
       server_time_utc_iso = this.demo_getCurrentTimeBasedOnSchedule(nflStateWeek, 3600000);
     }
 
@@ -282,6 +281,7 @@ export class PickemsSurvivorGameComponent {
     return entries$;
   }
 
+  // Gets the current server time in ISO UTC and then resets the timers to count down from that time to the current deadline
   public reloadServerTime() {
     this.survivorPickemsApi.getServerTime().subscribe(time => {
       this.gameState.server_current_datetime_utc_iso = time.server_time;

@@ -102,6 +102,8 @@
                     <mat-header-cell *matHeaderCellDef class="survivor-table-cell"> Player </mat-header-cell>
                     <mat-cell *matCellDef="let element" [attr.data-label]="'Player'"
                         class="survivor-table-player-name-cell">
+                        <img src="/avatars/{{element.playerEmail}}.png" alt="Player Avatar" width="30" height="30"
+                            onerror="this.onerror=null; this.src='/assets/images/default_avatar.png';">
                         <span>{{element.playerUsername}}</span>
                     </mat-cell>
                 </ng-container>

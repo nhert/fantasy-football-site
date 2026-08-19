@@ -1,8 +1,10 @@
 <div>
     <span style="font-size: 36px; margin-bottom: 40; color: var(--text-color);">NFL Week {{getCurrentWeek()}}</span>
 
-    <p style="font-size: 16px; margin-bottom: 20px; color: var(--text-color);">Picks Must be Submitted by <strong>{{
-            getCurrentDeadline }}</strong></p>
+    <p style="font-size: 16px; margin-bottom: 0px; color: var(--text-color);"><i>Picks Must be Submitted by</i></p>
+    <p style="font-size: 18px; margin-top: 5px; margin-bottom: 20px; color: var(--text-color);">
+        <strong>{{getCurrentDeadline}}</strong>
+    </p>
 </div>
 <div class="countdown-container" *ngIf="!currentUserEliminated">
     <div *ngIf="!isExpired" class="timer">

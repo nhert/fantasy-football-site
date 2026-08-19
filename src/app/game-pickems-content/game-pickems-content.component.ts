@@ -91,7 +91,6 @@ export class GamePickemsContentComponent {
   @HostListener('document:visibilitychange', [])
   onVisibilityChange() {
     if (document.visibilityState === 'visible') {
-      // For critical contests, re-fetch server state entirely upon wake
       this.reloadServerTime.emit();
     }
   }

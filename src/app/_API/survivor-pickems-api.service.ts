@@ -16,6 +16,12 @@ export class SurvivorPickemsApiService {
 
     constructor(private http: HttpClient) { }
 
+    // AVATARS
+
+    uploadAvatar(userEmail: string, formData: FormData): Observable<any> {
+        return this.http.post(this.apiUrl + "/upload_avatar/" + userEmail, formData);
+    }
+
     // GENERIC
 
     getGameServerStatus(): Observable<any> {
@@ -54,11 +60,11 @@ export class SurvivorPickemsApiService {
         return this.http.get(this.usersApiUrl + "/get/" + userEmail);
     }
 
-    addUser(userJson) {
+    addUser(userJson): Observable<any> {
         return this.http.post(this.usersApiUrl + "/add", userJson);
     }
 
-    updateUsername(userEmail: string, userJson) {
+    updateUsername(userEmail: string, userJson): Observable<any> {
         return this.http.post(this.usersApiUrl + "/update/" + userEmail, userJson);
     }
 
@@ -76,7 +82,7 @@ export class SurvivorPickemsApiService {
         return this.http.get(this.survivorApiUrl + "/entries");
     }
 
-    updateSurvivorChoiceForUser(userEmail: string, week: number, userChoice: any) {
+    updateSurvivorChoiceForUser(userEmail: string, week: number, userChoice: any): Observable<any> {
         let userChoiceJson = {
             choice_sleeper_id: userChoice.sleeperId_current,
             choice_gm_name: userChoice.name
@@ -94,7 +100,7 @@ export class SurvivorPickemsApiService {
         return this.http.get(this.pickemsApiUrl + "/scores");
     }
 
-    deletePickemsEntryForUser(userEmail: string, week: number, choice_sleeper_id: string) {
+    deletePickemsEntryForUser(userEmail: string, week: number, choice_sleeper_id: string): Observable<any> {
         return this.http.get(this.pickemsApiUrl + "/delete/" + userEmail + "/" + week + "/" + choice_sleeper_id);
     }
 

@@ -42,7 +42,7 @@ export const routes: Routes = [
   { path: 'draft-videos', component: DraftVideosComponent },
   // Protected by Login
   { path: 'play', component: PickemsSurvivorLobbyComponent, canActivate: Constants.PICKEMS_SURVIVOR_SKIP_AUTH ? [] : [AuthGuard] },
-  { path: 'demo', component: PickemsSurvivorDemoComponent },
+  { path: 'demo', component: PickemsSurvivorDemoComponent, canActivate: Constants.PICKEMS_SURVIVOR_SKIP_AUTH ? [] : [AuthGuard] },
   {
     path: 'callback',
     loadChildren: () =>

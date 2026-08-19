@@ -3,22 +3,13 @@ CRITICAL
 - the allow/deny for nginx config /api/ is forbidden. Is this because SSR isnt being used?
 - test cron job + calling update scores
 
-TIMER
-- refactor how the timer logic works
-    - right now, calling getServerTime and refreshing is passed between game component and content components with @Input @Output
-    - refresh timer gets called twice, once for survivor once for pickems (are there actually 2 timers going at once?)
-    - move the call for getServerTime to be native to the timer component and do not handle any of this in game/content
-    - Content components can simply call a "refresh" to make the timer retrieve
-- fix how ResetTimer works. Gets called repeatedly whenever tab is changed and will have the wrong new server time since ngOnInit gets called in the content classes. 
-    (basically might need a small refactor to how timer component works - maybe i should just have the getServerTime API directly in there)
-- refactor how this.selectedWeek is used for verification - instead of relying on current week selector value need to check value of the current loaded matchups week
-
 MINOR
-- Improve the help dialog and add more colors / bolding / images (dont trust these idiots)
-- Improve the visuals of the survivor pool finished screen. Dont just use text
 - setup google client ids for SSO https://auth0.com/docs/authenticate/identity-providers/social-identity-providers/google
 - backup all pickems/survivor picks before updating scores
+- refactor how this.selectedWeek is used for verification - instead of relying on current week selector value need to check value of the current loaded matchups week
 
 NICE TO HAVE
+- Improve the visuals of the survivor pool finished screen. Dont just use text
 - hide eliminated players toggle on the survivor pool 
 - calendar tasks button
+- avatar upload 

@@ -15,16 +15,18 @@ export class Constants {
 	static AUTH0_DOMAIN = "dev-bk2yk7ww7yqyitvv.us.auth0.com";
 	static AUTH0_CLIENT_ID = "iDWar2e5ka8RXvdJTQT60w5DytBEyz9J";
 	//static AUTH0_CALLBACK = "https://b3fl.com/";
-	static AUTH0_CALLBACK = "http://localhost:4200/play";
+	static AUTH0_CALLBACK_PROD = "http://localhost:4200/play";
+	//static AUTH0_CALLBACK_DEMO = "http://localhost:4200/demo";
 	// auth0 expects this exact structure in app-routing.module.ts
 	static AUTH0_CONFIG = {
 		domain: Constants.AUTH0_DOMAIN,
 		clientId: Constants.AUTH0_CLIENT_ID,
 		authorizationParams: {
-			redirect_uri: Constants.AUTH0_CALLBACK,
+			redirect_uri: Constants.AUTH0_CALLBACK_PROD,
 		},
 		errorPath: '/callback',
 	}
+	static PICKEMS_SURVIVOR_AVATAR_FOLDER: string = "/avatars/";
 	static PICKEMS_SURVIVOR_SKIP_AUTH: boolean = true; // FALSE IN PRODUCTION MODE. skip auth0 login
 	static PICKEMS_SURVIVOR_IN_LOCAL_TESTING_MODE: boolean = false; // FALSE IN PRODUCTION MODE. set to false for (nginx) deployment.
 
