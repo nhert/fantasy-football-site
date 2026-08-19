@@ -1,12 +1,18 @@
 <div style="display: flex;
   align-items: center;
   justify-content: center; flex-direction: column;">
-    <img src="{{avatarUrl}}" alt="Player Avatar" width="80" height="80"
-        onerror="this.onerror=null; this.src='/assets/images/default_avatar.png';">
-    <br>
-    <input type="file" (change)="onFileSelected($event)" accept="image/*">
-    <br>
-    <span>{{avatarUploadResponse}}</span>
-    <br>
-    <button (click)="onUpload()" [disabled]="!selectedFile">Upload Image</button>
+  @if (showCurSelectedImage) {
+  <img src="{{selectedFileLocalUrl}}" alt="Player Avatar" width="80" height="80"
+    onerror="this.onerror=null; this.src='/assets/images/default_avatar.png';" loading="lazy">
+  } @else {
+  <img src="{{avatarUrl}}" alt="Player Avatar" width="80" height="80"
+    onerror="this.onerror=null; this.src='/assets/images/default_avatar.png';" loading="lazy">
+  }
+
+  <br>
+  <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*">
+  <br>
+  <span>{{avatarUploadResponse}}</span>
+  <br>
+  <button (click)="onUpload()" [disabled]="!selectedFile" class="upload-button">Upload Avatar</button>
 </div>

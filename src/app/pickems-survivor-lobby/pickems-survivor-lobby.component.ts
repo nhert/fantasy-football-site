@@ -29,6 +29,7 @@ export class PickemsSurvivorLobbyComponent {
   // Capture the native HTML dialog element reference
   @ViewChild('helpModal') helpElement!: ElementRef<HTMLDialogElement>;
   @ViewChild('usernameChangeModal') usernameChangeElement!: ElementRef<HTMLDialogElement>;
+  @ViewChild('avatarUploader') avatarUploadComponent!: PickemsSurvivorImageUploaderComponent;
 
   private auth = inject(AuthService);
   private doc = inject(DOCUMENT);
@@ -214,10 +215,10 @@ export class PickemsSurvivorLobbyComponent {
     this.survivorPickemsApi.updateUsername(this.currentUser.email, user).subscribe({
       next: () => {
         this.closeUsernameChangeModal();
-        this.successToast("", "Username updated successfully. Please refresh page");
+        this.successToast("", "Profile updated successfully. Please refresh page");
       },
       error: (err) => {
-        this.errorToast("", "The Pickems & Survivor Pool Game Server could not create an account for this user. Please try again.");
+        this.errorToast("", "The Pickems & Survivor Pool Game Server could not edit nickname for this user. Please try again.");
         console.error(err.message) // Displays error from service/interceptor
       }
     });
@@ -266,6 +267,7 @@ export class PickemsSurvivorLobbyComponent {
   }
 
   openUsernameChangeModal(): void {
+    this.avatarUploadComponent.refresh();
     this.usernameChangeElement.nativeElement.showModal();
   }
 

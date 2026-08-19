@@ -42,7 +42,7 @@ export class PickemsSurvivorGameComponent {
   public gameState: GameState; // nfl week rotates to the next on wednesdays at 2-3am. 
   public gamePhase: GameStatePhase; // Preseason / Reg Season / Post Season
   public gameSchedule: GameSchedule[];
-  public gameUsers: any[] = [];
+  public gameUsers: any[] = []; // fields: user_email, username, avatar_url
   public gamesUnlockDate: Date; // utility variable. in pre-season displays when games unlock.
 
   // survivor pool vars
@@ -495,10 +495,11 @@ export class PickemsSurvivorGameComponent {
   protected convertToPickemsScoreElement(entries: any[]) {
     this.pickemsScores = [];
     entries.forEach(entry => {
-      const username = this.getGameUserFromEmail(entry.owner).username;
+      const user = this.getGameUserFromEmail(entry.owner);
       this.pickemsScores.push({
         owner: entry.owner,
-        username: username,
+        username: user.username,
+        avatarUrl: user.avatar_url ?? Constants.PICKEMS_SURVIVOR_DEFAULT_AVATAR_URL,
         score: entry.total_score,
       });
     });
@@ -536,10 +537,12 @@ export class PickemsSurvivorGameComponent {
       }
 
       let winCount: number = survivorRecordByWeek.filter(record => record.outcome == "WIN").length;
+      const gameUser = this.getGameUserFromEmail(key);
 
       let newRow: SurvivorEntries = {
         playerEmail: key,
-        playerUsername: this.getGameUserFromEmail(key).username,
+        playerUsername: gameUser.username,
+        avatarUrl: gameUser.avatar_url ?? Constants.PICKEMS_SURVIVOR_DEFAULT_AVATAR_URL,
         winCount: winCount,
         week1: this.getSurvivorDbRowRecordWithWeek(rows, 1),
         week2: this.getSurvivorDbRowRecordWithWeek(rows, 2),

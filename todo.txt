@@ -3,6 +3,12 @@ CRITICAL
 - the allow/deny for nginx config /api/ is forbidden. Is this because SSR isnt being used?
 - test cron job + calling update scores
 
+AVATARS
+- make things look better on the edit profile modal
+- Switch imgs to loading="lazy"
+- use the new avatarUrl field on user
+- check file size in the image uploader class (onchange handler that checks filesize and prints error that blocks submit)
+
 MINOR
 - setup google client ids for SSO https://auth0.com/docs/authenticate/identity-providers/social-identity-providers/google
 - backup all pickems/survivor picks before updating scores
@@ -12,4 +18,4 @@ NICE TO HAVE
 - Improve the visuals of the survivor pool finished screen. Dont just use text
 - hide eliminated players toggle on the survivor pool 
 - calendar tasks button
-- avatar upload 
+- Pre-build a buy-back feature for survivor pool

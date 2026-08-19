@@ -25,10 +25,12 @@
                         <ng-container matColumnDef="username">
                             <th mat-header-cell *matHeaderCellDef class="score-table-cell"><span
                                     style="font-size: 18px;"><strong>Player</strong></span></th>
-                            <td mat-cell *matCellDef="let player" class="score-table-cell"><img
-                                    src="/avatars/{{player.email}}.png" alt="Player Avatar" width="30" height="30"
-                                    onerror="this.onerror=null; this.src='/assets/images/default_avatar.png';">
-                                {{player.username}} </td>
+                            <td mat-cell *matCellDef="let player" class="score-table-cell">
+                                <img src="{{player.avatarUrl}}" alt="" width="30" height="30" loading="lazy"
+                                    onerror="this.onerror=null; this.src='/assets/images/default_avatar.png';"
+                                    style="margin-right: 5px; vertical-align: middle;">
+                                {{player.username}}
+                            </td>
                         </ng-container>
 
                         <ng-container matColumnDef="score">

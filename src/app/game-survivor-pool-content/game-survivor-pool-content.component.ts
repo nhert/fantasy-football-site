@@ -208,13 +208,16 @@ export class GameSurvivorPoolContentComponent {
     return this.gameState.survivor_pool_outcome != "UNKNOWN";
   }
 
+  //TODO: THIS GETS CALLED MULTIPLE TIMES PER FRAME
   protected getListOfSurvivorPoolWinningUsernames() {
     if (this.gameState.survivor_pool_outcome != "UNKNOWN" && this.gameState.survivor_pool_winning_owners) {
       const arrayOfEmails = this.gameState.survivor_pool_winning_owners.split(",");
       const arrayOfUsernames = [];
 
+      //console.log("arrayOfEmails=");
+      //console.log(arrayOfEmails);
       for (var email of arrayOfEmails) {
-        arrayOfUsernames.push(this.getGameUserFromEmail(email).username);
+        arrayOfUsernames.push(this.getGameUserFromEmail(email)?.username);
       }
 
       return arrayOfUsernames.join(", ");

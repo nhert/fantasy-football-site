@@ -1,0 +1,15 @@
+.upload-button {
+    width: 250px;
+    background-color: var(--accent-color-2);
+    color: var(--text-color);
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+
+.upload-button:hover {
+    background-color: var(--accent-color);
+}
+
+.upload-button:disabled {
+    background-color: #ca5662;
+}

@@ -35,6 +35,7 @@ export interface GameUser {
 export interface SurvivorEntries {
     playerUsername: string;
     playerEmail: string;
+    avatarUrl: string;
     winCount: number;
     week1: SurvivorDbRow;
     week2: SurvivorDbRow;
@@ -120,6 +121,7 @@ export interface PickemsMatchupCache {
 
 export interface PickemsScore {
     owner: string,
+    avatarUrl: string,
     username: string,
     score: number
 }

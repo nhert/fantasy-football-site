@@ -12,8 +12,8 @@
                 <button *ngIf="isGameUserChecked && !isGameUserNeedsCreation && isGameReady" class="account-bar-button"
                     type="button" mat-button (click)="openUsernameChangeModal()">
                     <mat-icon
-                        style="vertical-align: middle; transform: scale(0.7); width: 30px">account_circle</mat-icon>
-                    <span class="account-bar-button-text">Edit Name</span>
+                        style="vertical-align: middle; transform: scale(0.7); width: 25px">account_circle</mat-icon>
+                    <span class="account-bar-button-text">Profile</span>
                 </button>
                 <button class="account-bar-button" type="button" mat-button (click)="openHelpModal()">
                     <mat-icon style="vertical-align: middle; transform: scale(0.7); width: 25px">help</mat-icon>
@@ -248,14 +248,16 @@
 
 <dialog #usernameChangeModal class="username-change-box">
     <div class="username-change-content">
-        <h2>Username Change</h2>
+        <h2>Edit Profile</h2>
 
-        <pickems-survivor-image-uploader [currentUser]="currentUser"></pickems-survivor-image-uploader>
+        <!-- <ng-container> -->
+        <pickems-survivor-image-uploader #avatarUploader [currentUser]="currentUser"></pickems-survivor-image-uploader>
+        <!-- </ng-container> -->
 
         <form [formGroup]="userForm" (ngSubmit)="changeAccountUsername()">
             <div class="form-group">
-                <input type="text" id="username" formControlName="username" placeholder="Enter nickname"
-                    style="width: 200px; height: 40px; font-size: 16px; margin-bottom: 10px;" />
+                <input type="text" id="username" formControlName="username" placeholder="Enter nickname ..."
+                    style="width: 250px; height: 40px; font-size: 16px; margin-bottom: 5px;" />
 
                 <!-- Validation Error Messages -->
                 @if ((username?.invalid)) {
@@ -279,11 +281,11 @@
                 }
             </div>
 
-            <div style="height: 20px;"></div>
+            <div style="height: 10px;"></div>
 
             <!-- Disable button if the form fails validation -->
-            <button type="submit" [disabled]="userForm.invalid" class="username-change-button">Submit</button>
-            <button type="button" (click)="closeUsernameChangeModal()" class="username-change-button">Cancel</button>
+            <button type="submit" [disabled]="userForm.invalid" class="username-change-button">Save Nickname</button>
+            <button type="button" (click)="closeUsernameChangeModal()" class="username-change-button">Close</button>
         </form>
     </div>
 </dialog>

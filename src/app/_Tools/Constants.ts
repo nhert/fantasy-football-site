@@ -27,6 +27,8 @@ export class Constants {
 		errorPath: '/callback',
 	}
 	static PICKEMS_SURVIVOR_AVATAR_FOLDER: string = "/avatars/";
+	static PICKEMS_SURVIVOR_AVATAR_MAX_FILESIZE = 5 * 1024 * 1024;
+	static PICKEMS_SURVIVOR_DEFAULT_AVATAR_URL: string = "/assets/images/default_avatar.png";
 	static PICKEMS_SURVIVOR_SKIP_AUTH: boolean = true; // FALSE IN PRODUCTION MODE. skip auth0 login
 	static PICKEMS_SURVIVOR_IN_LOCAL_TESTING_MODE: boolean = false; // FALSE IN PRODUCTION MODE. set to false for (nginx) deployment.
 
