@@ -44,8 +44,16 @@ server {
   # Serve users files that have been uploaded
   location /avatars/ {
         alias /var/www/b3fl_db/pickems-survivor-db/avatar_uploads/;
-        expires 1d;                # Optional: cache images in the browser for better performance
-        add_header Cache-Control "public, no-transform";
-        try_files $uri =404;        # Return 404 if the image file doesn't exist on disk
+
+        # Optional: cache images in the browser for better performance
+        # expires 5m;
+        # expires 1d;
+
+        # Disable NGINX-managed file expiration and Instruct browsers and proxies never to cache these files
+        expires off;
+        add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0";
+
+        # Return 404 if the image file doesn't exist on disk
+        try_files $uri =404;
   }
 }

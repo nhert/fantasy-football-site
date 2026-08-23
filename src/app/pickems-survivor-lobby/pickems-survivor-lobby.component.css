@@ -51,6 +51,12 @@
     align-items: center;
     justify-content: center;
     display: inline-flex;
+    background-color: #cccccc;
+    color: #242424;
+}
+
+.account-bar-button:hover {
+    background-color: #8f8e8e;
 }
 
 .account-bar-button-text {
@@ -175,6 +181,28 @@ p {
     overflow-y: auto;
 }
 
+.profile-edit-card {
+    background-color: var(--accent-color);
+    position: relative;
+    width: 100%;
+}
+
+.profile-edit-card-heading {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 5px;
+}
+
+.profile-edit-close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    background-color: var(--accent-color-2);
+    color: var(--text-color);
+}
+
 .username-change-box {
     border: none;
     border-radius: 8px;
@@ -202,6 +230,7 @@ p {
     text-align: center;
     flex-direction: column;
     gap: 12px;
+    position: relative;
 }
 
 .username-change-button {
@@ -212,7 +241,7 @@ p {
 }
 
 .username-change-button:hover {
-    background-color: var(--accent-color);
+    background-color: #3d3d3d;
 }
 
 .username-change-button:disabled {

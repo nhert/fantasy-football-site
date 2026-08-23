@@ -7,6 +7,10 @@
             <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Info"
                 [shouldDisplay]="isGameStateLoaded && gamePhase==0"
                 [message]="`Fantasy season hasn\'t started yet! Pick'ems & Survivor Pool will unlock at ${this.gamesUnlockDate}`"></app-pickems-survivor-warning-info-box>
+            <!-- <ng-container *ngIf="isGameStateLoaded && gamePhase==0">
+                <pickems-survivor-timer [gameState]="gameState"
+                    [currentUserEliminated]="false"></pickems-survivor-timer>
+            </ng-container> -->
         </div>
 
         <!-- user loaded the game state in-season -->

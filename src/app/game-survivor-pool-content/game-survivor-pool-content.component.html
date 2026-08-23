@@ -1,6 +1,6 @@
 <ng-container *ngIf="isTablePrepared">
 
-    <ng-container *ngIf="demoMode">
+    <ng-container *ngIf="demoMode && showDemoModeEnabled">
         <mat-expansion-panel style="width: 350px; background-color:chocolate; margin-bottom: 10px;">
             <mat-expansion-panel-header>
                 <mat-panel-title>
@@ -13,14 +13,14 @@
 
             <div mat-subheader>Hover mouse over button to see what it does</div>
             <mat-action-row class="demo-action-row">
-                <button mat-raised-button style="background-color: white; color: black;"
+                <button style="background-color: white; color: black;"
                     matTooltip="Click to move the current NFL week forward and process win/loss for each survivor entry"
                     (click)="demoNextWeek.emit()">Move
                     to Next Week</button>
-                <button mat-raised-button style="background-color: white; color: black;"
+                <button style="background-color: white; color: black;"
                     matTooltip="Click to reset the Survivor Pool to it's starting values"
                     (click)="demoReset.emit()">Reset</button>
-                <button mat-raised-button style="background-color: white; color: black;"
+                <button style="background-color: white; color: black;"
                     matTooltip="Click to set the current time to 20s before the timer expires"
                     (click)="demoTestTimer.emit()">Test Timer Expiry</button>
             </mat-action-row>
@@ -104,7 +104,7 @@
                         class="survivor-table-player-name-cell">
                         <img src="{{element.avatarUrl}}" alt="" width="40" height="40" loading="lazy"
                             onerror="this.onerror=null; this.src='/assets/images/default_avatar.png';"
-                            style="margin-right: 5px;">
+                            style="margin-right: 10px;">
                         <span>{{element.playerUsername}}</span>
                     </mat-cell>
                 </ng-container>

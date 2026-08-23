@@ -3,14 +3,7 @@ CRITICAL
 - the allow/deny for nginx config /api/ is forbidden. Is this because SSR isnt being used?
 - test cron job + calling update scores
 
-AVATARS
-- make things look better on the edit profile modal
-- Switch imgs to loading="lazy"
-- use the new avatarUrl field on user
-- check file size in the image uploader class (onchange handler that checks filesize and prints error that blocks submit)
-
 MINOR
-- setup google client ids for SSO https://auth0.com/docs/authenticate/identity-providers/social-identity-providers/google
 - backup all pickems/survivor picks before updating scores
 - refactor how this.selectedWeek is used for verification - instead of relying on current week selector value need to check value of the current loaded matchups week
 
@@ -19,3 +12,4 @@ NICE TO HAVE
 - hide eliminated players toggle on the survivor pool 
 - calendar tasks button
 - Pre-build a buy-back feature for survivor pool
+- light dark mode for live scores

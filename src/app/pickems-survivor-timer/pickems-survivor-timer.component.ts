@@ -99,7 +99,7 @@ export class PickemsSurvivorTimerComponent {
   private handleContestEnd() {
     if (this.timerSub) this.timerSub.unsubscribe();
     this.isExpired = true;
-    this.disableUiComponents.emit();
+    this.disableUiComponents?.emit();
   }
 
   protected getCurrentWeek() {

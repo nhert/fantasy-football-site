@@ -37,6 +37,7 @@ import { Constants } from '../_Tools/Constants';
 import { RouterModule } from '@angular/router';
 import { TopBarComponent } from "../top-bar/top-bar.component";
 import { FooterComponent } from "../footer/footer.component";
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-nav-menu',
@@ -75,9 +76,10 @@ import { FooterComponent } from "../footer/footer.component";
     MatNativeDateModule,
     RouterModule,
     TopBarComponent,
-    FooterComponent
+    FooterComponent,
+    CommonModule
   ]
 })
 export class NavMenuComponent {
-
+  showDemo: boolean = Constants.PICKEMS_SURVIVOR_SHOW_DEMO_MODE;
 }

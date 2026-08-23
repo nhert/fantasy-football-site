@@ -250,42 +250,56 @@
     <div class="username-change-content">
         <h2>Edit Profile</h2>
 
-        <!-- <ng-container> -->
-        <pickems-survivor-image-uploader #avatarUploader [currentUser]="currentUser"></pickems-survivor-image-uploader>
-        <!-- </ng-container> -->
+        <mat-card class="profile-edit-card">
+            <mat-card-content>
+                <h5 class="profile-edit-card-heading">Avatar</h5>
+                <ng-container>
+                    <pickems-survivor-image-uploader #avatarUploader
+                        [currentUser]="currentUser"></pickems-survivor-image-uploader>
+                </ng-container>
+            </mat-card-content>
+        </mat-card>
 
-        <form [formGroup]="userForm" (ngSubmit)="changeAccountUsername()">
-            <div class="form-group">
-                <input type="text" id="username" formControlName="username" placeholder="Enter nickname ..."
-                    style="width: 250px; height: 40px; font-size: 16px; margin-bottom: 5px;" />
+        <mat-card class="profile-edit-card">
+            <mat-card-content>
+                <h5 class="profile-edit-card-heading">Nickname</h5>
+                <form [formGroup]="userForm" (ngSubmit)="changeAccountUsername()">
+                    <div style="margin-top: 20px;">
+                        <input type="text" id="username" formControlName="username" placeholder="Enter nickname ..."
+                            style="width: 250px; height: 40px; font-size: 16px; margin-bottom: 5px;" />
 
-                <!-- Validation Error Messages -->
-                @if ((username?.invalid)) {
-                <div class="error-container">
-                    @if (username?.hasError('required')) {
-                    <p class="error-text">Nickname is required.</p>
-                    }
-                    @if (username?.hasError('minlength')) {
-                    <p class="error-text">Nickname must be at least 3 characters long.</p>
-                    }
-                    @if (username?.hasError('maxlength')) {
-                    <p class="error-text">Nickname must be 14 or less characters long.</p>
-                    }
-                    @if (username?.hasError('pattern')) {
-                    <p class="error-text">Nickname can only contain letters and numbers.</p>
-                    }
-                    @if (username?.hasError('uniqueUsername')) {
-                    <p class="error-text">Nickname has already been taken.</p>
-                    }
-                </div>
-                }
-            </div>
+                        <!-- Validation Error Messages -->
+                        @if ((username?.invalid)) {
+                        <div class="error-container">
+                            @if (username?.hasError('required')) {
+                            <p class="error-text">Nickname is required.</p>
+                            }
+                            @if (username?.hasError('minlength')) {
+                            <p class="error-text">Nickname must be at least 3 characters long.</p>
+                            }
+                            @if (username?.hasError('maxlength')) {
+                            <p class="error-text">Nickname must be 14 or less characters long.</p>
+                            }
+                            @if (username?.hasError('pattern')) {
+                            <p class="error-text">Nickname can only contain letters and numbers.</p>
+                            }
+                            @if (username?.hasError('uniqueUsername')) {
+                            <p class="error-text">Nickname has already been taken.</p>
+                            }
+                        </div>
+                        }
+                    </div>
 
-            <div style="height: 10px;"></div>
+                    <div style="height: 10px;"></div>
 
-            <!-- Disable button if the form fails validation -->
-            <button type="submit" [disabled]="userForm.invalid" class="username-change-button">Save Nickname</button>
-            <button type="button" (click)="closeUsernameChangeModal()" class="username-change-button">Close</button>
-        </form>
+                    <!-- Disable button if the form fails validation -->
+                    <button type="submit" [disabled]="userForm.invalid" class="username-change-button">Save
+                        Nickname</button>
+                </form>
+            </mat-card-content>
+        </mat-card>
+
+        <button type="button" (click)="closeUsernameChangeModal()"
+            class="profile-edit-close-button"><mat-icon>close</mat-icon></button>
     </div>
 </dialog>

@@ -7,7 +7,6 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatTabsModule } from "@angular/material/tabs";
 import { GameSurvivorPoolContentComponent } from "../game-survivor-pool-content/game-survivor-pool-content.component";
 import { GamePickemsContentComponent, PickemsPickStatus } from "../game-pickems-content/game-pickems-content.component";
-import { GamePickemsStandingsContentComponent } from "../game-pickems-standings-content/game-pickems-standings-content.component";
 import { GameSchedule, GameState, GameUser, PickemsDbRow, PickemsMatchup, PickemsMatchupCache, PickemsScore, SurvivorDbRow, SurvivorEntries, UnderdogStatus } from '../_Models/survivor.pickems.models';
 import { MatTableDataSource } from '@angular/material/table';
 import { firstValueFrom, forkJoin, Observable } from 'rxjs';
@@ -15,6 +14,7 @@ import { Constants } from '../_Tools/Constants';
 import { SimpleSpinnerComponent } from "../simple-spinner/simple-spinner.component";
 import { DisplayMode, PickemsSurvivorWarningInfoBoxComponent } from "../pickems-survivor-warning-info-box/pickems-survivor-warning-info-box.component";
 import { PickemsSurvivorCalendarComponent } from "../pickems-survivor-calendar/pickems-survivor-calendar.component";
+import { PickemsSurvivorTimerComponent } from "../pickems-survivor-timer/pickems-survivor-timer.component";
 
 enum GameStatePhase {
   PreSeason, InSeason, PostSeason

@@ -3,10 +3,11 @@ import { SurvivorPickemsApiService } from '../_API/survivor-pickems-api.service'
 import { GameUser } from '../_Models/survivor.pickems.models';
 import { Constants } from '../_Tools/Constants';
 import { CommonModule } from '@angular/common';
+import { SimpleSpinnerComponent } from "../simple-spinner/simple-spinner.component";
 
 @Component({
   selector: 'pickems-survivor-image-uploader',
-  imports: [CommonModule],
+  imports: [CommonModule, SimpleSpinnerComponent],
   templateUrl: './pickems-survivor-image-uploader.component.html',
   styleUrl: './pickems-survivor-image-uploader.component.css'
 })
@@ -18,6 +19,7 @@ export class PickemsSurvivorImageUploaderComponent {
   avatarUploadResponse: string = "";
 
   showCurSelectedImage: boolean = false;
+  hasUploadError: boolean = false;
   avatarUploadSuccess: boolean = false;
   isUploading: boolean;
 
@@ -32,6 +34,7 @@ export class PickemsSurvivorImageUploaderComponent {
   }
 
   onFileSelected(event: any) {
+    this.hasUploadError = false;
     const input = event.target as HTMLInputElement;
 
     if (input.files && input.files[0]) {
@@ -40,6 +43,7 @@ export class PickemsSurvivorImageUploaderComponent {
       if (file.size > Constants.PICKEMS_SURVIVOR_AVATAR_MAX_FILESIZE) {
         this.setUploadResponse('Upload Failure', "File size larger than 5MB", false);
         input.value = null; // Reset the input field
+        this.hasUploadError = true;
         return;
       }
 

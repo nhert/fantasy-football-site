@@ -67,6 +67,7 @@ export class GamePickemsContentComponent {
   isPickemsEntriesLoading: boolean = false; // when user changes the values in profile/week selector, this determines whether the pickems reload is complete.
   passedDeadlineDisableUi: boolean = false;
   userMadePickNoPageRefreshYet: boolean = false;
+  showDemoModeEnabled: boolean = Constants.PICKEMS_SURVIVOR_SHOW_DEMO_MODE;
 
   public StatusEnum = PickemsPickStatus;
   public DisplayModeEnum = DisplayMode;

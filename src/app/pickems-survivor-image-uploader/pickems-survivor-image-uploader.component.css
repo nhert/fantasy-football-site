@@ -7,7 +7,7 @@
 }
 
 .upload-button:hover {
-    background-color: var(--accent-color);
+    background-color: #3d3d3d;
 }
 
 .upload-button:disabled {

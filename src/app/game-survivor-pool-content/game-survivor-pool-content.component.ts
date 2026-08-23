@@ -62,6 +62,7 @@ export class GameSurvivorPoolContentComponent {
   isLoading: boolean = false;
   passedDeadlineDisableUi: boolean = false;
   didUserSuccessfullySubmit: boolean = false;
+  showDemoModeEnabled: boolean = Constants.PICKEMS_SURVIVOR_SHOW_DEMO_MODE;
 
   constructor(private survivorPickemsApi: SurvivorPickemsApiService) { }
 

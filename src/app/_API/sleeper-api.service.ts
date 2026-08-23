@@ -409,8 +409,9 @@ export class SleeperApiService {
 
 	public async getLiveScores(cacheData) {
 		const nflState = await fetch(this.getNflStateRestAPI()).then((res) => res.json());
-		//console.log(nflState);
+		console.log(nflState);
 		var currentNflWeek = nflState.week;
+		var currentNflSeasonType = nflState.season_type; // "pre" for preseason, etc
 
 		var aLeagueMatchups = [];
 		var bLeagueMatchups = [];
@@ -423,12 +424,12 @@ export class SleeperApiService {
 		var numALeagueMatchups = Math.floor(aLeagueMatchupData.length / 2);
 		var numBLeagueMatchups = Math.floor(bLeagueMatchupData.length / 2);
 
-		if (aLeagueMatchupData.length == 0 || bLeagueMatchupData.length == 0) {
+		if (aLeagueMatchupData.length == 0 || bLeagueMatchupData.length == 0 || currentNflSeasonType == "pre") {
 			return {
 				dataAvailable: false,
 				nflData: {
 					year: nflState.league_season,
-					week: currentNflWeek
+					week: 0
 				}
 			}
 		}

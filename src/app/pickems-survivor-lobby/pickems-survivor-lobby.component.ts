@@ -15,11 +15,12 @@ import { Constants } from '../_Tools/Constants';
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { ToastrService } from 'ngx-toastr';
 import { PickemsSurvivorImageUploaderComponent } from "../pickems-survivor-image-uploader/pickems-survivor-image-uploader.component";
+import { MatCardModule } from "@angular/material/card";
 
 @Component({
   selector: 'app-pickems-survivor-lobby',
   standalone: true,
-  imports: [CommonModule, SimpleSpinnerComponent, MatIcon, FormsModule, ReactiveFormsModule, MatToolbarModule, PickemsSurvivorGameComponent, MatCheckboxModule, PickemsSurvivorImageUploaderComponent],
+  imports: [CommonModule, SimpleSpinnerComponent, MatIcon, FormsModule, ReactiveFormsModule, MatToolbarModule, PickemsSurvivorGameComponent, MatCheckboxModule, PickemsSurvivorImageUploaderComponent, MatCardModule],
   templateUrl: './pickems-survivor-lobby.component.html',
   styleUrl: './pickems-survivor-lobby.component.css'
 })
@@ -211,6 +212,8 @@ export class PickemsSurvivorLobbyComponent {
       email: this.currentUser.email,
       username: this.username.value
     }
+    if (!user.username || user.username == "") return;
+
     this.currentUser.username = this.username.value;
     this.survivorPickemsApi.updateUsername(this.currentUser.email, user).subscribe({
       next: () => {
