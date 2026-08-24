@@ -177,6 +177,14 @@ p {
     /* Keeps bullets aligned with centered text */
 }
 
+.help-content-sublist ul {
+    padding-left: 25px;
+}
+
+.help-content-sublist li {
+    padding-bottom: 5px;
+}
+
 .help-scroll-area {
     overflow-y: auto;
 }

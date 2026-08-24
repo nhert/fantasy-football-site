@@ -3,14 +3,22 @@
         <simple-spinner [loading]="!isGameStateLoaded" [hideRefreshTip]="true"
             [title]="'Loading game data ...'"></simple-spinner>
 
-        <div style="margin-left: 20px; margin-right: 20px;">
+        <div style="margin-left: 20px; margin-right: 20px;" *ngIf="isGameStateLoaded && gamePhase==0">
             <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Info"
                 [shouldDisplay]="isGameStateLoaded && gamePhase==0"
                 [message]="`Fantasy season hasn\'t started yet! Pick'ems & Survivor Pool will unlock at ${this.gamesUnlockDate}`"></app-pickems-survivor-warning-info-box>
-            <!-- <ng-container *ngIf="isGameStateLoaded && gamePhase==0">
-                <pickems-survivor-timer [gameState]="gameState"
-                    [currentUserEliminated]="false"></pickems-survivor-timer>
-            </ng-container> -->
+            <!-- <pickems-survivor-timer [gameState]="gameState"
+                    [currentUserEliminated]="false"></pickems-survivor-timer> -->
+            <ng-container *ngIf="gameUsers && gameUsers.length > 0">
+                <div style="height: 20px;"></div>
+                <h3>Registered Players</h3>
+                @for (item of gameUsers; track item.user_email) {
+                <span style="font-size: 18px;"><img src="{{item.avatarUrl}}" alt="" width="50" height="50"
+                        loading="lazy" onerror="this.onerror=null; this.src='/assets/images/default_avatar.png';"
+                        style="margin-right: 10px; vertical-align: middle;">{{ item.username }}</span>
+                <br>
+                }
+            </ng-container>
         </div>
 
         <!-- user loaded the game state in-season -->

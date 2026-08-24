@@ -124,11 +124,6 @@ export class PickemsSurvivorGameComponent {
     const year = state.season;
     let server_time_utc_iso = time.server_time;
 
-    /*
-      Testing values for server time
-
-      2026-12-11T01:14:40.000Z  - 20 seconds before cutoff time week 14
-    */
     if (this.demoMode) {
       console.log("RESETTING SERVER TIME FOR DEMO MODE");
       // nflStateWeek = 0;
@@ -143,7 +138,7 @@ export class PickemsSurvivorGameComponent {
       console.log("Pickems/Survivor Pool page has been loaded pre-season");
       this.gamePhase = GameStatePhase.PreSeason;
       this.gamesUnlockDate = new Date(scheduleEntries[0].start_datetime);
-      this.isGameStateLoaded = true;
+      this.getPreSeasonGameUsers();
     }
     // Its the fantasy regular season 
     else {
@@ -171,12 +166,22 @@ export class PickemsSurvivorGameComponent {
         survivor_pool_winning_week: survivorPickemsState.survivor_pool_winning_week
       }
 
-      //console.log("state set");
-      //console.log(this.gameState.server_current_datetime_iso + " -> " + new Date(this.gameState.server_current_datetime_iso));
-      //console.log(this.gameState.current_cutoff_datetime_iso + " -> " + new Date(this.gameState.current_cutoff_datetime_iso));
-
       this.getGameUsers();
     }
+  }
+
+  // For display, show who has registered before season kicks off
+  getPreSeasonGameUsers() {
+    this.gameUsers = [];
+
+    this.survivorPickemsApi.getAllUsers().subscribe(users => {
+      const gameUsersNonDemo = users.gameUsers.filter(user => user.is_demo_user == 0);
+      gameUsersNonDemo.forEach(user => {
+        this.gameUsers.push(user);
+      });
+
+      this.isGameStateLoaded = true;
+    });
   }
 
   getGameUsers() {
@@ -643,6 +648,7 @@ export class PickemsSurvivorGameComponent {
 
   protected setPickemsCurrentSelectorValuesToDefault() {
     this.pickemsCurrentProfileSelectorValue = this.gameUsers.find(user => user.user_email == this.currentUser.email);
+    console.log(this.gameState.week);
     this.pickemsCurrentWeekSelectorValue = this.gameState.week;
   }
 
