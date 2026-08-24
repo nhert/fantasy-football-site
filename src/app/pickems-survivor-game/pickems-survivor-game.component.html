@@ -1,7 +1,6 @@
 <div class="game-container">
     <ng-container *ngIf="currentUser">
-        <simple-spinner [loading]="!isGameStateLoaded" [hideRefreshTip]="true"
-            [title]="'Loading game data ...'"></simple-spinner>
+        <simple-spinner [loading]="!isGameStateLoaded" [title]="'Loading game data ...'"></simple-spinner>
 
         <div style="margin-left: 20px; margin-right: 20px;" *ngIf="isGameStateLoaded && gamePhase==0">
             <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Info"
@@ -16,7 +15,7 @@
                 <span style="font-size: 18px;"><img src={{item.avatar_url}} alt="" width="50" height="50" loading="lazy"
                         onerror="this.onerror=null; this.src='/assets/images/default_avatar.png';"
                         style="margin-right: 10px; vertical-align: middle;">{{ item.username }}</span>
-                <br>
+                <div style="height: 10px;"></div>
                 }
             </ng-container>
         </div>
