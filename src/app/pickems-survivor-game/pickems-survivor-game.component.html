@@ -13,8 +13,8 @@
                 <div style="height: 20px;"></div>
                 <h3>Registered Players</h3>
                 @for (item of gameUsers; track item.user_email) {
-                <span style="font-size: 18px;"><img src="{{item.avatarUrl}}" alt="" width="50" height="50"
-                        loading="lazy" onerror="this.onerror=null; this.src='/assets/images/default_avatar.png';"
+                <span style="font-size: 18px;"><img src="item.avatarUrl" alt="" width="50" height="50" loading="lazy"
+                        onerror="this.onerror=null; this.src='/assets/images/default_avatar.png';"
                         style="margin-right: 10px; vertical-align: middle;">{{ item.username }}</span>
                 <br>
                 }
