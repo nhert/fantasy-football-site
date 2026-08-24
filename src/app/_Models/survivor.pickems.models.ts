@@ -87,6 +87,7 @@ export interface PickemsMatchup {
     league_type: string,
     allow_pick: boolean,
     pickems_score: number,
+    matchup_id: string,
 
     manager_1_sleeper_id: string,
     manager_1_real_name: string,

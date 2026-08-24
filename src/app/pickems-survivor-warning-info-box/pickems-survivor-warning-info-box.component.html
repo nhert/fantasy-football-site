@@ -31,6 +31,17 @@
     </div>
 </ng-container>
 
+<ng-container *ngIf="displayModeGreen">
+    <div class="container" *ngIf="shouldDisplay">
+        <mat-card class="green mat-elevation-z0">
+            <mat-card-content style="padding: 0; padding-left: 25px; padding-right: 25px;">
+                <mat-icon inline="true" style="margin-right: 3px;">check_circle</mat-icon>
+                {{message}}
+            </mat-card-content>
+        </mat-card>
+    </div>
+</ng-container>
+
 <ng-container *ngIf="displayModeGeneric">
     <div class="container" *ngIf="shouldDisplay">
         <mat-card class="generic mat-elevation-z0">

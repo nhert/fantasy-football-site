@@ -49,18 +49,18 @@
                     <div class="pick-double-triple-button-container"
                         *ngIf="matchup.allow_pick && !isCurrentWeekAndPassedDeadline() && !isPickemsCurrentlyLoading()">
                         <button type="button" class="pick-button"
-                            (click)="onClickMakePick(matchup.manager_1_sleeper_id)">
+                            (click)="onClickMakePick(matchup.matchup_id, matchup.manager_1_sleeper_id)">
                             <mat-icon
                                 style="vertical-align: middle; transform: scale(1.1); width: 40px">check_box</mat-icon>
                             <span style="font-size: 15px;"><strong>Pick</strong></span>
                         </button>
                         <div class="double-triple-button-group">
                             <button type="button" class="double-down-button" *ngIf="hasDoubleDownAvailable()"
-                                (click)="onClickDoubleDown(matchup.manager_1_sleeper_id)">
+                                (click)="onClickDoubleDown(matchup.matchup_id, matchup.manager_1_sleeper_id)">
                                 <mat-icon style="transform: scale(1.1); flex:none">looks_two</mat-icon>
                             </button>
                             <button type="button" class="triple-down-button" *ngIf="hasTripleDownAvailable()"
-                                (click)="onClickTripleDown(matchup.manager_1_sleeper_id)">
+                                (click)="onClickTripleDown(matchup.matchup_id, matchup.manager_1_sleeper_id)">
                                 <mat-icon style="transform: scale(1.1); flex:none">looks_3</mat-icon>
                             </button>
                         </div>
@@ -94,18 +94,18 @@
                     <div class="pick-double-triple-button-container"
                         *ngIf="matchup.allow_pick && !isCurrentWeekAndPassedDeadline() && !isPickemsCurrentlyLoading()">
                         <button type="button" class="pick-button"
-                            (click)="onClickMakePick(matchup.manager_2_sleeper_id)">
+                            (click)="onClickMakePick(matchup.matchup_id, matchup.manager_2_sleeper_id)">
                             <mat-icon
                                 style="vertical-align: middle; transform: scale(1); width: 40px">check_box</mat-icon>
                             <span style="font-size: 15px;"><strong>Pick</strong></span>
                         </button>
                         <div class="double-triple-button-group">
                             <button type="button" class="double-down-button" *ngIf="hasDoubleDownAvailable()"
-                                (click)="onClickDoubleDown(matchup.manager_2_sleeper_id)">
+                                (click)="onClickDoubleDown(matchup.matchup_id, matchup.manager_2_sleeper_id)">
                                 <mat-icon style="transform: scale(1); flex:none">looks_two</mat-icon>
                             </button>
                             <button type="button" class="triple-down-button" *ngIf="hasTripleDownAvailable()"
-                                (click)="onClickTripleDown(matchup.manager_2_sleeper_id)">
+                                (click)="onClickTripleDown(matchup.matchup_id, matchup.manager_2_sleeper_id)">
                                 <mat-icon style="transform: scale(1); flex:none">looks_3</mat-icon>
                             </button>
                         </div>

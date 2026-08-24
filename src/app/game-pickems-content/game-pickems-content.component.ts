@@ -132,11 +132,18 @@ export class GamePickemsContentComponent {
       && this.numberOfMissingPicksForCurrentUserCurrentLoadedWeek > 0
       && this.selectedWeek == this.gameState.week;
   }
+  get shouldShowGreenPicksAllMade() {
+    return !this.passedDeadlineDisableUi
+      && this.isCurrentUserSelectedInProfileDropdown()
+      && this.numberOfMissingPicksForCurrentUserCurrentLoadedWeek == 0
+      && this.selectedWeek == this.gameState.week;
+  }
   get shouldShowWarningNotRegistered() {
     return !this.passedDeadlineDisableUi
       && this.isCurrentUserSelectedInProfileDropdown()
       && !this.activeEmails.includes(this.currentUser.email)
-      && (this.numberOfMissingPicksForCurrentUserCurrentLoadedWeek == TOTAL_MATCHUP_COUNT);
+      && (this.numberOfMissingPicksForCurrentUserCurrentLoadedWeek == TOTAL_MATCHUP_COUNT)
+      && this.selectedWeek == this.gameState.week;
   }
   get numberOfMissingPicksForCurrentUserCurrentLoadedWeek() {
     return this.weeklyMatchups.filter(matchup => matchup.manager_1_pick_status == PickemsPickStatus.NONE && matchup.manager_2_pick_status == PickemsPickStatus.NONE).length;
@@ -163,9 +170,14 @@ export class GamePickemsContentComponent {
     return this.selectedWeek <= this.gameState.last_processed_week;
   }
 
-  protected trySubmitPickemsPick(choice_sleeper_id: string) {
+  protected trySubmitPickemsPick(pickPayload: any) {
     if (this.isPickLoading) return;
-    if (!choice_sleeper_id) return;
+
+    console.log(pickPayload);
+
+    if (!pickPayload) return;
+    const matchup_id = pickPayload.matchup_id, choice_sleeper_id = pickPayload.sleeper_id;
+    if (!choice_sleeper_id || !matchup_id) return;
 
     const choice_gm_name: string = Constants.USERS.find(user => user.sleeperId_current == choice_sleeper_id)?.name;
     if (!choice_gm_name) return;
@@ -179,14 +191,14 @@ export class GamePickemsContentComponent {
 
       // latest server UTC timestamp is before the cutoff time
       if (curServerTimeUTC < this.gameState.current_cutoff_datetime_utc_iso) {
-        this.survivorPickemsApi.makePickemsEntryForUser(this.currentUser.email, this.selectedWeek, choice_sleeper_id, choice_gm_name).subscribe({
+        this.survivorPickemsApi.makePickemsEntryForUser(this.currentUser.email, this.selectedWeek, matchup_id, choice_sleeper_id, choice_gm_name).subscribe({
           next: () => {
             this.reloadUIAfterMakePick(choice_sleeper_id, false, false);
             this.successToast('Saved Successfully', `You picked ${choice_gm_name} for week ${this.selectedWeek}!`);
             this.isPickLoading = false;
           },
           error: (err) => {
-            this.errorToast('Error While Saving', err.message);
+            this.errorToast('Error While Saving', err.error.error);
             this.isPickLoading = false;
           }
         });
@@ -197,17 +209,20 @@ export class GamePickemsContentComponent {
     });
   }
 
-  protected trySubmitPickemsDoublePick(choice_sleeper_id: string) {
-    this.trySubmitPickemsBonusPick(choice_sleeper_id, true, false);
+  protected trySubmitPickemsDoublePick(pickPayload: any) {
+    this.trySubmitPickemsBonusPick(pickPayload, true, false);
   }
 
-  protected trySubmitPickemsTriplePick(choice_sleeper_id: string) {
-    this.trySubmitPickemsBonusPick(choice_sleeper_id, false, true);
+  protected trySubmitPickemsTriplePick(pickPayload: any) {
+    this.trySubmitPickemsBonusPick(pickPayload, false, true);
   }
 
-  private trySubmitPickemsBonusPick(choice_sleeper_id, isDouble, isTriple) {
+  private trySubmitPickemsBonusPick(pickPayload, isDouble, isTriple) {
     if (this.isPickLoading) return;
-    if (!choice_sleeper_id) return;
+
+    if (!pickPayload) return;
+    const matchup_id = pickPayload.matchup_id, choice_sleeper_id = pickPayload.sleeper_id;
+    if (!choice_sleeper_id || !matchup_id) return;
 
     const choice_gm_name: string = Constants.USERS.find(user => user.sleeperId_current == choice_sleeper_id)?.name;
     if (!choice_gm_name) return;
@@ -221,7 +236,7 @@ export class GamePickemsContentComponent {
 
       // latest server UTC timestamp is before the cutoff time
       if (curServerTimeUTC < this.gameState.current_cutoff_datetime_utc_iso) {
-        this.survivorPickemsApi.makePickemsEntryWithBonusesForUser(this.currentUser.email, this.selectedWeek, choice_sleeper_id, choice_gm_name, isDouble, isTriple).subscribe({
+        this.survivorPickemsApi.makePickemsEntryWithBonusesForUser(this.currentUser.email, this.selectedWeek, matchup_id, choice_sleeper_id, choice_gm_name, isDouble, isTriple).subscribe({
           next: () => {
             this.reloadUIAfterMakePick(choice_sleeper_id, isDouble, isTriple);
             if (isDouble) {
@@ -232,7 +247,7 @@ export class GamePickemsContentComponent {
             this.isPickLoading = false;
           },
           error: (err) => {
-            this.errorToast('Error While Saving', err.message);
+            this.errorToast('Error While Saving', err.error.error);
             this.isPickLoading = false;
           }
         });
@@ -266,7 +281,7 @@ export class GamePickemsContentComponent {
             this.isPickLoading = false;
           },
           error: (err) => {
-            this.errorToast('Error While Saving', err.message);
+            this.errorToast('Error While Saving', err.error.error);
             this.isPickLoading = false;
           }
         });

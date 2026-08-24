@@ -45,6 +45,10 @@
                     [shouldDisplay]="shouldShowWarningToMakePick"
                     [message]="'You have not submitted all your picks yet this week'"></app-pickems-survivor-warning-info-box>
 
+                <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Green"
+                    [shouldDisplay]="shouldShowGreenPicksAllMade"
+                    [message]="'You have submitted all your picks this week'"></app-pickems-survivor-warning-info-box>
+
                 <div class="pickems-inputs">
                     <mat-form-field style="padding-top: 20px; max-width: 180px;">
                         <mat-label>Choose a Profile</mat-label>

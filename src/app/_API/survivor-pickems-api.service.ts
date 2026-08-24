@@ -104,16 +104,18 @@ export class SurvivorPickemsApiService {
         return this.http.get(this.pickemsApiUrl + "/delete/" + userEmail + "/" + week + "/" + choice_sleeper_id);
     }
 
-    makePickemsEntryForUser(userEmail: string, week: number, choice_sleeper_id: string, choice_gm_name: string): Observable<any> {
+    makePickemsEntryForUser(userEmail: string, week: number, matchup_id: string, choice_sleeper_id: string, choice_gm_name: string): Observable<any> {
         let userChoiceJson = {
+            matchup_id: matchup_id,
             choice_sleeper_id: choice_sleeper_id,
             choice_gm_name: choice_gm_name
         }
         return this.http.post(this.pickemsApiUrl + "/make_pick/" + userEmail + "/" + week, userChoiceJson);
     }
 
-    makePickemsEntryWithBonusesForUser(userEmail: string, week: number, choice_sleeper_id: string, choice_gm_name: string, isDouble: boolean, isTriple: boolean): Observable<any> {
+    makePickemsEntryWithBonusesForUser(userEmail: string, week: number, matchup_id: string, choice_sleeper_id: string, choice_gm_name: string, isDouble: boolean, isTriple: boolean): Observable<any> {
         let userChoiceJson = {
+            matchup_id: matchup_id,
             choice_sleeper_id: choice_sleeper_id,
             choice_gm_name: choice_gm_name,
             is_double_down: isDouble,

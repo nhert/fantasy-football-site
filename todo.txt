@@ -9,7 +9,6 @@ MINOR
 
 NICE TO HAVE
 - Improve the visuals of the survivor pool finished screen. Dont just use text
-- hide eliminated players toggle on the survivor pool 
 - calendar tasks button
 - Pre-build a buy-back feature for survivor pool
 - light dark mode for live scores

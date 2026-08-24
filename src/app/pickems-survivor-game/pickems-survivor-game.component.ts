@@ -375,6 +375,7 @@ export class PickemsSurvivorGameComponent {
         league_type: league_type,
         allow_pick: this.getCurrentUserAllowedToMakePickemsPick(player1.userId, player2.userId, currentUserPickemsEntries),
         pickems_score: this.getPickemsScore(week, player1.userId, player2.userId, currentSelectedProfileEntries),
+        matchup_id: player1.matchupId ?? player2.matchupId, // they should be identical
 
         manager_1_sleeper_id: player1.userId,
         manager_1_real_name: player1.managerName,

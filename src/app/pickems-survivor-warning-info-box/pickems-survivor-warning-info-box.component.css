@@ -20,6 +20,19 @@
     align-items: center;
 }
 
+.green {
+    color: #009E73;
+    border-left: 5px solid #009E73;
+    margin-top: 10px;
+    background-color: #ebe4d9;
+    padding: 0px;
+    min-height: 45px;
+    max-width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .info {
     color: rgb(32, 108, 223);
     border-left: 5px solid rgb(32, 108, 223);

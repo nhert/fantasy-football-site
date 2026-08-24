@@ -32,31 +32,34 @@
     </ng-container>
 
     <!-- The survivor pool is still ongoing, so show the week, timer, and inputs. -->
-    <ng-container *ngIf="!isSurvivorPoolFinished()">
+    <ng-container *ngIf="!isSurvivorPoolFinished">
         <div class="flex-centered">
             <mat-card style="background-color: var(--accent-color); width: 600px;">
                 <mat-card-content>
-                    <pickems-survivor-timer [gameState]="gameState"
-                        [currentUserEliminated]="userEliminated || userMissedStart"
+                    <pickems-survivor-timer [gameState]="gameState" [currentUserEliminated]="currentUserEliminated"
                         (disableUiComponents)="handleDisableUiComponents()"></pickems-survivor-timer>
 
                     <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Warning"
-                        [shouldDisplay]="getShouldShowWarningToMakePick()"
+                        [shouldDisplay]="shouldShowWarningToMakePick"
                         [message]="'You have not submitted a pick yet this week'"></app-pickems-survivor-warning-info-box>
 
-                    <div class="survivor-inputs" *ngIf="getIsCurrentUserAlive()">
+                    <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Green"
+                        [shouldDisplay]="shouldShowGreenPicksAllMade"
+                        [message]="'You have submitted your pick this week'"></app-pickems-survivor-warning-info-box>
+
+                    <div class="survivor-inputs" *ngIf="!currentUserEliminated">
                         <mat-form-field style="padding-top: 20px;">
                             <mat-label>Choose a GM</mat-label>
                             <mat-select #gmSelectorComponent [compareWith]="compareUsers"
-                                [disabled]="shouldDisableUiInput()">
+                                [disabled]="shouldDisableUiInput">
                                 <mat-optgroup label='A League' style="font-size: 12px;">
-                                    <mat-option *ngFor="let user of getAlphabetizedUsersForALeague()" [value]="user"
+                                    <mat-option *ngFor="let user of alphabetizedUsersForALeague" [value]="user"
                                         [disabled]="isSleeperIdInListOfSurvivorChoices(user.sleeperId_current)">
                                         {{ user.name }}
                                     </mat-option>
                                 </mat-optgroup>
                                 <mat-optgroup label='B League' style="font-size: 12px;">
-                                    <mat-option *ngFor="let user of getAlphabetizedUsersForBLeague()" [value]="user"
+                                    <mat-option *ngFor="let user of alphabetizedUsersForBLeague" [value]="user"
                                         [disabled]="isSleeperIdInListOfSurvivorChoices(user.sleeperId_current)">
                                         {{ user.name }}
                                     </mat-option>
@@ -64,7 +67,7 @@
                             </mat-select>
                         </mat-form-field>
                         <button type="button" mat-raised-button (click)="handleSubmitChoiceClick()"
-                            [disabled]="shouldDisableUiInput()">Submit</button>
+                            [disabled]="shouldDisableUiInput">Submit</button>
                     </div>
 
                     <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Generic"
@@ -80,13 +83,13 @@
     </ng-container>
 
     <!-- The survivor pool is concluded, so show the outcome and winners -->
-    <ng-container *ngIf="isSurvivorPoolFinished()">
+    <ng-container *ngIf="isSurvivorPoolFinished">
         <div class="flex-centered">
             <mat-card style="background-color: var(--accent-color); width: 600px;">
                 <mat-card-content>
                     <span style="font-size: 36px; color: var(--text-color);">Survivor Pool Finished!</span>
                     <br><br>
-                    <span style="font-size: 18px; color: var(--text-color);">{{getSurvivorPoolOutcome()}}</span>
+                    <span style="font-size: 18px; color: var(--text-color);">{{survivorPoolOutcome}}</span>
                     <br><br><br>
                     <mat-icon style="transform: scale(2); color:#dbbc0a">star_border</mat-icon>
                     <br><br>

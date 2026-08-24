@@ -7,6 +7,7 @@ export enum DisplayMode {
   Warning,
   Info,
   SubmissionLock,
+  Green,
   Generic
 }
 
@@ -33,5 +34,8 @@ export class PickemsSurvivorWarningInfoBoxComponent {
   }
   get displayModeGeneric() {
     return this.displayMode == DisplayMode.Generic;
+  }
+  get displayModeGreen() {
+    return this.displayMode == DisplayMode.Green;
   }
 }

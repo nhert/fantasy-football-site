@@ -121,7 +121,7 @@ export class GameSurvivorPoolContentComponent {
             this.isLoading = false;
           },
           error: (err) => {
-            this.errorToast('Error While Saving', err.message);
+            this.errorToast('Error While Saving', err.error.error);
             this.isLoading = false;
           }
         });
@@ -147,7 +147,7 @@ export class GameSurvivorPoolContentComponent {
   }
 
   private getNumTableWeeksToDisplay(): number {
-    if (this.isSurvivorPoolFinished()) {
+    if (this.isSurvivorPoolFinished) {
       // Return the week that the pool was won if it has finished.
       // Don't show up to the current NFL week because it will just be empty columns.
       return this.gameState.survivor_pool_winning_week;
@@ -163,13 +163,7 @@ export class GameSurvivorPoolContentComponent {
     }
   }
 
-  protected getAlphabetizedUsersForALeague() {
-    return this.b3fl_users.filter((user: any) => user.currentLeague == Constants.A_LEAGUE_NAME).sort((a, b) => a.name.localeCompare(b.name));
-  }
 
-  protected getAlphabetizedUsersForBLeague() {
-    return this.b3fl_users.filter((user: any) => user.currentLeague == Constants.B_LEAGUE_NAME).sort((a, b) => a.name.localeCompare(b.name));
-  }
 
   protected isSleeperIdInListOfSurvivorChoices(sleeperId: string): boolean {
     return this.made_choices_sleeper_ids.includes(sleeperId);
@@ -203,14 +197,6 @@ export class GameSurvivorPoolContentComponent {
     this.passedDeadlineDisableUi = true;
   }
 
-  protected shouldDisableUiInput() {
-    return this.passedDeadlineDisableUi || !this.getIsCurrentUserAlive();
-  }
-
-  protected isSurvivorPoolFinished() {
-    return this.gameState.survivor_pool_outcome != "UNKNOWN";
-  }
-
   //TODO: THIS GETS CALLED MULTIPLE TIMES PER FRAME
   protected getListOfSurvivorPoolWinningUsernames() {
     if (this.gameState.survivor_pool_outcome != "UNKNOWN" && this.gameState.survivor_pool_winning_owners) {
@@ -229,7 +215,23 @@ export class GameSurvivorPoolContentComponent {
     return "";
   }
 
-  protected getSurvivorPoolOutcome() {
+  get alphabetizedUsersForALeague() {
+    return this.b3fl_users.filter((user: any) => user.currentLeague == Constants.A_LEAGUE_NAME).sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  get alphabetizedUsersForBLeague() {
+    return this.b3fl_users.filter((user: any) => user.currentLeague == Constants.B_LEAGUE_NAME).sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  get shouldDisableUiInput() {
+    return this.passedDeadlineDisableUi || this.currentUserEliminated;
+  }
+
+  get isSurvivorPoolFinished() {
+    return this.gameState.survivor_pool_outcome != "UNKNOWN";
+  }
+
+  get survivorPoolOutcome() {
     if (this.gameState.survivor_pool_outcome === "WON") {
       return "The pool was WON by a single player";
     } else if (this.gameState.survivor_pool_outcome === "TIE") {
@@ -239,15 +241,19 @@ export class GameSurvivorPoolContentComponent {
     return "The pool is unfinished";
   }
 
-  protected getShouldShowWarningToMakePick() {
+  get shouldShowWarningToMakePick() {
     // if player is not eliminated, and they do NOT have an entry for this week, and it is not after the deadline, and they did not just click the submit button successfully without reloading the page
-    const alive = this.getIsCurrentUserAlive();
+    const alive = !this.currentUserEliminated;
     return alive && !this.passedDeadlineDisableUi && this.userNeedsToMakePickThisWeek && !this.didUserSuccessfullySubmit;
   }
 
-  // User is not eliminated and user did not miss the week 1 submission deadline
-  protected getIsCurrentUserAlive() {
-    return !this.userEliminated && !this.userMissedStart;
+  get shouldShowGreenPicksAllMade() {
+    const alive = !this.currentUserEliminated;
+    return alive && !this.passedDeadlineDisableUi && (!this.userNeedsToMakePickThisWeek || this.didUserSuccessfullySubmit);
+  }
+
+  get currentUserEliminated() {
+    return this.userEliminated || this.userMissedStart;
   }
 
   // DEMO-ONLY RELATED METHODS

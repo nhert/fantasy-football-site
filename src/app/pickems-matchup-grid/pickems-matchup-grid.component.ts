@@ -25,9 +25,9 @@ export class PickemsMatchupGridComponent {
   hasTripleDownAvailable = input.required<boolean>();
 
   tryRemovePickemsPick = output<string>();
-  trySubmitPickemsPick = output<string>();
-  trySubmitPickemsDoublePick = output<string>();
-  trySubmitPickemsTriplePick = output<string>();
+  trySubmitPickemsPick = output<any>();
+  trySubmitPickemsDoublePick = output<any>();
+  trySubmitPickemsTriplePick = output<any>();
 
   StatusEnum = PickemsPickStatus;
 
@@ -48,18 +48,30 @@ export class PickemsMatchupGridComponent {
     return score;
   }
 
-  onClickMakePick(sleeper_id) {
+  onClickMakePick(matchup_id, sleeper_id) {
     //console.log("pick made " + sleeper_id);
-    this.trySubmitPickemsPick.emit(sleeper_id);
+    const pickPayload = {
+      matchup_id: matchup_id,
+      sleeper_id: sleeper_id
+    }
+    this.trySubmitPickemsPick.emit(pickPayload);
   }
 
-  onClickDoubleDown(sleeper_id) {
-    console.log("double down made " + sleeper_id);
-    this.trySubmitPickemsDoublePick.emit(sleeper_id);
+  onClickDoubleDown(matchup_id, sleeper_id) {
+    //console.log("double down made " + sleeper_id);
+    const pickPayload = {
+      matchup_id: matchup_id,
+      sleeper_id: sleeper_id
+    }
+    this.trySubmitPickemsDoublePick.emit(pickPayload);
   }
 
-  onClickTripleDown(sleeper_id) {
-    console.log("triple down made " + sleeper_id);
-    this.trySubmitPickemsTriplePick.emit(sleeper_id);
+  onClickTripleDown(matchup_id, sleeper_id) {
+    //console.log("triple down made " + sleeper_id);
+    const pickPayload = {
+      matchup_id: matchup_id,
+      sleeper_id: sleeper_id
+    }
+    this.trySubmitPickemsTriplePick.emit(pickPayload);
   }
 }

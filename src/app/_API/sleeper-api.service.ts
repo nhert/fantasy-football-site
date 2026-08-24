@@ -204,6 +204,7 @@ export class SleeperApiService {
 					playersInMatchup.push({
 						points: matchupData.points,
 						rosterId: matchupData.roster_id,
+						matchupId: "A-" + matchupData.matchup_id,
 						userId: userId,
 						avatarUrl: teamAvatarUrl ? teamAvatarUrl : user.avatar,
 						sleeperName: user.sleeperName,
@@ -237,6 +238,7 @@ export class SleeperApiService {
 					playersInMatchup.push({
 						points: matchupData.points,
 						rosterId: matchupData.roster_id,
+						matchupId: "B-" + matchupData.matchup_id,
 						userId: userId,
 						avatarUrl: teamAvatarUrl ? teamAvatarUrl : user.avatar,
 						sleeperName: user.sleeperName,
