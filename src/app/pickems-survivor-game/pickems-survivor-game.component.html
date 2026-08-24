@@ -35,8 +35,8 @@
                             [userMissedStart]="currentSurvivorUserMissedStart"
                             [userNeedsToMakePickThisWeek]="currentSurvivorUserNeedsPickForThisWeek"
                             (reloadData)="reloadSurvivorEntries()" (reloadServerTime)="reloadServerTime()"
-                            [demoMode]="demoMode" (demoNextWeek)="demo_NextWeek()" (demoReset)="demo_Reset()"
-                            (demoTestTimer)="demo_TestTimer()"></game-survivor-pool-content>
+                            [demoMode]="demoMode" [demoLoading]="isDemoLoading" (demoNextWeek)="demo_NextWeek()"
+                            (demoReset)="demo_Reset()" (demoTestTimer)="demo_TestTimer()"></game-survivor-pool-content>
                     </ng-template>
                 </mat-tab>
 
@@ -50,7 +50,7 @@
                             (reloadPickemsMatchupsForWeek)="updatePickemsSelectorValuesAndReloadEntries($event)"
                             (reloadPickemsScores)="reloadPickemsScores()"
                             [dataSourcePickemsScores]="dataSourcePickemsScores" [demoMode]="demoMode"
-                            (demoNextWeek)="demo_NextWeek()" (demoReset)="demo_Reset()"
+                            [demoLoading]="isDemoLoading" (demoNextWeek)="demo_NextWeek()" (demoReset)="demo_Reset()"
                             (demoTestTimer)="demo_TestTimer()"></game-pickems-content>
                     </ng-template>
                 </mat-tab>

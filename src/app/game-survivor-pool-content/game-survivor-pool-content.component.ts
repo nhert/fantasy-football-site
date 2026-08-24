@@ -16,11 +16,12 @@ import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
 import { PickemsSurvivorWarningInfoBoxComponent } from "../pickems-survivor-warning-info-box/pickems-survivor-warning-info-box.component";
 import { DisplayMode } from '../pickems-survivor-warning-info-box/pickems-survivor-warning-info-box.component';
+import { SimpleSpinnerComponent } from "../simple-spinner/simple-spinner.component";
 
 @Component({
   selector: 'game-survivor-pool-content',
   standalone: true,
-  imports: [MatTableModule, CommonModule, MatSelect, MatOptionModule, MatFormFieldModule, PickemsSurvivorTimerComponent, MatExpansionModule, MatListModule, MatTooltipModule, MatCardModule, MatIconModule, PickemsSurvivorWarningInfoBoxComponent],
+  imports: [MatTableModule, CommonModule, MatSelect, MatOptionModule, MatFormFieldModule, PickemsSurvivorTimerComponent, MatExpansionModule, MatListModule, MatTooltipModule, MatCardModule, MatIconModule, PickemsSurvivorWarningInfoBoxComponent, SimpleSpinnerComponent],
   templateUrl: './game-survivor-pool-content.component.html',
   styleUrl: './game-survivor-pool-content.component.css'
 })
@@ -39,6 +40,7 @@ export class GameSurvivorPoolContentComponent {
 
   // Demo related inputs
   @Input('demoMode') demoMode: boolean = false;
+  @Input('demoLoading') demoLoading: boolean = false;
   @Output('demoNextWeek') demoNextWeek = new EventEmitter<void>();
   @Output('demoReset') demoReset = new EventEmitter<void>();
   @Output('demoTestTimer') demoTestTimer = new EventEmitter<void>();

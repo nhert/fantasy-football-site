@@ -66,6 +66,7 @@ export class PickemsSurvivorGameComponent {
 
   // loading booleans
   isGameStateLoaded: boolean = false;
+  isDemoLoading: boolean = false;
 
   DisplayModeEnum = DisplayMode;
 
@@ -648,7 +649,6 @@ export class PickemsSurvivorGameComponent {
 
   protected setPickemsCurrentSelectorValuesToDefault() {
     this.pickemsCurrentProfileSelectorValue = this.gameUsers.find(user => user.user_email == this.currentUser.email);
-    console.log(this.gameState.week);
     this.pickemsCurrentWeekSelectorValue = this.gameState.week;
   }
 
@@ -672,7 +672,8 @@ export class PickemsSurvivorGameComponent {
   // simulates the natural server progression to next week that happens via cron job, but triggered manually.
   // Will get whatever week were currently on and add 1, rotate server_time to a time close to the new cutoff date and refresh display.
   protected async demo_NextWeek() {
-    console.log("demo_NextWeek");
+    //console.log("demo_NextWeek");
+    this.isDemoLoading = true;
 
     await firstValueFrom(this.survivorPickemsApi.demo_PerformWeekEndLogic());
 
@@ -714,18 +715,20 @@ export class PickemsSurvivorGameComponent {
       if (this.pickemsContent) {
         this.pickemsContent.selectedWeek = curWeek;
       }
+      this.isDemoLoading = false;
     });
   }
 
   protected async demo_Reset() {
-    console.log("demo_Reset");
+    //console.log("demo_Reset");
+    this.isDemoLoading = true;
     // will remove db records for users, gamestate, entries
     await firstValueFrom(this.survivorPickemsApi.demo_Reset());
     window.location.reload();
   }
 
   protected demo_TestTimer() {
-    console.log("demo_TestTimer");
+    //console.log("demo_TestTimer");
 
     let curWeek = this.gameState.week;
     let serverTime = this.demo_getCurrentTimeBasedOnSchedule(curWeek, 1000 * 20);

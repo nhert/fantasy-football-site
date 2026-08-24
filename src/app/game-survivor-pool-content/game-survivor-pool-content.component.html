@@ -12,18 +12,22 @@
             </mat-expansion-panel-header>
 
             <div mat-subheader>Hover mouse over button to see what it does</div>
-            <mat-action-row class="demo-action-row">
-                <button style="background-color: white; color: black;"
-                    matTooltip="Click to move the current NFL week forward and process all entries"
-                    (click)="demoNextWeek.emit()">Move
-                    to Next Week</button>
-                <button style="background-color: white; color: black;"
-                    matTooltip="Click to set the deadline timer to 20 seconds remaining"
-                    (click)="demoTestTimer.emit()">Test Deadline Timer</button>
-                <button style="background-color: white; color: black;"
-                    matTooltip="Click to reset all current user submissions and go back to week 1"
-                    (click)="demoReset.emit()">Reset All Demo Data</button>
-            </mat-action-row>
+            <ng-container *ngIf="!demoLoading">
+                <mat-action-row class="demo-action-row">
+                    <button style="background-color: white; color: black;"
+                        matTooltip="Click to move the current NFL week forward and process all entries"
+                        (click)="demoNextWeek.emit()">Move
+                        to Next Week</button>
+                    <button style="background-color: white; color: black;"
+                        matTooltip="Click to set the deadline timer to 20 seconds remaining"
+                        (click)="demoTestTimer.emit()">Test Deadline Timer</button>
+                    <button style="background-color: white; color: black;"
+                        matTooltip="Click to reset all current user submissions and go back to week 1"
+                        (click)="demoReset.emit()">Reset All Demo Data</button>
+                </mat-action-row>
+            </ng-container>
+            <simple-spinner [loading]="demoLoading" [hideRefreshTip]="true"
+                [title]="'Running requested demo action ...'"></simple-spinner>
         </mat-expansion-panel>
     </ng-container>
 

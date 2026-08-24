@@ -16,6 +16,7 @@ import { PickemsMatchupGridComponent } from "../pickems-matchup-grid/pickems-mat
 import { GamePickemsStandingsContentComponent } from "../game-pickems-standings-content/game-pickems-standings-content.component";
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SimpleSpinnerComponent } from "../simple-spinner/simple-spinner.component";
 
 const MAX_WEEKS: number = 14;
 const TOTAL_MATCHUP_COUNT = 13;
@@ -31,7 +32,7 @@ export enum PickemsPickStatus {
 @Component({
   selector: 'game-pickems-content',
   standalone: true,
-  imports: [PickemsSurvivorTimerComponent, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, CommonModule, MatExpansionModule, MatIconModule, MatButtonModule, PickemsSurvivorWarningInfoBoxComponent, PickemsMatchupGridComponent, GamePickemsStandingsContentComponent, MatTooltipModule],
+  imports: [PickemsSurvivorTimerComponent, MatInputModule, MatSelectModule, MatCardModule, MatIconModule, CommonModule, MatExpansionModule, MatIconModule, MatButtonModule, PickemsSurvivorWarningInfoBoxComponent, PickemsMatchupGridComponent, GamePickemsStandingsContentComponent, MatTooltipModule, SimpleSpinnerComponent],
   templateUrl: './game-pickems-content.component.html',
   styleUrl: './game-pickems-content.component.css'
 })
@@ -54,6 +55,7 @@ export class GamePickemsContentComponent {
   @ViewChild(PickemsSurvivorTimerComponent) timerComponent!: PickemsSurvivorTimerComponent;
 
   @Input('demoMode') demoMode: boolean = false;
+  @Input('demoLoading') demoLoading: boolean = false;
   @Output('demoNextWeek') demoNextWeek = new EventEmitter<void>();
   @Output('demoReset') demoReset = new EventEmitter<void>();
   @Output('demoTestTimer') demoTestTimer = new EventEmitter<void>();
