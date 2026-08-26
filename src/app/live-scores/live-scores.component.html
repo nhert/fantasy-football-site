@@ -3,148 +3,200 @@
     <p>Click on a matchup to see individual player scores</p>
     <p>The refresh button can be used to quickly update scores without a full page reload</p>
 
-    <div>
-        <button style="width: 100px; height: 100px;" [disabled]="refreshButtonDisabled()"
-            (click)="refreshDisplayedData()"><mat-icon style="transform: scale(2);">refresh</mat-icon></button>
-    </div>
-
     <simple-spinner [loading]="loading"></simple-spinner>
 
-    <div *ngIf="isLoaded() && !isPreseason" id="live-scores-div">
+    <ng-container *ngIf="isLoaded() && !isPreseason">
         <h2>{{nflData.year}}</h2>
         <h2>Week {{nflData.week}}</h2>
+        <div>
+            <button class="refresh-button" [disabled]="refreshButtonDisabled()"
+                (click)="refreshDisplayedData()"><mat-icon style="transform: scale(2);">refresh</mat-icon></button>
+        </div>
         <br>
-        <h2>A League</h2>
-        <div *ngFor="let matchup of aLeagueMatchups">
-            <div *ngIf="matchup[0] && matchup[1]">
-                <mat-expansion-panel [hideToggle]="true" [expanded]="false">
-                    <mat-expansion-panel-header class="please" [collapsedHeight]="'250px'" [expandedHeight]="'250px'">
-                        <div class="card-content-wrapper">
-                            <div class="left-content">
-                                <mat-label style="font-size: 40px;">{{matchup[0].points}}</mat-label>
-                                <br>
-                                <br>
-                                <mat-label style="font-size: 18px;">{{matchup[0].teamName}}</mat-label>
-                                <br>
-                                <br>
-                                <img src="{{matchup[0].avatarUrl}}" alt="Player Avatar" width=80px height=80px>
-                                <br>
-                                <mat-label>{{matchup[0].managerName}} ({{matchup[0].sleeperName}})</mat-label>
-                            </div>
-                            <div class="middle-content">
-                                <mat-label style="font-size: 24px;"> VS </mat-label>
-                            </div>
-                            <div class="right-content">
-                                <mat-label style="font-size: 40px;">{{matchup[1].points}}</mat-label>
-                                <br>
-                                <br>
-                                <mat-label style="font-size: 18px;">{{matchup[1].teamName}}</mat-label>
-                                <br>
-                                <br>
-                                <img src="{{matchup[1].avatarUrl}}" alt="Player Avatar" width=80px height=80px>
-                                <br>
-                                <mat-label>{{matchup[1].managerName}} ({{matchup[1].sleeperName}})</mat-label>
-                            </div>
-                        </div>
-                    </mat-expansion-panel-header>
+        <h1>A League</h1>
+        <div class="scores-grid-container">
+            <div *ngFor="let matchup of aLeagueMatchups">
+                <div *ngIf="matchup.manager_1_sleeper_id && matchup.manager_2_sleeper_id" style="height: auto;"
+                    class="matchup-panel">
+                    <!-- <img src="/assets/images/flames.gif" alt="" class="top-middle-flames-anchor"> -->
+                    <div class="card-content-header">
 
-                    <div class="card-content-wrapper">
-                        <div class="left-content player-content-left">
-                            <div class="player-content-style-left">
-                                <div *ngFor="let data of matchup[0].startingPlayers">
-                                    <p>
-                                        <span
-                                            style="font-size: 20; margin-right: 5px;"><em>{{data.player.position}}</em></span>
-                                        <span
-                                            style="font-size: 14; margin-right: 15px;">{{data.player.full_name}}</span>
-                                        <span style="font-size: 30;"><b>{{data.playerScore}}</b></span>
-                                    </p>
-                                </div>
+                        <div class="left-content">
+                            <div class="pick-score-container">
+                                <mat-label class="player-score-text">{{matchup.manager_1_points}}</mat-label>
+                            </div>
+
+                            <div class="player-name-content margin-t-20">
+                                <mat-label class="player-name-text">{{matchup.manager_1_team_name}}</mat-label>
+                            </div>
+
+                            <img src="{{matchup.manager_1_avatar_url}}" alt="Player Avatar" width=80px height=80px
+                                loading="lazy">
+                            <br>
+                            <div class="player-reals-content">
+                                <mat-label class="player-reals-text">{{matchup.manager_1_real_name}}
+                                    ({{matchup.manager_1_sleeper_name}})</mat-label>
                             </div>
                         </div>
-                        <div class="right-content player-content-right">
-                            <div class="player-content-style-right">
-                                <div *ngFor="let data of matchup[1].startingPlayers">
-                                    <p>
-                                        <span
-                                            style="font-size: 30; margin-right: 15px;"><b>{{data.playerScore}}</b></span>
-                                        <span style="font-size: 14; margin-right: 5px;">{{data.player.full_name}}</span>
-                                        <span style="font-size: 20;"><em>{{data.player.position}}</em></span>
-                                    </p>
-                                </div>
+                        <div class="middle-content">
+                            <mat-label class="middle-vs-text"> VS </mat-label>
+                        </div>
+                        <div class="right-content">
+                            <div class="pick-score-container">
+                                <mat-label class="player-score-text">{{matchup.manager_2_points}}</mat-label>
+                            </div>
+
+                            <div class="player-name-content margin-t-20">
+                                <mat-label class="player-name-text">{{matchup.manager_2_team_name}}</mat-label>
+                            </div>
+
+                            <img src="{{matchup.manager_2_avatar_url}}" alt="Player Avatar" width=80px height=80px
+                                loading="lazy">
+                            <br>
+                            <div class="player-reals-content">
+                                <mat-label class="player-reals-text">{{matchup.manager_2_real_name}}
+                                    ({{matchup.manager_2_sleeper_name}})</mat-label>
                             </div>
                         </div>
                     </div>
-                </mat-expansion-panel>
-                <div style="height: 20px;"></div>
+
+                    <mat-expansion-panel [hideToggle]="true" [expanded]="false" class="nfl-starters-panel">
+                        <mat-expansion-panel-header [collapsedHeight]="'50px'" [expandedHeight]="'50px'">
+                            <p style="text-align: center; width: 100%; color: #e7e7e7;">Click here to
+                                show/hide NFL starters</p>
+                        </mat-expansion-panel-header>
+
+                        <div class="card-content-players">
+                            <div class="left-content player-content-left">
+                                <div class="player-content-style-left">
+                                    <div *ngFor="let data of matchup.manager_1_starters"
+                                        style="container-type: inline-size; height: 40px;">
+                                        <p>
+                                            <span
+                                                class="player-content-text-position margin-r-5"><em>{{data.player.position}}</em></span>
+                                            <span
+                                                class="player-content-text-name margin-r-15">{{data.player.full_name}}</span>
+                                            <span class="player-content-text-score"><b>{{data.playerScore}}</b></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right-content player-content-right">
+                                <div class="player-content-style-right">
+                                    <div *ngFor="let data of matchup.manager_2_starters"
+                                        style="container-type: inline-size; height: 40px;">
+                                        <p>
+                                            <span
+                                                class="player-content-text-score margin-r-15"><b>{{data.playerScore}}</b></span>
+                                            <span
+                                                class="player-content-text-name margin-r-5">{{data.player.full_name}}</span>
+                                            <span
+                                                class="player-content-text-position"><em>{{data.player.position}}</em></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+                </div>
+                <div *ngIf="!matchup.manager_1_sleeper_id || !matchup.manager_2_sleeper_id">
+                    <p style="color: red;">Missing Sleeper ID! Try refreshing page</p>
+                </div>
             </div>
         </div>
-        <h2>B League</h2>
-        <div *ngFor="let matchup of bLeagueMatchups">
-            <div *ngIf="matchup[0] && matchup[1]">
-                <mat-expansion-panel [hideToggle]="true" [expanded]="false">
-                    <mat-expansion-panel-header class="please" [collapsedHeight]="'250px'" [expandedHeight]="'250px'">
-                        <div class="card-content-wrapper">
-                            <div class="left-content">
-                                <mat-label style="font-size: 40px;">{{matchup[0].points}}</mat-label>
-                                <br>
-                                <br>
-                                <mat-label style="font-size: 18px;">{{matchup[0].teamName}}</mat-label>
-                                <br>
-                                <br>
-                                <img src="{{matchup[0].avatarUrl}}" alt="Player Avatar" width=80px height=80px>
-                                <br>
-                                <mat-label>{{matchup[0].managerName}} ({{matchup[0].sleeperName}})</mat-label>
-                            </div>
-                            <div class="middle-content">
-                                <mat-label style="font-size: 24px;"> VS </mat-label>
-                            </div>
-                            <div class="right-content">
-                                <mat-label style="font-size: 40px;">{{matchup[1].points}}</mat-label>
-                                <br>
-                                <br>
-                                <mat-label style="font-size: 18px;">{{matchup[1].teamName}}</mat-label>
-                                <br>
-                                <br>
-                                <img src="{{matchup[1].avatarUrl}}" alt="Player Avatar" width=80px height=80px>
-                                <br>
-                                <mat-label>{{matchup[1].managerName}} ({{matchup[1].sleeperName}})</mat-label>
-                            </div>
-                        </div>
-                    </mat-expansion-panel-header>
 
-                    <div class="card-content-wrapper">
-                        <div class="left-content player-content-left">
-                            <div class="player-content-style-left">
-                                <div *ngFor="let data of matchup[0].startingPlayers">
-                                    <p>
-                                        <span
-                                            style="font-size: 20; margin-right: 5px;"><em>{{data.player.position}}</em></span>
-                                        <span
-                                            style="font-size: 14; margin-right: 15px;">{{data.player.full_name}}</span>
-                                        <span style="font-size: 30;"><b>{{data.playerScore}}</b></span>
-                                    </p>
-                                </div>
+        <h1>B League</h1>
+        <div class="scores-grid-container">
+            <div *ngFor="let matchup of bLeagueMatchups">
+                <div *ngIf="matchup.manager_1_sleeper_id && matchup.manager_2_sleeper_id" style="height: auto;"
+                    class="matchup-panel">
+                    <!-- <img src="/assets/images/flames.gif" alt="" class="top-middle-flames-anchor"> -->
+                    <div class="card-content-header">
+
+                        <div class="left-content">
+                            <div class="pick-score-container">
+                                <mat-label class="player-score-text">{{matchup.manager_1_points}}</mat-label>
+                            </div>
+
+                            <div class="player-name-content margin-t-20">
+                                <mat-label class="player-name-text">{{matchup.manager_1_team_name}}</mat-label>
+                            </div>
+
+                            <img src="{{matchup.manager_1_avatar_url}}" alt="Player Avatar" width=80px height=80px
+                                loading="lazy">
+                            <br>
+                            <div class="player-reals-content">
+                                <mat-label class="player-reals-text">{{matchup.manager_1_real_name}}
+                                    ({{matchup.manager_1_sleeper_name}})</mat-label>
                             </div>
                         </div>
-                        <div class="right-content player-content-right">
-                            <div class="player-content-style-right">
-                                <div *ngFor="let data of matchup[1].startingPlayers">
-                                    <p>
-                                        <span
-                                            style="font-size: 30; margin-right: 15px;"><b>{{data.playerScore}}</b></span>
-                                        <span style="font-size: 14; margin-right: 5px;">{{data.player.full_name}}</span>
-                                        <span style="font-size: 20;"><em>{{data.player.position}}</em></span>
-                                    </p>
-                                </div>
+                        <div class="middle-content">
+                            <mat-label class="middle-vs-text"> VS </mat-label>
+                        </div>
+                        <div class="right-content">
+                            <div class="pick-score-container">
+                                <mat-label class="player-score-text">{{matchup.manager_2_points}}</mat-label>
+                            </div>
+
+                            <div class="player-name-content margin-t-20">
+                                <mat-label class="player-name-text">{{matchup.manager_2_team_name}}</mat-label>
+                            </div>
+
+                            <img src="{{matchup.manager_2_avatar_url}}" alt="Player Avatar" width=80px height=80px
+                                loading="lazy">
+                            <br>
+                            <div class="player-reals-content">
+                                <mat-label class="player-reals-text">{{matchup.manager_2_real_name}}
+                                    ({{matchup.manager_2_sleeper_name}})</mat-label>
                             </div>
                         </div>
                     </div>
-                </mat-expansion-panel>
-                <div style="height: 20px;"></div>
+
+                    <mat-expansion-panel [hideToggle]="true" [expanded]="false" class="nfl-starters-panel">
+                        <mat-expansion-panel-header [collapsedHeight]="'50px'" [expandedHeight]="'50px'">
+                            <p style="text-align: center; width: 100%; color: #e7e7e7;">Click here to
+                                show/hide NFL starters</p>
+                        </mat-expansion-panel-header>
+
+                        <div class="card-content-players">
+                            <div class="left-content player-content-left">
+                                <div class="player-content-style-left">
+                                    <div *ngFor="let data of matchup.manager_1_starters"
+                                        style="container-type: inline-size; height: 40px;">
+                                        <p>
+                                            <span
+                                                class="player-content-text-position margin-r-5"><em>{{data.player.position}}</em></span>
+                                            <span
+                                                class="player-content-text-name margin-r-15">{{data.player.full_name}}</span>
+                                            <span class="player-content-text-score"><b>{{data.playerScore}}</b></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right-content player-content-right">
+                                <div class="player-content-style-right">
+                                    <div *ngFor="let data of matchup.manager_2_starters"
+                                        style="container-type: inline-size; height: 40px;">
+                                        <p>
+                                            <span
+                                                class="player-content-text-score margin-r-15"><b>{{data.playerScore}}</b></span>
+                                            <span
+                                                class="player-content-text-name margin-r-5">{{data.player.full_name}}</span>
+                                            <span
+                                                class="player-content-text-position"><em>{{data.player.position}}</em></span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+                </div>
+                <div *ngIf="!matchup.manager_1_sleeper_id || !matchup.manager_2_sleeper_id">
+                    <p style="color: red;">Missing Sleeper ID! Try refreshing page</p>
+                </div>
             </div>
         </div>
-    </div>
+    </ng-container>
 
     <div *ngIf="isLoaded() && isPreseason">
         <h2>{{nflData.year}}</h2>

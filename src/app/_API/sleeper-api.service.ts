@@ -143,12 +143,12 @@ export class SleeperApiService {
 		var numBLeagueMatchups = Math.floor(bLeagueMatchupData.length / 2);
 
 		if (cacheData) {
-			console.log("getPickemsMatchupsForWeek() Refreshing with cached data");
+			console.log("getPickemsMatchupsForWeek() Refreshing with cached data. Week=" + week);
 			aLeagueRosterMap = cacheData.aLeagueRosterMap;
 			bLeagueRosterMap = cacheData.bLeagueRosterMap;
 			userInfoMap = cacheData.userInfoMap;
 		} else {
-			console.log("getPickemsMatchupsForWeek() Loading fresh data from SleeperAPI");
+			console.log("getPickemsMatchupsForWeek() Loading fresh data from SleeperAPI. Week=" + week);
 			const aLeagueRosterData = await this.getSleeperRosterRecords(Constants.A_LEAGUE_SLEEPER_ID);
 			const bLeagueRosterData = await this.getSleeperRosterRecords(Constants.B_LEAGUE_SLEEPER_ID);
 			const aLeagueUserData = await fetch(this.getLeagueUserDataRestAPI(Constants.A_LEAGUE_SLEEPER_ID)).then((res) => res.json());
@@ -411,7 +411,7 @@ export class SleeperApiService {
 
 	public async getLiveScores(cacheData) {
 		const nflState = await fetch(this.getNflStateRestAPI()).then((res) => res.json());
-		console.log(nflState);
+		//console.log(nflState);
 		var currentNflWeek = nflState.week;
 		var currentNflSeasonType = nflState.season_type; // "pre" for preseason, etc
 
@@ -436,7 +436,7 @@ export class SleeperApiService {
 			}
 		}
 
-		console.log(aLeagueMatchupData);
+		//console.log(aLeagueMatchupData);
 
 		if (cacheData) {
 			console.log("getLiveScores() Refreshing with cached data");
@@ -500,6 +500,7 @@ export class SleeperApiService {
 					playersInMatchup.push({
 						points: matchupData.points,
 						rosterId: matchupData.roster_id,
+						matchupId: matchupData.matchup_id,
 						userId: userId,
 						avatarUrl: teamAvatarUrl ? teamAvatarUrl : user.avatar,
 						sleeperName: user.sleeperName,
@@ -532,6 +533,7 @@ export class SleeperApiService {
 
 					playersInMatchup.push({
 						points: matchupData.points,
+						matchupId: matchupData.matchup_id,
 						rosterId: matchupData.roster_id,
 						userId: userId,
 						avatarUrl: teamAvatarUrl ? teamAvatarUrl : user.avatar,
@@ -780,8 +782,8 @@ export class SleeperApiService {
 		var isJer_Rule = sleeperId == Constants.JER_SLEEPER_ID_RECORD_CORRECTION;
 
 		const nflState = await fetch(this.getNflStateRestAPI()).then((res) => res.json());
-		console.log("current state");
-		console.log(nflState);
+		//console.log("current state");
+		//console.log(nflState);
 		var currentNflWeek = nflState.week; // 1, 2, 3 
 		/*
 			example object
@@ -803,8 +805,8 @@ export class SleeperApiService {
 		for (var curLeague of allLeagues) {
 			var leagueId = curLeague.LeagueId;
 
-			console.log("*****PROCESSING A LEAGUE: ");
-			console.log(curLeague);
+			//console.log("*****PROCESSING A LEAGUE: ");
+			//console.log(curLeague);
 
 			const leagueRosterData = await this.getSleeperRosterRecords(leagueId);
 			const leagueData = await fetch(this.getLeagueRestAPI(leagueId))
@@ -812,8 +814,8 @@ export class SleeperApiService {
 			const playoffData = await fetch(this.getLeagueRestAPI(leagueId) + "/winners_bracket")
 				.then((res) => res.json());
 
-			console.log(leagueRosterData);
-			console.log(leagueData);
+			//console.log(leagueRosterData);
+			//console.log(leagueData);
 
 			var winningRosters = [];
 			playoffData.forEach(round => {
@@ -857,14 +859,14 @@ export class SleeperApiService {
 			var lastPlayoffResult = "";
 			var isPlayoffsPostElim = false;
 
-			console.log("rosterid=" + rosterId);
-			console.log("weekMax=" + weekMax);
+			//console.log("rosterid=" + rosterId);
+			//console.log("weekMax=" + weekMax);
 
 			if (rosterId != -1) {
 				for (let week = 1; week <= weekMax; week++) {
 					const matchups = await fetch(this.getLeagueRestAPI(leagueId) + "/matchups/" + week).then((res) => res.json());
 
-					console.log(matchups);
+					//console.log(matchups);
 
 					var user1score = -1, user2score = -1, outcome = "", year = "", matchupId1 = -1
 					var user1starters = [], user1roster = [], user2starters = [], user2roster = [];
@@ -940,7 +942,7 @@ export class SleeperApiService {
 			}
 		}
 
-		console.log("----BREAK--------");
+		//console.log("----BREAK--------");
 		return records;
 	}
 

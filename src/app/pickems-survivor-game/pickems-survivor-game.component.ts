@@ -244,7 +244,7 @@ export class PickemsSurvivorGameComponent {
   }
 
   public reloadPickemsEntriesForWeek(week: number): Observable<any> {
-    console.log(`running reloadPickemsEntriesForWeek with week ${week}`);
+    //console.log(`running reloadPickemsEntriesForWeek with week ${week}`);
     let forkJoin$;
 
     if (week == 1 || week > this.gameState.week) {

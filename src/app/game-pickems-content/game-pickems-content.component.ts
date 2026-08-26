@@ -173,7 +173,7 @@ export class GamePickemsContentComponent {
   protected trySubmitPickemsPick(pickPayload: any) {
     if (this.isPickLoading) return;
 
-    console.log(pickPayload);
+    //console.log(pickPayload);
 
     if (!pickPayload) return;
     const matchup_id = pickPayload.matchup_id, choice_sleeper_id = pickPayload.sleeper_id;

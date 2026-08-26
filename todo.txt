@@ -10,5 +10,4 @@ MINOR
 NICE TO HAVE
 - Improve the visuals of the survivor pool finished screen. Dont just use text
 - calendar tasks button
-- Pre-build a buy-back feature for survivor pool
-- light dark mode for live scores
+- live scores: actually calculate or get each users fantasy record

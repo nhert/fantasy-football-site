@@ -187,7 +187,7 @@ export class PickemsSurvivorLobbyComponent {
 
   // create a b3fl game account with nickname
   protected createAccount(): void {
-    console.log(`acct name [${this.username.value}]`);
+    //console.log(`acct name [${this.username.value}]`);
     const user = {
       email: this.currentUser.email,
       username: this.username.value
@@ -207,7 +207,7 @@ export class PickemsSurvivorLobbyComponent {
   }
 
   protected changeAccountUsername(): void {
-    console.log(`acct name update [${this.username.value}]`);
+    //console.log(`acct name update [${this.username.value}]`);
     const user = {
       email: this.currentUser.email,
       username: this.username.value
