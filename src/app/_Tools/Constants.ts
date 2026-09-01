@@ -82,6 +82,7 @@ export class Constants {
 			sleeperId_current: "471702444481441792",
 			sleeperIds_old: [],
 			legacyId: "userId-90093",
+			b3flId: 1,
 			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
@@ -89,6 +90,7 @@ export class Constants {
 			sleeperId_current: "867462835893080064",
 			sleeperIds_old: [],
 			legacyId: "userId-27062481",
+			b3flId: 2,
 			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
@@ -96,6 +98,7 @@ export class Constants {
 			sleeperId_current: "867562511770255360",
 			sleeperIds_old: [],
 			legacyId: "userId-95527",
+			b3flId: 3,
 			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
@@ -103,6 +106,7 @@ export class Constants {
 			sleeperId_current: "867601213447897088",
 			sleeperIds_old: [],
 			legacyId: "userId-91161",
+			b3flId: 4,
 			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
@@ -110,6 +114,7 @@ export class Constants {
 			sleeperId_current: "869618771407556608",
 			sleeperIds_old: [],
 			legacyId: "userId-91908",
+			b3flId: 5,
 			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
@@ -117,6 +122,7 @@ export class Constants {
 			sleeperId_current: "441653692567908352",
 			sleeperIds_old: [],
 			legacyId: "userId-5318397",
+			b3flId: 6,
 			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
@@ -124,6 +130,7 @@ export class Constants {
 			sleeperId_current: "471826036959473664",
 			sleeperIds_old: [],
 			legacyId: "userId-27845667",
+			b3flId: 7,
 			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
@@ -131,6 +138,7 @@ export class Constants {
 			sleeperId_current: "731243643578490880",
 			sleeperIds_old: [],
 			legacyId: "userId-19416897",
+			b3flId: 8,
 			currentLeague: this.HIATUS_LEAGUE_NAME
 		},
 		{
@@ -138,6 +146,7 @@ export class Constants {
 			sleeperId_current: "865480383385448448",
 			sleeperIds_old: [],
 			legacyId: "userId-28536059",
+			b3flId: 9,
 			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
@@ -145,6 +154,7 @@ export class Constants {
 			sleeperId_current: "865596427626201088",
 			sleeperIds_old: [],
 			legacyId: "userId-130280",
+			b3flId: 10,
 			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
@@ -152,6 +162,7 @@ export class Constants {
 			sleeperId_current: "866400340310917120",
 			sleeperIds_old: [],
 			legacyId: "userId-144377",
+			b3flId: 11,
 			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
@@ -159,6 +170,7 @@ export class Constants {
 			sleeperId_current: "867272838229454848",
 			sleeperIds_old: [],
 			legacyId: "userId-14712314",
+			b3flId: 12,
 			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
@@ -166,6 +178,7 @@ export class Constants {
 			sleeperId_current: "1129286835634581504",
 			sleeperIds_old: ["867294931482505216"],
 			legacyId: "userId-25196559",
+			b3flId: 13,
 			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
@@ -173,6 +186,7 @@ export class Constants {
 			sleeperId_current: "867433255367008256",
 			sleeperIds_old: [],
 			legacyId: "userId-13060178",
+			b3flId: 14,
 			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
@@ -180,6 +194,7 @@ export class Constants {
 			sleeperId_current: "867479730138583040",
 			sleeperIds_old: [],
 			legacyId: "userId-25169661",
+			b3flId: 15,
 			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
@@ -187,6 +202,7 @@ export class Constants {
 			sleeperId_current: "867489506998267904",
 			sleeperIds_old: [],
 			legacyId: "userId-7530198",
+			b3flId: 16,
 			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
@@ -194,6 +210,7 @@ export class Constants {
 			sleeperId_current: "867531909708840960",
 			sleeperIds_old: [],
 			legacyId: "userId-5280198",
+			b3flId: 17,
 			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
@@ -201,6 +218,7 @@ export class Constants {
 			sleeperId_current: "867587986001403904",
 			sleeperIds_old: [],
 			legacyId: "userId-5339416",
+			b3flId: 18,
 			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
@@ -208,6 +226,7 @@ export class Constants {
 			sleeperId_current: "867593986880229376",
 			sleeperIds_old: [],
 			legacyId: "userId-90171",
+			b3flId: 19,
 			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
@@ -215,6 +234,7 @@ export class Constants {
 			sleeperId_current: "867598805816795136",
 			sleeperIds_old: [],
 			legacyId: "userId-7830798",
+			b3flId: 20,
 			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
@@ -222,6 +242,7 @@ export class Constants {
 			sleeperId_current: "998276027312889856",
 			sleeperIds_old: ["867970353417363456"],
 			legacyId: "userId-962198",
+			b3flId: 21,
 			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
@@ -229,6 +250,7 @@ export class Constants {
 			sleeperId_current: "867598396356259840",
 			sleeperIds_old: [],
 			legacyId: "userId-14721116",
+			b3flId: 22,
 			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
@@ -236,6 +258,7 @@ export class Constants {
 			sleeperId_current: "868693802389540864",
 			sleeperIds_old: [],
 			legacyId: "userId-90093",
+			b3flId: 23,
 			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
@@ -243,6 +266,7 @@ export class Constants {
 			sleeperId_current: "868705613276925952",
 			sleeperIds_old: [],
 			legacyId: "userId-7401235",
+			b3flId: 24,
 			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
@@ -250,6 +274,7 @@ export class Constants {
 			sleeperId_current: "1130918451767369728",
 			sleeperIds_old: [],
 			legacyId: "-",
+			b3flId: 25,
 			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
@@ -257,6 +282,7 @@ export class Constants {
 			sleeperId_current: "1130914622246318080",
 			sleeperIds_old: [],
 			legacyId: "-",
+			b3flId: 26,
 			currentLeague: this.A_LEAGUE_NAME
 		},
 		{
@@ -264,9 +290,26 @@ export class Constants {
 			sleeperId_current: "868742012944420864",
 			sleeperIds_old: [],
 			legacyId: "-",
+			b3flId: 27,
 			currentLeague: this.B_LEAGUE_NAME
 		}
 	]
+
+	//TODO: use this to display flames over matchups
+	public static RIVALRIES = [
+		[9, 24], // Connor Dan
+		[], // Nate Caolan
+		[], // Nate Tom
+		[], // Nate Connor
+		[], // Zack Zach
+		[], // Jer Dalley
+		[], // Jake Rimon
+		[], // Jordan?? Tom
+		[], // Scott Jer
+		[], // Ryan Liam
+		[], // Omar Tom
+		[], // Jordan I v S
+	];
 
 	public static DUMMY_USER = {
 		name: "User Not Found",

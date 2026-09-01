@@ -11,3 +11,4 @@ NICE TO HAVE
 - Improve the visuals of the survivor pool finished screen. Dont just use text
 - calendar tasks button
 - live scores: actually calculate or get each users fantasy record
+- Rivalries display

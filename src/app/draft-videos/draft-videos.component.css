@@ -1,7 +1,41 @@
+:host {
+    display: block;
+    /* Allows the component to honor width settings */
+    width: 100%;
+    height: 100%;
+    /* Forces it to stretch to the parent grid bounds */
+}
+
 .draft-vids-container {
     justify-content: center;
     align-items: center;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    /* height: 100%; */
+    margin-bottom: 50px;
+}
+
+.video-content {
+    min-width: 400px;
+    min-height: 350px;
+    max-width: 600px;
+    max-height: 500px;
     width: 100%;
     height: 100%;
+    flex: none;
+}
+
+.input-card {
+    background-color: var(--accent-color);
+    margin: 20px;
+    min-width: 400px;
+    max-width: 600px;
+    width: 100%;
+}
+
+.selector-year {
+    background-color: var(--accent-color);
+    color: var(--text-color);
 }
