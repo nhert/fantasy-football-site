@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
 import { MatCardModule } from "@angular/material/card";
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-draft-videos',
@@ -18,11 +19,12 @@ export class DraftVideosComponent {
   yearOptions: string[] = ['2026', '2024', '2023', '2022'];
   loading = false;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.loading = true;
     this.handleQueryParams();
+
   }
 
   handleQueryParams() {
