@@ -451,12 +451,14 @@ export class SleeperApiService {
 			const bLeagueUserData = await fetch(this.getLeagueUserDataRestAPI(Constants.B_LEAGUE_SLEEPER_ID)).then((res) => res.json());
 			for (var roster of aLeagueRosterData) {
 				var userId = roster.owner_id;
-				var userMetadata = aLeagueUserData.find(obj => obj.user_id == userId).metadata;
+				var userData = aLeagueUserData.find(obj => obj.user_id == userId);
+				var userMetadata = userData.metadata;
 				aLeagueRosterMap.set(roster.roster_id, { userId: userId, teamName: userMetadata.team_name, teamAvatar: userMetadata.avatar });
 			}
 			for (var roster of bLeagueRosterData) {
 				var userId = roster.owner_id;
-				var userMetadata = bLeagueUserData.find(obj => obj.user_id == userId).metadata;
+				var userData = bLeagueUserData.find(obj => obj.user_id == userId);
+				var userMetadata = userData.metadata;
 				bLeagueRosterMap.set(roster.roster_id, { userId: userId, teamName: userMetadata.team_name, teamAvatar: userMetadata.avatar });
 			}
 			for (let i = 0; i < Constants.USERS.length; i++) {
@@ -546,9 +548,6 @@ export class SleeperApiService {
 			}
 			bLeagueMatchups.push(playersInMatchup);
 		}
-
-		//console.log(aLeagueMatchups);
-		//console.log(bLeagueMatchups);
 
 		return {
 			dataAvailable: true,

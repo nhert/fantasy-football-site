@@ -12,11 +12,13 @@ import { SleeperApiService } from '../_API/sleeper-api.service';
 import { MatIcon } from "@angular/material/icon";
 import { MatExpansionPanel, MatExpansionModule } from "@angular/material/expansion";
 import { Matchup, MatchupCache } from '../_Models/common.models';
+import { Constants } from '../_Tools/Constants';
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-live-scores',
   standalone: true,
-  imports: [MatProgressSpinnerModule, CommonModule, FormsModule, MatLabel, MatInputModule, MatFormFieldModule, MatSelectModule, MatDividerModule, ReactiveFormsModule, MatCardModule, SimpleSpinnerComponent, MatIcon, MatExpansionPanel, MatExpansionModule],
+  imports: [MatProgressSpinnerModule, CommonModule, FormsModule, MatLabel, MatInputModule, MatFormFieldModule, MatSelectModule, MatDividerModule, ReactiveFormsModule, MatCardModule, SimpleSpinnerComponent, MatIcon, MatExpansionPanel, MatExpansionModule, MatTooltip],
   templateUrl: './live-scores.component.html',
   styleUrl: './live-scores.component.css'
 })
@@ -29,6 +31,7 @@ export class LiveScoresComponent {
   cachedData: MatchupCache; // Data that does not commonly change such as usernames, avatars, etc
 
   isPreseason: boolean = false;
+  showVFX: boolean = true;
 
   constructor(private sleeperApi: SleeperApiService) { }
 
@@ -108,6 +111,7 @@ export class LiveScoresComponent {
 
         this.aLeagueMatchups.push({
           matchup_id: player1.matchupId ?? player2.matchupId, // they should be identical
+          is_rivalry: this.isRivalry(player1.userId, player2.userId),
 
           manager_1_sleeper_id: player1.userId,
           manager_1_real_name: player1.managerName,
@@ -135,6 +139,7 @@ export class LiveScoresComponent {
 
         this.bLeagueMatchups.push({
           matchup_id: player1.matchupId ?? player2.matchupId, // they should be identical
+          is_rivalry: this.isRivalry(player1.userId, player2.userId),
 
           manager_1_sleeper_id: player1.userId,
           manager_1_real_name: player1.managerName,
@@ -157,6 +162,10 @@ export class LiveScoresComponent {
       }
 
     }
+  }
+
+  isRivalry(player1SleeperId, player2SleeperId): boolean {
+    return Constants.isRivalry(player1SleeperId, player2SleeperId);
   }
 
   isLoaded() {

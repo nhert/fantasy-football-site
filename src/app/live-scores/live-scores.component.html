@@ -1,7 +1,10 @@
 <div class="live-scores-container">
     <h1>B3FL Live Scores</h1>
-    <p>Click on a matchup to see individual player scores</p>
     <p>The refresh button can be used to quickly update scores without a full page reload</p>
+
+    <input type="checkbox" [(ngModel)]="showVFX" /><span style="font-size: 12px;">Show .gifs and effects? (Disable to
+        improve
+        performance)</span>
 
     <simple-spinner [loading]="loading"></simple-spinner>
 
@@ -18,7 +21,12 @@
             <div *ngFor="let matchup of aLeagueMatchups">
                 <div *ngIf="matchup.manager_1_sleeper_id && matchup.manager_2_sleeper_id" style="height: auto;"
                     class="matchup-panel">
-                    <!-- <img src="/assets/images/flames.gif" alt="" class="top-middle-flames-anchor"> -->
+                    <ng-container *ngIf="matchup.is_rivalry && showVFX">
+                        <img src="/assets/images/flames.gif" alt="" class="top-middle-flames-anchor" loading="lazy">
+                        <img src="/assets/images/heated-rivalry.png" alt="" class="top-middle-rivalry-text-anchor"
+                            loading="lazy"
+                            matTooltip="Whether it's a series of electric matchups, bad blood, or simmering tension: these GMs have a historic rivalry">
+                    </ng-container>
                     <div class="card-content-header">
 
                         <div class="left-content">
@@ -110,7 +118,12 @@
             <div *ngFor="let matchup of bLeagueMatchups">
                 <div *ngIf="matchup.manager_1_sleeper_id && matchup.manager_2_sleeper_id" style="height: auto;"
                     class="matchup-panel">
-                    <!-- <img src="/assets/images/flames.gif" alt="" class="top-middle-flames-anchor"> -->
+                    <ng-container *ngIf="matchup.is_rivalry && showVFX">
+                        <img src="/assets/images/flames.gif" alt="" class="top-middle-flames-anchor" loading="lazy">
+                        <img src="/assets/images/heated-rivalry.png" alt="" class="top-middle-rivalry-text-anchor"
+                            loading="lazy"
+                            matTooltip="Whether it's a series of electric matchups, bad blood, or simmering tension: these GMs have a historic rivalry">
+                    </ng-container>
                     <div class="card-content-header">
 
                         <div class="left-content">

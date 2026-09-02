@@ -2,6 +2,7 @@
 
 export interface Matchup {
     matchup_id: string,
+    is_rivalry: boolean,
 
     manager_1_sleeper_id: string,
     manager_1_real_name: string,

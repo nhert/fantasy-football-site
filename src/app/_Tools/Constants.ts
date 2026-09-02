@@ -295,20 +295,20 @@ export class Constants {
 		}
 	]
 
-	//TODO: use this to display flames over matchups
 	public static RIVALRIES = [
-		[9, 24], // Connor Dan
-		[], // Nate Caolan
-		[], // Nate Tom
-		[], // Nate Connor
-		[], // Zack Zach
-		[], // Jer Dalley
-		[], // Jake Rimon
-		[], // Jordan?? Tom
-		[], // Scott Jer
-		[], // Ryan Liam
-		[], // Omar Tom
-		[], // Jordan I v S
+		[2, 3], 	// Nate Caolan
+		[2, 12], 	// Nate Tom
+		[2, 9], 	// Nate Connor
+		[1, 4], 	// Jer Dalley
+		[1, 18], 	// Jer Scott
+		[9, 24], 	// Connor Dan
+		[9, 13], 	// Connor Ryan
+		[19, 5], 	// Jake Rimon
+		[10, 12], 	// JordanS Tom
+		[17, 20], 	// Zack Zach
+		[13, 15], 	// Ryan Liam
+		[6, 12], 	// Omar Tom
+		[14, 10], 	// Jordan I v S
 	];
 
 	public static DUMMY_USER = {
@@ -316,6 +316,7 @@ export class Constants {
 		sleeperId_current: "-",
 		sleeperIds_old: [],
 		legacyId: "-",
+		b3flId: -1,
 		currentLeague: "None"
 	}
 
@@ -342,6 +343,18 @@ export class Constants {
 			}
 		}
 		return this.DUMMY_USER;
+	}
+
+	public static isRivalry(player1SleeperId, player2SleeperId) {
+		const b3flId1 = Constants.getUserReal(player1SleeperId).b3flId;
+		const b3flId2 = Constants.getUserReal(player2SleeperId).b3flId;
+
+		for (var idPair of this.RIVALRIES) {
+			if ((idPair[0] == b3flId1 && idPair[1] == b3flId2) || (idPair[1] == b3flId1 && idPair[0] == b3flId2)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// get an array of all real user profiles of active gms (in a or b league and can be chosen for pickems/survivor games)
