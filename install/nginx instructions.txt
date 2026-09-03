@@ -20,13 +20,17 @@ START THE API BACKEND FOR SURVIVOR / PICKEMS (localhost:5000)
 
 1. npm install -g pm2 (install package manager2 globally if not already)
 2. npm install --os=linux --cpu=x64 sharp (install linux version of sharp so that we can use it here)
-2. cd to /var/www/ and make a folder "b3fl_db" and drop the pullPickemsSurvivorDbData.sh script inside it (example cd /var/www/b3fl_db/)
-3. Run ". pullPickemsSurvivorDbData.sh" (this clones/pulls latest github version of the pickem/survivor db to the directory)
-4. Run "sudo pm2 start server.js --name pickems-survivor-db" (api will listen on localhost in the background for reverse proxy from nginx)
+3. npm install -g sqlite3
+4. cd to /var/www/ and make a folder "b3fl_db" and drop the pullPickemsSurvivorDbData.sh script inside it (example cd /var/www/b3fl_db/)
+5. Run ". pullPickemsSurvivorDbData.sh" (this clones/pulls latest github version of the pickem/survivor db to the directory)
+6. Run "sudo pm2 start server.js --name pickems-survivor-db" (api will listen on localhost in the background for reverse proxy from nginx)
 
 UPDATE GAME BACKEND
 1. cd /var/www/b3fl_db/
 2. Run ". pullPickemsSurvivorDbData.sh"
+
+BACKUP DB
+cp main.db /var/www/b3fl_db/pickems-survivor-db/data
 
 SETUP NGINX FOR ANGULAR FRONTEND
 
@@ -42,3 +46,4 @@ UPDATE ANGULAR FRONTEND
 1. cd /usr/share/nginx/html/
 2. Run ". pullSiteData.sh"
 3. service nginx restart
+

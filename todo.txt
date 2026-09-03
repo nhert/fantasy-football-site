@@ -2,6 +2,8 @@
 CRITICAL
 - improve the security of the /api/ endpoint. Right now there is rudimentary measures to prevent a user from using their browser url to trigger routes, but CURL or otherwise could be used to break
 - test cron job + calling update scores
+- update matchup count in front/backend to 14
+- Add user entries for new b leaguers
 
 MINOR
 - refactor how this.selectedWeek is used for verification - instead of relying on current week selector value need to check value of the current loaded matchups week

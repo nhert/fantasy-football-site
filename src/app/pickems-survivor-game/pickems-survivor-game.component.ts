@@ -133,6 +133,20 @@ export class PickemsSurvivorGameComponent {
       console.log("Pickems/Survivor Pool page has been loaded pre-season");
       gamePhase = GameStatePhase.PreSeason;
       this.gamesUnlockDate = new Date(scheduleEntries[0].start_datetime);
+      this.gameState = {
+        season: year,
+        week: scheduleEntry.week,
+        phase: gamePhase,
+        server_current_datetime_utc_iso: server_time_utc_iso,
+        current_start_datetime_utc_iso: scheduleEntry.start_datetime,
+        current_start_local_date_display: new Date(scheduleEntry.start_datetime),
+        current_cutoff_datetime_utc_iso: scheduleEntry.cutoff_datetime,
+        current_cutoff_local_date_display: new Date(scheduleEntry.cutoff_datetime),
+        last_processed_week: survivorPickemsState.last_processed_week,
+        survivor_pool_outcome: survivorPickemsState.survivor_pool_outcome,
+        survivor_pool_winning_owners: survivorPickemsState.survivor_pool_winning_owners,
+        survivor_pool_winning_week: survivorPickemsState.survivor_pool_winning_week
+      }
       this.getPreSeasonGameUsers();
     }
     // Its the fantasy regular season 

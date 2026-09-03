@@ -1,5 +1,5 @@
 <div class="game-container">
-    <ng-container *ngIf="currentUser">
+    <ng-container *ngIf="currentUser && gameState">
         <simple-spinner [loading]="!isGameStateLoaded" [title]="'Loading game data ...'"></simple-spinner>
 
         <div style="margin-left: 20px; margin-right: 20px;" *ngIf="isGameStateLoaded && gameState.phase == 0">

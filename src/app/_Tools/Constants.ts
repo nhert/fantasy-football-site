@@ -158,7 +158,7 @@ export class Constants {
 			currentLeague: this.B_LEAGUE_NAME
 		},
 		{
-			name: "Eric",
+			name: "Hendy",
 			sleeperId_current: "866400340310917120",
 			sleeperIds_old: [],
 			legacyId: "userId-144377",
@@ -292,7 +292,23 @@ export class Constants {
 			legacyId: "-",
 			b3flId: 27,
 			currentLeague: this.B_LEAGUE_NAME
-		}
+		},
+		// {
+		// 	name: "Huttfluss",
+		// 	sleeperId_current: "",
+		// 	sleeperIds_old: [],
+		// 	legacyId: "-",
+		// 	b3flId: 28,
+		// 	currentLeague: this.B_LEAGUE_NAME
+		// },
+		// {
+		// 	name: "Lindon",
+		// 	sleeperId_current: "",
+		// 	sleeperIds_old: [],
+		// 	legacyId: "-",
+		// 	b3flId: 29,
+		// 	currentLeague: this.B_LEAGUE_NAME
+		// }
 	]
 
 	public static RIVALRIES = [
