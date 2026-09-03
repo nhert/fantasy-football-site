@@ -6,8 +6,8 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTabsModule } from "@angular/material/tabs";
 import { GameSurvivorPoolContentComponent } from "../game-survivor-pool-content/game-survivor-pool-content.component";
-import { GamePickemsContentComponent, PickemsPickStatus } from "../game-pickems-content/game-pickems-content.component";
-import { GameSchedule, GameState, GameUser, PickemsDbRow, PickemsMatchup, PickemsMatchupCache, PickemsScore, SurvivorDbRow, SurvivorEntries, UnderdogStatus } from '../_Models/survivor.pickems.models';
+import { GamePickemsContentComponent } from "../game-pickems-content/game-pickems-content.component";
+import { FANTASY_WEEKS_REGULAR_SEASON, GameSchedule, GameState, GameStatePhase, GameUser, PickemsDbRow, PickemsMatchup, PickemsMatchupCache, PickemsPickStatus, PickemsScore, SurvivorDbRow, SurvivorEntries, UnderdogStatus } from '../_Models/survivor.pickems.models';
 import { MatTableDataSource } from '@angular/material/table';
 import { firstValueFrom, forkJoin, Observable } from 'rxjs';
 import { Constants } from '../_Tools/Constants';
@@ -15,10 +15,6 @@ import { SimpleSpinnerComponent } from "../simple-spinner/simple-spinner.compone
 import { DisplayMode, PickemsSurvivorWarningInfoBoxComponent } from "../pickems-survivor-warning-info-box/pickems-survivor-warning-info-box.component";
 import { PickemsSurvivorCalendarComponent } from "../pickems-survivor-calendar/pickems-survivor-calendar.component";
 import { PickemsSurvivorTimerComponent } from "../pickems-survivor-timer/pickems-survivor-timer.component";
-
-enum GameStatePhase {
-  PreSeason, InSeason, PostSeason
-}
 
 @Component({
   selector: 'pickems-survivor-game',
@@ -36,11 +32,8 @@ export class PickemsSurvivorGameComponent {
   @ViewChild(GameSurvivorPoolContentComponent) survivorPoolContent!: GameSurvivorPoolContentComponent;
   @ViewChild(GamePickemsContentComponent) pickemsContent!: GamePickemsContentComponent;
 
-  public static FANTASY_WEEKS_REGULAR_SEASON = 14; // number of weeks in the fantasy regular season
-
   // state information
   public gameState: GameState; // nfl week rotates to the next on wednesdays at 2-3am. 
-  public gamePhase: GameStatePhase; // Preseason / Reg Season / Post Season
   public gameSchedule: GameSchedule[];
   public gameUsers: any[] = []; // fields: user_email, username, avatar_url
   public gamesUnlockDate: Date; // utility variable. in pre-season displays when games unlock.
@@ -124,11 +117,12 @@ export class PickemsSurvivorGameComponent {
     let nflStateWeek = state.week;
     const year = state.season;
     let server_time_utc_iso = time.server_time;
+    let gamePhase = GameStatePhase.PreSeason;
 
     if (this.demoMode) {
       console.log("RESETTING SERVER TIME FOR DEMO MODE");
-      // nflStateWeek = 0;
-      nflStateWeek = survivorPickemsState.last_processed_week >= 14 ? 14 : survivorPickemsState.last_processed_week + 1;
+      //nflStateWeek = survivorPickemsState.last_processed_week >= 14 ? 14 : survivorPickemsState.last_processed_week + 1;
+      nflStateWeek = survivorPickemsState.last_processed_week + 1;
       server_time_utc_iso = this.demo_getCurrentTimeBasedOnSchedule(nflStateWeek, 3600000);
     }
 
@@ -137,18 +131,18 @@ export class PickemsSurvivorGameComponent {
     // Its the pre-season
     if (scheduleEntry.week <= 0) {
       console.log("Pickems/Survivor Pool page has been loaded pre-season");
-      this.gamePhase = GameStatePhase.PreSeason;
+      gamePhase = GameStatePhase.PreSeason;
       this.gamesUnlockDate = new Date(scheduleEntries[0].start_datetime);
       this.getPreSeasonGameUsers();
     }
     // Its the fantasy regular season 
     else {
       // Its the post-season
-      if (nflStateWeek > PickemsSurvivorGameComponent.FANTASY_WEEKS_REGULAR_SEASON) {
+      if (nflStateWeek > FANTASY_WEEKS_REGULAR_SEASON) {
         console.log("Pickems/Survivor Pool page has been loaded post-season");
-        this.gamePhase = GameStatePhase.PostSeason;
+        gamePhase = GameStatePhase.PostSeason;
       } else {
-        this.gamePhase = GameStatePhase.InSeason;
+        gamePhase = GameStatePhase.InSeason;
       }
 
       // initialize the gamestate variable
@@ -156,6 +150,7 @@ export class PickemsSurvivorGameComponent {
       this.gameState = {
         season: year,
         week: scheduleEntry.week,
+        phase: gamePhase,
         server_current_datetime_utc_iso: server_time_utc_iso,
         current_start_datetime_utc_iso: scheduleEntry.start_datetime,
         current_start_local_date_display: new Date(scheduleEntry.start_datetime),
@@ -682,6 +677,11 @@ export class PickemsSurvivorGameComponent {
     let serverTime = this.demo_getCurrentTimeBasedOnSchedule(curWeek, 3600000);
     let scheduleEntry = this.getCurrentSchedule(serverTime);
 
+    let phase = GameStatePhase.InSeason;
+    if (this.gameState.week >= 14) {
+      phase = GameStatePhase.PostSeason;
+    }
+
     if (this.survivorPoolContent)
       this.survivorPoolContent.didUserSuccessfullySubmit = false;
 
@@ -694,10 +694,10 @@ export class PickemsSurvivorGameComponent {
     this.survivorPickemsApi.getSurvivorPickemsGameStates().subscribe(survivorPickemsState => {
       // initialize the gamestate variable
       // Remember: this isnt necessarily the sleeper nflstate week, this is the week for pickems/survivor which rotates forward on tuesday night / wednesday morning (2am).
-
       this.gameState = {
         season: 2025,
         week: scheduleEntry.week,
+        phase: phase,
         server_current_datetime_utc_iso: serverTime,
         current_start_datetime_utc_iso: scheduleEntry.start_datetime,
         current_start_local_date_display: new Date(scheduleEntry.start_datetime),
@@ -708,7 +708,6 @@ export class PickemsSurvivorGameComponent {
         survivor_pool_winning_owners: survivorPickemsState.survivor_pool_winning_owners,
         survivor_pool_winning_week: survivorPickemsState.survivor_pool_winning_week
       }
-      this.gamePhase = GameStatePhase.InSeason;
 
       this.getGameUsers();
       this.survivorPoolContent?.resetTimer();

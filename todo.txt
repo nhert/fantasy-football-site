@@ -1,13 +1,11 @@
 
 CRITICAL
-- the allow/deny for nginx config /api/ is forbidden. Is this because SSR isnt being used?
+- improve the security of the /api/ endpoint. Right now there is rudimentary measures to prevent a user from using their browser url to trigger routes, but CURL or otherwise could be used to break
 - test cron job + calling update scores
 
 MINOR
-- backup all pickems/survivor picks before updating scores
 - refactor how this.selectedWeek is used for verification - instead of relying on current week selector value need to check value of the current loaded matchups week
 
 NICE TO HAVE
-- Improve the visuals of the survivor pool finished screen. Dont just use text
 - calendar tasks button
-- live scores: actually calculate or get each users fantasy record
+- live scores: get each users fantasy record

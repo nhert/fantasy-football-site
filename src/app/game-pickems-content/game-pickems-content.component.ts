@@ -1,8 +1,8 @@
 import { Component, EventEmitter, HostListener, inject, Input, Output, ViewChild } from '@angular/core';
-import { GameState, GameUser, PickemsDbRow, PickemsMatchup, PickemsScore, UnderdogStatus } from '../_Models/survivor.pickems.models';
+import { FANTASY_WEEKS_REGULAR_SEASON, GameState, GameStatePhase, GameUser, PickemsDbRow, PickemsMatchup, PickemsPickStatus, PickemsScore, TOTAL_MATCHUP_COUNT, UnderdogStatus } from '../_Models/survivor.pickems.models';
 import { PickemsSurvivorTimerComponent } from "../pickems-survivor-timer/pickems-survivor-timer.component";
 import { MatInputModule } from "@angular/material/input";
-import { MatSelect, MatSelectChange, MatSelectModule } from "@angular/material/select";
+import { MatSelectChange, MatSelectModule } from "@angular/material/select";
 import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
 import { CommonModule } from '@angular/common';
@@ -17,17 +17,6 @@ import { GamePickemsStandingsContentComponent } from "../game-pickems-standings-
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SimpleSpinnerComponent } from "../simple-spinner/simple-spinner.component";
-
-const MAX_WEEKS: number = 14;
-const TOTAL_MATCHUP_COUNT = 13;
-
-export enum PickemsPickStatus {
-  NONE,
-  PICK,
-  DOUBLE,
-  TRIPLE,
-  AUTO
-}
 
 @Component({
   selector: 'game-pickems-content',
@@ -72,13 +61,11 @@ export class GamePickemsContentComponent {
   userMadePickNoPageRefreshYet: boolean = false;
   showDemoModeEnabled: boolean = Constants.PICKEMS_SURVIVOR_SHOW_DEMO_MODE;
 
-  public StatusEnum = PickemsPickStatus;
   public DisplayModeEnum = DisplayMode;
-  public UnderdogEnum = UnderdogStatus;
 
   private toastr = inject(ToastrService);
 
-  readonly weekOptions: number[] = Array.from({ length: MAX_WEEKS }, (_, i) => i + 1);
+  readonly weekOptions: number[] = Array.from({ length: FANTASY_WEEKS_REGULAR_SEASON }, (_, i) => i + 1);
 
   constructor(private survivorPickemsApi: SurvivorPickemsApiService) { }
 
@@ -126,6 +113,9 @@ export class GamePickemsContentComponent {
     this.passedDeadlineDisableUi = true;
   }
 
+  get isPickemsFinished() {
+    return this.gameState.phase == GameStatePhase.PostSeason;
+  }
   get shouldShowWarningToMakePick() {
     return !this.passedDeadlineDisableUi
       && this.isCurrentUserSelectedInProfileDropdown()

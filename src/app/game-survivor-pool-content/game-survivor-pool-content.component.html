@@ -87,12 +87,13 @@
         <div class="flex-centered">
             <mat-card style="background-color: var(--accent-color); width: 600px;">
                 <mat-card-content>
-                    <span style="font-size: 36px; color: var(--text-color);">Survivor Pool Finished!</span>
-                    <br><br>
-                    <span style="font-size: 18px; color: var(--text-color);">{{survivorPoolOutcome}}</span>
-                    <br><br><br>
-                    <mat-icon style="transform: scale(2); color:#dbbc0a">star_border</mat-icon>
-                    <br><br>
+                    <span style="font-size: 36px; color: var(--text-color);">Survivor Pool Finished</span>
+                    <br>
+                    <img src="/assets/images/spinning-star.gif" alt="Star" style="width: 150px; height: 150px;"
+                        loading="lazy">
+                    <br>
+                    <span style="font-size: 18px; color: var(--text-color);"><i>{{survivorPoolOutcome}}</i></span>
+                    <br>
                     <span style="font-size: 30px; color:#dbbc0a">Congratulations to
                         {{getListOfSurvivorPoolWinningUsernames()}}!</span>
                 </mat-card-content>

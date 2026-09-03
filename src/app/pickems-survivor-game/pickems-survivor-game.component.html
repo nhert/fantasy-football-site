@@ -2,9 +2,9 @@
     <ng-container *ngIf="currentUser">
         <simple-spinner [loading]="!isGameStateLoaded" [title]="'Loading game data ...'"></simple-spinner>
 
-        <div style="margin-left: 20px; margin-right: 20px;" *ngIf="isGameStateLoaded && gamePhase==0">
+        <div style="margin-left: 20px; margin-right: 20px;" *ngIf="isGameStateLoaded && gameState.phase == 0">
             <app-pickems-survivor-warning-info-box [displayMode]="DisplayModeEnum.Info"
-                [shouldDisplay]="isGameStateLoaded && gamePhase==0"
+                [shouldDisplay]="isGameStateLoaded && gameState.phase == 0"
                 [message]="`Fantasy season hasn\'t started yet! Pick'ems & Survivor Pool will unlock at ${this.gamesUnlockDate}`"></app-pickems-survivor-warning-info-box>
             <!-- <pickems-survivor-timer [gameState]="gameState"
                     [currentUserEliminated]="false"></pickems-survivor-timer> -->
@@ -21,10 +21,7 @@
         </div>
 
         <!-- user loaded the game state in-season -->
-        <div *ngIf="isGameStateLoaded && (gamePhase==1 || gamePhase==2)">
-            <div *ngIf="gamePhase==2">
-                <h2>Fantasy regular season has finished. Thanks for playing!</h2>
-            </div>
+        <div *ngIf="isGameStateLoaded && (gameState.phase == 1 || gameState.phase == 2)">
             <mat-tab-group class="game-tab-group" animationDuration="200ms" dynamicHeight>
                 <mat-tab label="Survivor">
                     <ng-template matTabContent>

@@ -1,10 +1,24 @@
 // Generic
 
-import { PickemsPickStatus } from "../game-pickems-content/game-pickems-content.component";
+export const FANTASY_WEEKS_REGULAR_SEASON = 14; // number of weeks in the fantasy regular season
+export const TOTAL_MATCHUP_COUNT = 13;
+
+export enum GameStatePhase {
+    PreSeason, InSeason, PostSeason
+}
+
+export enum PickemsPickStatus {
+    NONE,
+    PICK,
+    DOUBLE,
+    TRIPLE,
+    AUTO
+}
 
 export interface GameState {
     season: number,
     week: number,
+    phase: GameStatePhase,
     server_current_datetime_utc_iso: string,
     current_start_datetime_utc_iso: string,
     current_start_local_date_display: Date, // takes the UTC ISO string, and wraps it in a Date object which translates to local users timezone. For display

@@ -17,6 +17,7 @@ import { MatExpansionPanel, MatExpansionModule } from "@angular/material/expansi
 export class GamePickemsStandingsContentComponent {
   @Input('currentUser') currentUser: GameUser;
   @Input('dataSource') dataSource: MatTableDataSource<PickemsScore>; // data source for the survivor pool table
+  @Input('showExpanded') showExpanded: boolean = false;
   @Output('reloadPickemsScores') reloadPickemsScores = new EventEmitter<void>();
 
   displayedColumns: string[] = ['username', 'score'];
