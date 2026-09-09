@@ -41,12 +41,6 @@ export class PickemsMatchupGridComponent {
     this.isViewInit = true;
   }
 
-  protected getPickemsScoreDisplay(score: number) {
-    if (!this.isShowPickemsScores()) return "";
-    if (score > 0) return "+" + score;
-    return score;
-  }
-
   onClickMakePick(matchup_id, sleeper_id) {
     //console.log("pick made " + sleeper_id);
     const pickPayload = {

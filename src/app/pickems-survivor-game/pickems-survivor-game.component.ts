@@ -7,7 +7,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatTabsModule } from "@angular/material/tabs";
 import { GameSurvivorPoolContentComponent } from "../game-survivor-pool-content/game-survivor-pool-content.component";
 import { GamePickemsContentComponent } from "../game-pickems-content/game-pickems-content.component";
-import { FANTASY_WEEKS_REGULAR_SEASON, GameSchedule, GameState, GameStatePhase, GameUser, PickemsDbRow, PickemsMatchup, PickemsMatchupCache, PickemsPickStatus, PickemsScore, SurvivorDbRow, SurvivorEntries, UnderdogStatus } from '../_Models/survivor.pickems.models';
+import { FANTASY_WEEKS_REGULAR_SEASON, FantasyStarterData, GameSchedule, GameState, GameStatePhase, GameUser, PickemsDbRow, PickemsMatchup, PickemsMatchupCache, PickemsPickStatus, PickemsScore, SurvivorDbRow, SurvivorEntries, UnderdogStatus } from '../_Models/survivor.pickems.models';
 import { MatTableDataSource } from '@angular/material/table';
 import { firstValueFrom, forkJoin, Observable } from 'rxjs';
 import { Constants } from '../_Tools/Constants';
@@ -379,11 +379,13 @@ export class PickemsSurvivorGameComponent {
     for (var matchup of matchups) {
       const player1 = matchup[0];
       const player2 = matchup[1];
+      const score = this.getPickemsScore(week, player1.userId, player2.userId, currentSelectedProfileEntries);
 
       this.pickemsMatchups.push({
         league_type: league_type,
         allow_pick: this.getCurrentUserAllowedToMakePickemsPick(player1.userId, player2.userId, currentUserPickemsEntries),
-        pickems_score: this.getPickemsScore(week, player1.userId, player2.userId, currentSelectedProfileEntries),
+        pickems_score: score,
+        pickems_score_displayFormatted: this.getPickemsScoreDisplay(score),
         matchup_id: player1.matchupId ?? player2.matchupId, // they should be identical
 
         manager_1_sleeper_id: player1.userId,
@@ -391,7 +393,7 @@ export class PickemsSurvivorGameComponent {
         manager_1_sleeper_name: player1.sleeperName,
         manager_1_team_name: player1.teamName,
         manager_1_avatar_url: player1.avatarUrl,
-        manager_1_starters: player1.startingPlayers,
+        manager_1_starters: this.convertNflStartersArray(player1.startingPlayers),
         manager_1_points: player1.points,
         manager_1_pick_status: this.getCurrentPickemsProfilePickStatus(player1.userId, currentSelectedProfileEntries),
         manager_1_underdog_status: this.getManagerUnderdogStatus(week, player1.userId, player2.userId),
@@ -402,13 +404,21 @@ export class PickemsSurvivorGameComponent {
         manager_2_sleeper_name: player2.sleeperName,
         manager_2_team_name: player2.teamName,
         manager_2_avatar_url: player2.avatarUrl,
-        manager_2_starters: player2.startingPlayers,
+        manager_2_starters: this.convertNflStartersArray(player2.startingPlayers),
         manager_2_points: player2.points,
         manager_2_pick_status: this.getCurrentPickemsProfilePickStatus(player2.userId, currentSelectedProfileEntries),
         manager_2_underdog_status: this.getManagerUnderdogStatus(week, player2.userId, player1.userId),
         manager_2_record_at_week: this.getManagerRecordForWeek(week, player2.userId),
       });
     }
+  }
+
+  private convertNflStartersArray(starters: any[]): FantasyStarterData[] {
+    return starters.map(data => ({
+      playerPosition: data.player.position,
+      playerName: data.player.full_name,
+      playerScore: data.playerScore
+    }));
   }
 
   // whether or not to show the three buttons for pick/double/triple above matchup
@@ -442,6 +452,11 @@ export class PickemsSurvivorGameComponent {
     }
 
     return scoreEntry.score;
+  }
+
+  protected getPickemsScoreDisplay(score: number): string {
+    if (score > 0) return "+" + score;
+    return "" + score;
   }
 
   private getManagerRecordForWeek(week, managerId: string) {
@@ -728,6 +743,9 @@ export class PickemsSurvivorGameComponent {
       this.pickemsContent?.resetTimer();
       if (this.pickemsContent) {
         this.pickemsContent.selectedWeek = curWeek;
+      }
+      if (this.survivorPoolContent) {
+        this.survivorPoolContent.setListOfSurvivorPoolWinningUsernames();
       }
       this.isDemoLoading = false;
     });

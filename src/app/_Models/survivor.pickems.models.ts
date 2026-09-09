@@ -101,6 +101,7 @@ export interface PickemsMatchup {
     league_type: string,
     allow_pick: boolean,
     pickems_score: number,
+    pickems_score_displayFormatted: string,
     matchup_id: string,
 
     manager_1_sleeper_id: string,
@@ -108,7 +109,7 @@ export interface PickemsMatchup {
     manager_1_sleeper_name: string,
     manager_1_team_name: string,
     manager_1_avatar_url: string,
-    manager_1_starters: any[],
+    manager_1_starters: FantasyStarterData[],
     manager_1_points: number,
     manager_1_pick_status: PickemsPickStatus,
     manager_1_underdog_status: UnderdogStatus,
@@ -119,13 +120,19 @@ export interface PickemsMatchup {
     manager_2_sleeper_name: string,
     manager_2_team_name: string,
     manager_2_avatar_url: string,
-    manager_2_starters: any[],
+    manager_2_starters: FantasyStarterData[],
     manager_2_points: number,
     manager_2_pick_status: PickemsPickStatus,
     manager_2_underdog_status: UnderdogStatus,
     manager_2_record_at_week: string
 
     // underdog related fields
+}
+
+export interface FantasyStarterData {
+    playerName: string,
+    playerPosition: string,
+    playerScore: number
 }
 
 export interface PickemsMatchupCache {

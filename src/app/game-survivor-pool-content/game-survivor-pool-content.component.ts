@@ -59,6 +59,8 @@ export class GameSurvivorPoolContentComponent {
   readonly column_username = 'playerUsername';
   readonly column_week_prefix = 'week';
 
+  winningUsersDisplayString: string = "";
+
   // flags
   isTablePrepared: boolean = false;
   isLoading: boolean = false;
@@ -70,6 +72,7 @@ export class GameSurvivorPoolContentComponent {
 
   ngOnInit() {
     this.prepTable();
+    this.setListOfSurvivorPoolWinningUsernames();
     this.isTablePrepared = true;
     this.didUserSuccessfullySubmit = false;
   }
@@ -197,8 +200,7 @@ export class GameSurvivorPoolContentComponent {
     this.passedDeadlineDisableUi = true;
   }
 
-  //TODO: THIS GETS CALLED MULTIPLE TIMES PER FRAME
-  protected getListOfSurvivorPoolWinningUsernames() {
+  public setListOfSurvivorPoolWinningUsernames() {
     if (this.gameState.survivor_pool_outcome != "UNKNOWN" && this.gameState.survivor_pool_winning_owners) {
       const arrayOfEmails = this.gameState.survivor_pool_winning_owners.split(",");
       const arrayOfUsernames = [];
@@ -209,10 +211,8 @@ export class GameSurvivorPoolContentComponent {
         arrayOfUsernames.push(this.getGameUserFromEmail(email)?.username);
       }
 
-      return arrayOfUsernames.join(", ");
+      this.winningUsersDisplayString = arrayOfUsernames.join(", ");
     }
-
-    return "";
   }
 
   get alphabetizedUsersForALeague() {

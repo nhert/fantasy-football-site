@@ -58,6 +58,7 @@ export class PickemsSurvivorLobbyComponent {
   private readonly demo_user_email = "demo.user@b3fl.com";
 
   protected existingUsernames: string[];
+  usernameControl!: AbstractControl | null;
 
   private sub_Auth: Subscription;
   user$ = this.auth.user$;
@@ -87,11 +88,9 @@ export class PickemsSurvivorLobbyComponent {
     });
   }
 
-  get username() {
-    return this.userForm.get('username');
-  }
-
   ngOnInit(): void {
+    this.usernameControl = this.userForm.get('username');
+
     if (Constants.PICKEMS_SURVIVOR_SKIP_AUTH) {
       console.log("Pickems Survivor Lobby started with logins DISABLED");
       this.authenticateInDevMode();
@@ -190,9 +189,9 @@ export class PickemsSurvivorLobbyComponent {
     //console.log(`acct name [${this.username.value}]`);
     const user = {
       email: this.currentUser.email,
-      username: this.username.value
+      username: this.usernameControl.value
     }
-    this.currentUser.username = this.username.value;
+    this.currentUser.username = this.usernameControl.value;
     this.survivorPickemsApi.addUser(user).subscribe({
       next: () => {
         this.isGameUserNeedsCreation = false;
@@ -210,11 +209,11 @@ export class PickemsSurvivorLobbyComponent {
     //console.log(`acct name update [${this.username.value}]`);
     const user = {
       email: this.currentUser.email,
-      username: this.username.value
+      username: this.usernameControl.value
     }
     if (!user.username || user.username == "") return;
 
-    this.currentUser.username = this.username.value;
+    this.currentUser.username = this.usernameControl.value;
     this.survivorPickemsApi.updateUsername(this.currentUser.email, user).subscribe({
       next: () => {
         this.closeUsernameChangeModal();

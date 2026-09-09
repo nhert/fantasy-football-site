@@ -53,21 +53,21 @@
                             style="width: 200px; height: 40px; font-size: 16px; margin-bottom: 10px;" />
 
                         <!-- Validation Error Messages -->
-                        @if ((username?.invalid) || !termsCheck.checked) {
+                        @if ((usernameControl?.invalid) || !termsCheck.checked) {
                         <div class="error-container">
-                            @if (username?.hasError('required')) {
+                            @if (usernameControl?.hasError('required')) {
                             <p class="error-text">Nickname is required.</p>
                             }
-                            @if (username?.hasError('minlength')) {
+                            @if (usernameControl?.hasError('minlength')) {
                             <p class="error-text">Nickname must be at least 3 characters long.</p>
                             }
-                            @if (username?.hasError('maxlength')) {
+                            @if (usernameControl?.hasError('maxlength')) {
                             <p class="error-text">Nickname must be 14 or less characters long.</p>
                             }
-                            @if (username?.hasError('pattern')) {
+                            @if (usernameControl?.hasError('pattern')) {
                             <p class="error-text">Nickname can only contain letters and numbers.</p>
                             }
-                            @if (username?.hasError('uniqueUsername')) {
+                            @if (usernameControl?.hasError('uniqueUsername')) {
                             <p class="error-text">Nickname has already been taken.</p>
                             }
                             @if (!termsCheck.checked){
@@ -298,21 +298,21 @@
                             style="width: 250px; height: 40px; font-size: 16px; margin-bottom: 5px;" />
 
                         <!-- Validation Error Messages -->
-                        @if ((username?.invalid)) {
+                        @if ((usernameControl?.invalid)) {
                         <div class="error-container">
-                            @if (username?.hasError('required')) {
+                            @if (usernameControl?.hasError('required')) {
                             <p class="error-text">Nickname is required.</p>
                             }
-                            @if (username?.hasError('minlength')) {
+                            @if (usernameControl?.hasError('minlength')) {
                             <p class="error-text">Nickname must be at least 3 characters long.</p>
                             }
-                            @if (username?.hasError('maxlength')) {
+                            @if (usernameControl?.hasError('maxlength')) {
                             <p class="error-text">Nickname must be 14 or less characters long.</p>
                             }
-                            @if (username?.hasError('pattern')) {
+                            @if (usernameControl?.hasError('pattern')) {
                             <p class="error-text">Nickname can only contain letters and numbers.</p>
                             }
-                            @if (username?.hasError('uniqueUsername')) {
+                            @if (usernameControl?.hasError('uniqueUsername')) {
                             <p class="error-text">Nickname has already been taken.</p>
                             }
                         </div>

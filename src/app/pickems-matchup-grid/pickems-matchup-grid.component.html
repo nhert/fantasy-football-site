@@ -27,18 +27,20 @@
                 <img src="/assets/images/auto_pick_chip.png" alt="Logo" class="top-right-anchor"
                     *ngIf="matchup.manager_2_pick_status === StatusEnum.AUTO">
 
-                <div [class.score-positive]="matchup.pickems_score > 0"
-                    [class.score-negative]="matchup.pickems_score < 0"
-                    [class.score-neutral]="matchup.pickems_score == 0"
-                    *ngIf="matchup.manager_1_pick_status === StatusEnum.DOUBLE || matchup.manager_1_pick_status === StatusEnum.TRIPLE || matchup.manager_1_pick_status === StatusEnum.PICK || matchup.manager_1_pick_status === StatusEnum.AUTO">
-                    <span class="top-left-anchor-score">{{getPickemsScoreDisplay(matchup.pickems_score)}}</span>
-                </div>
-                <div [class.score-positive]="matchup.pickems_score > 0"
-                    [class.score-negative]="matchup.pickems_score < 0"
-                    [class.score-neutral]="matchup.pickems_score == 0"
-                    *ngIf="matchup.manager_2_pick_status === StatusEnum.DOUBLE || matchup.manager_2_pick_status === StatusEnum.TRIPLE || matchup.manager_2_pick_status === StatusEnum.PICK || matchup.manager_2_pick_status === StatusEnum.AUTO">
-                    <span class="top-right-anchor-score">{{getPickemsScoreDisplay(matchup.pickems_score)}}</span>
-                </div>
+                <ng-container *ngIf="isShowPickemsScores()">
+                    <div [class.score-positive]="matchup.pickems_score > 0"
+                        [class.score-negative]="matchup.pickems_score < 0"
+                        [class.score-neutral]="matchup.pickems_score == 0"
+                        *ngIf="matchup.manager_1_pick_status === StatusEnum.DOUBLE || matchup.manager_1_pick_status === StatusEnum.TRIPLE || matchup.manager_1_pick_status === StatusEnum.PICK || matchup.manager_1_pick_status === StatusEnum.AUTO">
+                        <span class="top-left-anchor-score">{{matchup.pickems_score_displayFormatted}}</span>
+                    </div>
+                    <div [class.score-positive]="matchup.pickems_score > 0"
+                        [class.score-negative]="matchup.pickems_score < 0"
+                        [class.score-neutral]="matchup.pickems_score == 0"
+                        *ngIf="matchup.manager_2_pick_status === StatusEnum.DOUBLE || matchup.manager_2_pick_status === StatusEnum.TRIPLE || matchup.manager_2_pick_status === StatusEnum.PICK || matchup.manager_2_pick_status === StatusEnum.AUTO">
+                        <span class="top-right-anchor-score">{{matchup.pickems_score_displayFormatted}}</span>
+                    </div>
+                </ng-container>
 
                 <div class="left-content">
                     <div style="margin-bottom: 10px;">
@@ -138,26 +140,27 @@
                 <div class="card-content-players">
                     <div class="left-content player-content-left">
                         <div class="player-content-style-left">
-                            <div *ngFor="let data of matchup.manager_1_starters"
+                            <div *ngFor="let starter of matchup.manager_1_starters"
                                 style="container-type: inline-size; height: 40px;">
                                 <p>
                                     <span
-                                        class="player-content-text-position margin-r-5"><em>{{data.player.position}}</em></span>
-                                    <span class="player-content-text-name margin-r-15">{{data.player.full_name}}</span>
-                                    <span class="player-content-text-score"><b>{{data.playerScore}}</b></span>
+                                        class="player-content-text-position margin-r-5"><em>{{starter.playerPosition}}</em></span>
+                                    <span class="player-content-text-name margin-r-15">{{starter.playerName}}</span>
+                                    <span class="player-content-text-score"><b>{{starter.playerScore}}</b></span>
                                 </p>
                             </div>
                         </div>
                     </div>
                     <div class="right-content player-content-right">
                         <div class="player-content-style-right">
-                            <div *ngFor="let data of matchup.manager_2_starters"
+                            <div *ngFor="let starter of matchup.manager_2_starters"
                                 style="container-type: inline-size; height: 40px;">
                                 <p>
                                     <span
-                                        class="player-content-text-score margin-r-15"><b>{{data.playerScore}}</b></span>
-                                    <span class="player-content-text-name margin-r-5">{{data.player.full_name}}</span>
-                                    <span class="player-content-text-position"><em>{{data.player.position}}</em></span>
+                                        class="player-content-text-score margin-r-15"><b>{{starter.playerScore}}</b></span>
+                                    <span class="player-content-text-name margin-r-5">{{starter.playerName}}</span>
+                                    <span
+                                        class="player-content-text-position"><em>{{starter.playerPosition}}</em></span>
                                 </p>
                             </div>
                         </div>
