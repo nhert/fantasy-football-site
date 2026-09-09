@@ -6,16 +6,16 @@ import nflPlayersJson from '../../assets/nflPlayers/nfl_players.json'
 export class Constants {
 
 	// Set to the most current Sleeper League ID. This will update when commish starts a new season.
-	static A_LEAGUE_SLEEPER_ID = "1257104499407863808"; // 2025
-	static B_LEAGUE_SLEEPER_ID = "1257479897941553152"; // 2025
-	//static A_LEAGUE_SLEEPER_ID = "1389348365044576256"; // 2026
-	//static B_LEAGUE_SLEEPER_ID = "1389346418421932032"; // 2026
+	//static A_LEAGUE_SLEEPER_ID = "1257104499407863808"; // 2025
+	//static B_LEAGUE_SLEEPER_ID = "1257479897941553152"; // 2025
+	static A_LEAGUE_SLEEPER_ID = "1389348365044576256"; // 2026
+	static B_LEAGUE_SLEEPER_ID = "1389346418421932032"; // 2026
 
 	// PICKEMS / SURVIVOR POOL RELATED CONSTANTS	
 	static PICKEMS_SURVIVOR_AVATAR_FOLDER: string = "/avatars/";
 	static PICKEMS_SURVIVOR_AVATAR_MAX_FILESIZE = 5 * 1024 * 1024;
 	static PICKEMS_SURVIVOR_DEFAULT_AVATAR_URL: string = "/assets/images/default_avatar.png";
-	static PICKEMS_SURVIVOR_SHOW_DEMO_MODE: boolean = true; // FALSE IN PRODUCTION MODE. show the demo pickems survivor pool tab
+	static PICKEMS_SURVIVOR_SHOW_DEMO_MODE: boolean = false; // FALSE IN PRODUCTION MODE. show the demo pickems survivor pool tab
 	static PICKEMS_SURVIVOR_SKIP_AUTH: boolean = false; // FALSE IN PRODUCTION MODE. skip auth0 login
 	static PICKEMS_SURVIVOR_IN_LOCAL_TESTING_MODE: boolean = false; // FALSE IN PRODUCTION MODE. set to false for (nginx) deployment.
 
@@ -293,22 +293,22 @@ export class Constants {
 			b3flId: 27,
 			currentLeague: this.B_LEAGUE_NAME
 		},
-		// {
-		// 	name: "Huttfluss",
-		// 	sleeperId_current: "",
-		// 	sleeperIds_old: [],
-		// 	legacyId: "-",
-		// 	b3flId: 28,
-		// 	currentLeague: this.B_LEAGUE_NAME
-		// },
-		// {
-		// 	name: "Lindon",
-		// 	sleeperId_current: "",
-		// 	sleeperIds_old: [],
-		// 	legacyId: "-",
-		// 	b3flId: 29,
-		// 	currentLeague: this.B_LEAGUE_NAME
-		// }
+		{
+			name: "Hutfluss",
+			sleeperId_current: "1401381212001439744",
+			sleeperIds_old: [],
+			legacyId: "-",
+			b3flId: 28,
+			currentLeague: this.B_LEAGUE_NAME
+		},
+		{
+			name: "Lindon",
+			sleeperId_current: "1118278952403025920",
+			sleeperIds_old: [],
+			legacyId: "-",
+			b3flId: 29,
+			currentLeague: this.B_LEAGUE_NAME
+		}
 	]
 
 	public static RIVALRIES = [
