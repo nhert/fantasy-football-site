@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, EventEmitter, HostListener, Input, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, EventEmitter, HostListener, Input, NgZone, Output, signal } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
 import { GameState } from '../_Models/survivor.pickems.models';
@@ -36,6 +36,11 @@ export class PickemsSurvivorTimerComponent {
   isExpired: boolean = false;
 
   public DisplayModeEnum = DisplayMode;
+
+  constructor(
+    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   // Call this and the timer will start counting down using whatever the current "gameState.server_current_datetime_utc_iso" time is.
   public refreshTimer() {
@@ -76,8 +81,11 @@ export class PickemsSurvivorTimerComponent {
     // Capture initial hardware high-resolution time reference
     this.lastPerformanceTick = performance.now();
 
-    this.timerSub = interval(1000).subscribe(() => {
-      this.tick();
+    this.ngZone.runOutsideAngular(() => {
+      this.timerSub = interval(1000).subscribe(() => {
+        this.tick();
+        this.cdr.detectChanges();
+      });
     });
   }
 
