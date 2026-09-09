@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, HostListener, Input, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, EventEmitter, HostListener, Input, Output, signal } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
 import { GameState } from '../_Models/survivor.pickems.models';
@@ -11,7 +11,8 @@ import { DisplayMode, PickemsSurvivorWarningInfoBoxComponent } from "../pickems-
   standalone: true,
   imports: [DecimalPipe, CommonModule, MatCardModule, MatIconModule, PickemsSurvivorWarningInfoBoxComponent],
   templateUrl: './pickems-survivor-timer.component.html',
-  styleUrl: './pickems-survivor-timer.component.css'
+  styleUrl: './pickems-survivor-timer.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PickemsSurvivorTimerComponent {
   @Input('gameState') gameState: GameState;
@@ -27,6 +28,9 @@ export class PickemsSurvivorTimerComponent {
   minutes = computed(() => Math.floor((this.timeRemaining() % 3600) / 60));
   seconds = computed(() => Math.floor(this.timeRemaining() % 60));
 
+  currentWeekDisplay: number = 0;
+  currentDeadlineDisplay: string = "Unknown";
+
   private timerSub!: Subscription;
   private lastPerformanceTick!: number;
   isExpired: boolean = false;
@@ -36,6 +40,9 @@ export class PickemsSurvivorTimerComponent {
   // Call this and the timer will start counting down using whatever the current "gameState.server_current_datetime_utc_iso" time is.
   public refreshTimer() {
     if (this.gameState) {
+      this.setCurrentWeek();
+      this.setCurrentDeadline();
+
       let curServerTime = this.gameState.server_current_datetime_utc_iso;
       let cutoffTime = this.gameState.current_cutoff_datetime_utc_iso;
 
@@ -102,11 +109,10 @@ export class PickemsSurvivorTimerComponent {
     this.disableUiComponents?.emit();
   }
 
-  protected getCurrentWeek() {
+  protected setCurrentWeek() {
     if (this.gameState) {
-      return this.gameState.week;
+      this.currentWeekDisplay = this.gameState.week;
     }
-    return 0;
   }
 
   longDateLocal = new Intl.DateTimeFormat("default", {
@@ -119,11 +125,10 @@ export class PickemsSurvivorTimerComponent {
     timeZoneName: 'longGeneric'
   });
 
-  get getCurrentDeadline() {
+  protected setCurrentDeadline() {
     if (this.gameState && this.gameState.week > 0) {
-      return this.longDateLocal.format(this.gameState.current_cutoff_local_date_display);
+      this.currentDeadlineDisplay = this.longDateLocal.format(this.gameState.current_cutoff_local_date_display);
     }
-    return "Unknown";
   }
 
   private getUTCSecondsDiff(isoString1: string, isoString2: string): number {
@@ -133,7 +138,7 @@ export class PickemsSurvivorTimerComponent {
   }
 
   get getLockMessage() {
-    return `All submissions for week ${this.getCurrentWeek()} are now locked!`
+    return `All submissions for week ${this.currentWeekDisplay} are now locked!`
   }
 
   ngOnDestroy() {
