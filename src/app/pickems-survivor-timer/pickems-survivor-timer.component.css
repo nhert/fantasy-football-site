@@ -1,8 +1,9 @@
 :host {
     display: inline-block;
-    /* Or block, depending on your UI design */
-    contain: layout text style;
-    /* Isolate text rendering passes completely from the parent layout */
+    height: 210px;
+    overflow: hidden;
+    font-variant-numeric: tabular-nums;
+    contain: content;
 }
 
 .countdown-container {

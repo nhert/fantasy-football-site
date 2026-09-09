@@ -23,7 +23,7 @@ game-survivor-pool-content,
 pickems-survivor-timer {
     display: block;
     /* Changes it from an inline tag to a structural box */
-    contain: layout style;
+    contain: content;
     /* Freezes layout boundaries inside WebKit */
     width: 100%;
     /* Ensures it occupies the correct horizontal space */

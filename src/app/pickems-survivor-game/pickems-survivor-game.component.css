@@ -1,6 +1,6 @@
 .game-container {
     display: block;
-    contain: layout style;
+    contain: content;
     /* Crucial: Stops internal text mutations (like timers) from triggering global page reflows */
     width: 100%;
 }
