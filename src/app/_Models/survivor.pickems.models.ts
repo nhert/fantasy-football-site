@@ -1,7 +1,7 @@
 // Generic
 
 export const FANTASY_WEEKS_REGULAR_SEASON = 14; // number of weeks in the fantasy regular season
-export const TOTAL_MATCHUP_COUNT = 13;
+export const TOTAL_MATCHUP_COUNT = 14;
 
 export enum GameStatePhase {
     PreSeason, InSeason, PostSeason
