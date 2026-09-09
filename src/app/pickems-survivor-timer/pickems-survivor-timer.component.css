@@ -1,7 +1,15 @@
+:host {
+    display: inline-block;
+    /* Or block, depending on your UI design */
+    contain: layout text style;
+    /* Isolate text rendering passes completely from the parent layout */
+}
+
 .countdown-container {
     text-align: center;
     font-family: Arial, sans-serif;
     display: block;
+    font-variant-numeric: tabular-nums;
 }
 
 .timer {

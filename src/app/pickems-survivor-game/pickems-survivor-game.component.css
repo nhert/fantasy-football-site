@@ -1,4 +1,7 @@
 .game-container {
+    display: block;
+    contain: layout style;
+    /* Crucial: Stops internal text mutations (like timers) from triggering global page reflows */
     width: 100%;
 }
 
@@ -31,5 +34,4 @@
     background-color: var(--bg-color);
     color: #e2e8f0;
     padding: 24px;
-    height: 100%;
 }
