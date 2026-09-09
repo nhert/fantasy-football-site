@@ -32,6 +32,8 @@ export class Constants {
 			redirect_uri: Constants.PICKEMS_SURVIVOR_IN_LOCAL_TESTING_MODE ? Constants.AUTH0_CALLBACK_LOCAL_TESTING : Constants.AUTH0_CALLBACK_PRODUCTION,
 		},
 		errorPath: '/home',
+		useRefreshTokens: true, // Crucial for iOS Firefox
+		cacheLocation: 'localstorage' as const // switch from memory to localstore to help iOS
 	}
 
 	// HARDCODED URLS
