@@ -29,6 +29,10 @@ UPDATE GAME BACKEND
 1. cd /var/www/b3fl_db/
 2. Run ". pullPickemsSurvivorDbData.sh"
 
+RUN SCORE UPDATER
+1. cd /var/www/b3fl_db/[dirName]
+2. npm run auto
+
 BACKUP DB
 cp main.db /var/www/b3fl_db/pickems-survivor-db/data
 
